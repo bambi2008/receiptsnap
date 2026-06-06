@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReceiptSnap — Wireframe Prototype</title>
+<style>
+/* ============================================================
+   RECEIPTSNAP DESIGN SYSTEM — CSS
+   ============================================================ */
+
+:root {
+  /* Colors */
+  --blue:       #007AFF;
+  --blue-dark:  #0056CC;
+  --blue-light: #E8F2FF;
+  --green:      #34C759;
+  --orange:     #FF9500;
+  --red:        #FF3B30;
+  --purple:     #AF52DE;
+  --teal:       #5AC8FA;
+  --yellow:     #FFCC00;
+  --pink:       #FF2D55;
+  --indigo:     #5856D6;
+  
+  /* Neutrals */
+  --bg:         #F2F2F7;
+  --bg-card:    #FFFFFF;
+  --bg-header:  #F9F9FB;
+  --separator:  #E5E5EA;
+  --text:       #1C1C1E;
+  --text-sec:   #8E8E93;
+  --text-tert:  #C7C7CC;
+  
+  /* Category colors (IRS Schedule C mapping) */
+  --cat-meals:      #FF9500;
+  --cat-software:   #007AFF;
+  --cat-office:     #34C759;
+  --cat-travel:     #5856D6;
+  --cat-phone:      #5AC8FA;
+  --cat-supplies:   #AF52DE;
+  --cat-rent:       #FF3B30;
+  --cat-marketing:  #FF2D55;
+  --cat-insurance:  #FFCC00;
+  --cat-other:      #8E8E93;
+  
+  /* Typography */
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  
+  /* Spacing (4pt grid) */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: #1a1a2e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   PHONE FRAME
+   ============================================================ */
+.phone {
+  width: 390px;
+  height: 844px;
+  background: var(--bg);
+  border-radius: 44px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 
+    0 0 0 3px #1a1a1a,
+    0 0 0 6px #2d2d2d,
+    0 0 0 8px #1a1a1a,
+    0 20px 60px rgba(0,0,0,0.5);
+}
+
+/* Status bar */
+.status-bar {
+  height: 54px;
+  background: var(--bg-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 28px 8px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  position: relative;
+  z-index: 10;
+}
+.status-bar .time { font-size: 15px; font-weight: 700; }
+.status-bar .icons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.status-bar .icons span { font-size: 14px; }
+
+/* ============================================================
+   SCREENS CONTAINER
+   ============================================================ */
+.screens {
+  height: calc(844px - 54px - 84px); /* minus status bar and tab bar */
+  position: relative;
+  overflow: hidden;
+}
+
+.screen {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: var(--bg);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s ease;
+  transform: translateX(0);
+  opacity: 1;
+}
+.screen.hidden-left  { transform: translateX(-100%); opacity: 0; pointer-events: none; }
+.screen.hidden-right { transform: translateX(100%);  opacity: 0; pointer-events: none; }
+.screen.hidden-fade  { opacity: 0; pointer-events: none; }
+
+/* Onboarding is overlaid */
+.screen.onboarding-overlay {
+  z-index: 100;
+  background: #FFFFFF;
+}
+
+/* ============================================================
+   TAB BAR
+   ============================================================ */
+.tab-bar {
+  height: 84px;
+  background: var(--bg-card);
+  border-top: 0.5px solid var(--separator);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 8px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--text-sec);
+  font-weight: 500;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.tab-item.active { color: var(--blue); }
+.tab-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* ============================================================
+   CAMERA SCREEN
+   ============================================================ */
+.camera-screen {
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.viewfinder-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 0 24px;
+}
+
+.viewfinder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  max-height: 460px;
+  background: #1C1C1E;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Simulated camera feed */
+.viewfinder-feed {
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(ellipse at 60% 40%, #3a3a3c 0%, #1c1c1e 60%);
+  position: relative;
+}
+
+/* Receipt silhouette in viewfinder */
+.viewfinder-feed::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 70%;
+  height: 70%;
+  background: #e8e8ea;
+  transform: rotate(-3deg);
+  border-radius: 3px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.viewfinder-feed::after {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 22%;
+  width: 56%;
+  height: 3%;
+  background: #c7c7cc;
+  border-radius: 1px;
+  transform: rotate(-3deg);
+  box-shadow: 
+    0 600% 0 0 #c7c7cc,
+    0 1200% 0 0 #c7c7cc,
+    0 1800% 0 0 #c7c7cc,
+    0 2400% 0 0 #c7c7cc,
+    0 3000% 0 0 #c7c7cc;
+}
+
+/* Corner brackets */
+.corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: rgba(255,255,255,0.6);
+  border-style: solid;
+}
+.corner.tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
+.corner.tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; border-radius: 0 4px 0 0; }
+.corner.bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; border-radius: 0 0 0 4px; }
+.corner.br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
+
+/* Free counter badge */
+.free-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  z-index: 5;
+}
+
+/* Capture hint */
+.capture-hint {
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  padding: 8px 0 4px;
+  font-weight: 400;
+}
+
+/* Shutter area */
+.shutter-area {
+  padding: 16px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.shutter-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #FFF;
+  border: 5px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+.shutter-btn:active {
+  transform: scale(0.92);
+  background: #e0e0e0;
+}
+.shutter-btn::after {
+  content: '';
+  position: absolute;
+  top: -8px; left: -8px;
+  right: -8px; bottom: -8px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+
+.gallery-thumb {
+  position: absolute;
+  left: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e0e0e0, #c0c0c0);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #999;
+  -webkit-tap-highlight-color: transparent;
+}
+.gallery-thumb::after {
+  content: '🖼';
+  font-size: 20px;
+}
+
+/* ============================================================
+   PROCESSING OVERLAY (on camera)
+   ============================================================ */
+.processing-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.processing-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.processing-card {
+  background: #1C1C1E;
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+.processing-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.processing-text {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   RESULT SHEET (bottom sheet style)
+   ============================================================ */
+.result-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-5) var(--space-5) 100px;
+  z-index: 25;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+}
+.result-sheet.active { transform: translateY(0); }
+
+.result-handle {
+  width: 36px;
+  height: 5px;
+  background: var(--separator);
+  border-radius: 3px;
+  margin: 0 auto 16px;
+}
+
+.result-header {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 0.5px solid var(--separator);
+}
+.result-row:last-child { border-bottom: none; }
+.result-label {
+  font-size: 13px;
+  color: var(--text-sec);
+  font-weight: 400;
+}
+.result-value {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 600;
+  text-align: right;
+}
+.result-category {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.result-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+  transition: opacity 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.97); opacity: 0.8; }
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-secondary { background: var(--bg); color: var(--blue); }
+
+/* ============================================================
+   RECEIPTS LIST SCREEN
+   ============================================================ */
+.receipts-screen {
+  background: var(--bg);
+}
+
+.section-header {
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-sec);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Summary card */
+.summary-card {
+  margin: var(--space-3) var(--space-4);
+  background: var(--blue);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  color: #fff;
+}
+.summary-title {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+.summary-main {
+  font-size: 22px;
+  font-weight: 700;
+}
+.summary-sub {
+  font-size: 13px;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+/* Search bar */
+.search-bar {
+  margin: var(--space-2) var(--space-4) var(--space-3);
+  background: #E5E5EA;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.search-icon { font-size: 16px; color: var(--text-sec); }
+.search-input {
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--text);
+  outline: none;
+  flex: 1;
+}
+.search-input::placeholder { color: var(--text-sec); }
+
+/* Receipt card */
+.receipt-card {
+  margin: 0 var(--space-4) var(--space-2);
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  -webkit-tap-highlight-color: transparent;
+}
+.receipt-card:active { transform: scale(0.98); }
+
+.receipt-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.receipt-info { flex: 1; min-width: 0; }
+.receipt-vendor {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+.receipt-meta {
+  font-size: 13px;
+  color: var(--text-sec);
+  margin-top: 2px;
+}
+.receipt-amount {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   RECEIPT DETAIL SCREEN
+   ============================================================ */
+.detail-screen { background: var(--bg); }
+
+.detail-nav {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  gap: var(--space-2);
+  background: var(--bg-card);
+  border-bottom: 0.5px solid var(--separator);
+}
+.detail-back {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--blue);
+  border-radius: 50%;
+  -webkit-tap-highlight-color: transparent;
+}
+.detail-back:active { background: var(--bg); }
+.detail-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+}
+
+.receipt-image {
+  margin: var(--space-4);
+  aspect-ratio: 3/4;
+  background: #e8e8ea;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.receipt-image-inner {
+  font-size: 60px;
+  opacity: 0.6;
+}
+.receipt-image::after {
+  content: 'Pinch to zoom';
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-size: 11px;
+  color: var(--text-sec);
+  background: rgba(255,255,255,0.8);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.detail-fields {
+  background: var(--bg-card);
+  margin: 0 var(--space-4);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.detail-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px var(--space-4);
+  border-bottom: 0.5px solid var(--separator);
+}
+.detail-field:last-child { border-bottom: none; }
+.field-label { font-size: 14px; color: var(--text-sec); }
+.field-value { font-size: 15px; font-weight: 500; color: var(--text); }
+.field-value.editable { color: var(--blue); cursor: pointer; }
+
+.detail-actions {
+  padding: var(--space-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.export-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--blue);
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+  -webkit-tap-highlight-color: transparent;
+}
+.export-btn:active { background: var(--bg); }
+
+/* ============================================================
+   MORE / SETTINGS SCREEN
+   ============================================================ */
+.more-screen { background: var(--bg); padding-bottom: 20px; }
+
+.subscription-card {
+  margin: var(--space-4);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.sub-tier {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-sec);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.sub-status {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.usage-bar {
+  height: 6px;
+  background: var(--bg);
+  border-radius: 3px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+.usage-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.usage-text {
+  font-size: 13px;
+  color: var(--text-sec);
+  margin-top: 8px;
+}
+
+.upgrade-btn {
+  display: block;
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+.upgrade-btn:active { opacity: 0.8; }
+
+.pro-benefits {
+  font-size: 13px;
+  color: var(--text-sec);
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+.menu-section {
+  margin: var(--space-2) var(--space-4);
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.menu-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px var(--space-4);
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text);
+  border-bottom: 0.5px solid var(--separator);
+  -webkit-tap-highlight-color: transparent;
+}
+.menu-row:last-child { border-bottom: none; }
+.menu-row:active { background: var(--bg); }
+.menu-arrow { color: var(--text-tert); font-size: 16px; }
+.menu-icon { margin-right: 10px; }
+
+/* ============================================================
+   ONBOARDING
+   ============================================================ */
+.onboarding-screen {
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+}
+
+.onboard-slides {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.onboard-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  text-align: center;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s;
+}
+.onboard-slide.active   { transform: translateX(0); opacity: 1; }
+.onboard-slide.past     { transform: translateX(-100%); opacity: 0; pointer-events: none; }
+.onboard-slide.future   { transform: translateX(100%); opacity: 0; pointer-events: none; }
+
+.onboard-illustration {
+  font-size: 80px;
+  margin-bottom: 32px;
+  line-height: 1;
+}
+
+.onboard-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1C1C1E;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.onboard-subtitle {
+  font-size: 16px;
+  color: #8E8E93;
+  line-height: 1.5;
+  max-width: 280px;
+}
+
+.onboard-footer {
+  padding: 20px 32px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.onboard-dots {
+  display: flex;
+  gap: 8px;
+}
+.onboard-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #C7C7CC;
+  transition: background 0.3s, transform 0.3s;
+}
+.onboard-dot.active {
+  background: var(--blue);
+  transform: scale(1.3);
+}
+
+.onboard-btn {
+  width: 100%;
+  max-width: 320px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+  background: var(--blue);
+  color: #fff;
+  transition: opacity 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.onboard-btn:active { transform: scale(0.97); opacity: 0.85; }
+.onboard-btn.secondary {
+  background: transparent;
+  color: var(--blue);
+  font-weight: 500;
+}
+.onboard-skip {
+  font-size: 14px;
+  color: var(--text-sec);
+  cursor: pointer;
+  font-weight: 500;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   PAYWALL MODAL
+   ============================================================ */
+.paywall-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 150;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.paywall-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.paywall-sheet {
+  width: 100%;
+  background: #fff;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-5) var(--space-5) 40px;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.paywall-overlay.active .paywall-sheet {
+  transform: translateY(0);
+}
+
+.paywall-header {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  text-align: center;
+  margin-bottom: 4px;
+}
+.paywall-sub {
+  font-size: 14px;
+  color: var(--text-sec);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.paywall-features {
+  list-style: none;
+  margin-bottom: 24px;
+}
+.paywall-features li {
+  padding: 10px 0;
+  font-size: 15px;
+  color: var(--text);
+  border-bottom: 0.5px solid var(--separator);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.paywall-features li::before {
+  content: '✓';
+  color: var(--green);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.plan-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px var(--space-4);
+  margin-bottom: 8px;
+  border: 2px solid var(--separator);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.plan-option.selected {
+  border-color: var(--blue);
+  background: var(--blue-light);
+}
+.plan-name { font-size: 16px; font-weight: 600; color: var(--text); }
+.plan-price { font-size: 16px; font-weight: 700; color: var(--text); }
+.plan-save {
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.paywall-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 17px;
+  font-weight: 700;
+  font-family: var(--font);
+  cursor: pointer;
+  margin-top: 8px;
+  -webkit-tap-highlight-color: transparent;
+}
+.paywall-btn:active { opacity: 0.8; }
+
+.paywall-footer {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-sec);
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1C1C1E;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 300;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+/* ============================================================
+   SCROLLBAR HIDE
+   ============================================================ */
+.screen::-webkit-scrollbar { display: none; }
+
+/* ============================================================
+   SWIPE HINT ON RECEIPT
+   ============================================================ */
+.swipe-hint {
+  font-size: 11px;
+  color: var(--text-tert);
+  text-align: center;
+  padding: 4px 0 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="phone" id="app">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <span class="icons">
+      <span>●●●●○</span>
+      <span>WiFi</span>
+      <span>🔋</span>
+    </span>
+  </div>
+
+  <!-- Screens Container -->
+  <div class="screens" id="screens">
+
+    <!-- ============ SCREEN: CAMERA (default) ============ -->
+    <div class="screen camera-screen" id="screen-camera">
+      <div class="viewfinder-container">
+        <div class="viewfinder" id="viewfinder">
+          <div class="viewfinder-feed">
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+            <div class="free-badge" id="free-badge">Free: <span id="remaining-count">47</span> left</div>
+          </div>
+        </div>
+      </div>
+      <div class="capture-hint">Position receipt in frame</div>
+      <div class="shutter-area">
+        <div class="gallery-thumb" title="Pick from gallery"></div>
+        <div class="shutter-btn" id="shutter-btn" title="Capture receipt"></div>
+      </div>
+
+      <!-- Processing overlay -->
+      <div class="processing-overlay" id="processing-overlay">
+        <div class="processing-card">
+          <div class="processing-spinner"></div>
+          <div class="processing-text">Reading receipt…</div>
+        </div>
+      </div>
+
+      <!-- Result sheet -->
+      <div class="result-sheet" id="result-sheet">
+        <div class="result-handle"></div>
+        <div class="result-header" id="result-vendor">Starbucks</div>
+        <div class="result-row">
+          <span class="result-label">Amount</span>
+          <span class="result-value" id="result-amount">$4.75</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Category</span>
+          <span class="result-value result-category">
+            <span class="cat-dot" style="background:var(--cat-meals)" id="result-cat-dot"></span>
+            <span id="result-category">Meals</span>
+          </span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Date</span>
+          <span class="result-value" id="result-date">Jun 5, 2026</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Note</span>
+          <span class="result-value" style="color:var(--text-sec);font-weight:400">—</span>
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-secondary" id="btn-edit">✏️ Edit</button>
+          <button class="btn btn-primary" id="btn-done">✓ Done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN: RECEIPTS LIST ============ -->
+    <div class="screen receipts-screen hidden-right" id="screen-receipts">
+      
+      <!-- Summary Card -->
+      <div class="summary-card">
+        <div class="summary-title">THIS MONTH</div>
+        <div class="summary-main">23 receipts</div>
+        <div class="summary-sub">$1,847.32 in deductions</div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" placeholder="Search receipts" id="search-input">
+      </div>
+
+      <!-- June 2026 -->
+      <div class="section-header">June 2026</div>
+      
+      <div class="receipt-card" onclick="openDetail('Starbucks', '$4.75', 'Meals', '#FF9500', 'Jun 5, 2026', 'Client meeting coffee')">
+        <div class="receipt-icon" style="background:#FFF3E6;color:var(--cat-meals)">🍽</div>
+        <div class="receipt-info">
+          <div class="receipt-vendor">Starbucks</div>
+          <div class="receipt-meta">Jun 5, 2026</div>
+        </div>
+        <div class="receipt-amount">$4.75</div>
+      </div>
+
+      <div class="receipt-card" onclick="openDetail('Adobe Creative Cloud', '$59.99', 'Software', '#007AFF', 'Jun 4, 2026', 'Monthly subscription')">
+        <div class="receipt-icon" style="background:#E8F2FF;color:var(--cat-software)">💻</div>
+        <div class="receipt-info">
+          <div class="receipt-vendor">Adobe Creative Cloud</div>
+          <div class="receipt-meta">Jun 4, 2026</div>
+        </div>
+        <div class="receipt-amount">$59.99</div>
+      </div>
+
+      <div class="receipt-card" onclick="openDetail('WeWork', '$29.00', 'Office', '#34C759', 'Jun 3, 2026', 'Day pass — downtown')">
+        <div class="receipt-icon" style="background:#E8F8ED;color:var(--cat-office)">🏢</div>
+        <div class="receipt-info">
+          <div class="receipt-vendor">WeWork</div>
+          <div class="receipt-meta">Jun 3, 2026</div>
+        </div>
+        <div class="receipt-amount">$29.00</div>
+      </div>
+
+      <div class="receipt-card" onclick="openDetail('Uber', '$18.50', 'Travel', '#5856D6', 'Jun 2, 2026', 'Ride to client office')">
+        <div class="receipt-icon" style="background:#EDECFA;color:var(--cat-travel)">🚗</div>
+        <div class="receipt-info">
+          <div class="receipt-vendor">Uber</div>
+          <div class="receipt-meta">Jun 2, 2026</div>
+        </div>
+        <div class="receipt-amount">$18.50</div>
+      </div>
+
+      <div class="receipt-card" onclick="openDetail('Verizon Wireless', '$89.99', 'Phone', '#5AC8FA', 'Jun 1, 2026', 'Monthly plan — business line')">
+        <div class="receipt-icon" style="background:#E6F6FD;color:var(--cat-phone)">📱</div>
+        <div class="receipt-info">
+          <div class="receipt-vendor">Verizon Wireless</div>
+          <div class="receipt-meta">Jun 1, 2026</div>
+        </div>
+        <div class="receipt-amount">$89.99</div>
+      </div>
+
+      <!-- May 2026 -->
+      <div class="section-header">May 2026</div>
+
+      <div class="receipt-card" onclick="openDetail('Notion', '$10.00', 'Software', '#007AFF', 'May 28, 2026', 'Plus plan monthly')">
+        <div class="receipt-icon" style="background:#E8F2FF;color:var(--cat-software)">💻</div>
+        <div class="receipt-info">
+          <div class="receipt-vendor">Notion</div>
+          <div class="receipt-meta">May 28, 2026</div>
+        </div>
+        <div class="receipt-amount">$10.00</div>
+      </div>
+
+      <div class="receipt-card" onclick="openDetail('FedEx Office', '$42.30', 'Supplies', '#AF52DE', 'May 25, 2026', 'Printing + binding proposal')">
+        <div class="receipt-icon" style="background:#F3E8FA;color:var(--cat-supplies)">📦</div>
+        <div class="receipt-info">
+          <div class="receipt-vendor">FedEx Office</div>
+          <div class="receipt-meta">May 25, 2026</div>
+        </div>
+        <div class="receipt-amount">$42.30</div>
+      </div>
+
+      <div class="receipt-card" onclick="openDetail('Delta Air Lines', '$347.00', 'Travel', '#5856D6', 'May 20, 2026', 'Flight to client workshop — SFO→JFK')">
+        <div class="receipt-icon" style="background:#EDECFA;color:var(--cat-travel)">✈️</div>
+        <div class="receipt-info">
+          <div class="receipt-vendor">Delta Air Lines</div>
+          <div class="receipt-meta">May 20, 2026</div>
+        </div>
+        <div class="receipt-amount">$347.00</div>
+      </div>
+
+      <div style="height: 20px;"></div>
+    </div>
+
+    <!-- ============ SCREEN: RECEIPT DETAIL ============ -->
+    <div class="screen detail-screen hidden-right" id="screen-detail">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail()">←</div>
+        <div class="detail-title" id="detail-vendor-name">Starbucks</div>
+      </div>
+
+      <div class="receipt-image">
+        <div class="receipt-image-inner">🧾</div>
+      </div>
+
+      <div class="detail-fields">
+        <div class="detail-field">
+          <span class="field-label">Vendor</span>
+          <span class="field-value" id="detail-vendor">Starbucks</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Amount</span>
+          <span class="field-value" id="detail-amount">$4.75</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Category</span>
+          <span class="field-value editable" id="detail-category" onclick="cycleCategory()">
+            <span id="detail-cat-dot" class="cat-dot" style="background:var(--cat-meals)"></span>
+            <span id="detail-cat-name">Meals</span>
+          </span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Date</span>
+          <span class="field-value" id="detail-date">Jun 5, 2026</span>
+        </div>
+        <div class="detail-field">
+          <span class="field-label">Note</span>
+          <span class="field-value" style="color:var(--text-sec)" id="detail-note">Client meeting coffee</span>
+        </div>
+      </div>
+
+      <div class="detail-actions">
+        <button class="export-btn" onclick="showToast('PDF exported — Share sheet would open')">📄 Export as PDF</button>
+        <button class="export-btn" onclick="showToast('CSV exported — Share sheet would open')">📊 Export as CSV</button>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN: MORE / SETTINGS ============ -->
+    <div class="screen more-screen hidden-right" id="screen-more">
+      
+      <!-- Subscription Card -->
+      <div class="subscription-card" id="subscription-card">
+        <div class="sub-tier">🆓 Free Tier</div>
+        <div class="sub-status" id="sub-status-text">32 of 50 receipts used</div>
+        <div class="usage-bar">
+          <div class="usage-fill" style="width:64%" id="usage-fill"></div>
+        </div>
+        <div class="usage-text" id="usage-text">18 free receipts remaining this month</div>
+        <button class="upgrade-btn" onclick="openPaywall()">✨ Upgrade to Pro — $7.99/mo</button>
+        <div class="pro-benefits">Pro: Unlimited receipts · CSV & PDF export · Schedule C categories · Priority support</div>
+      </div>
+
+      <!-- Menu Sections -->
+      <div class="menu-section">
+        <div class="menu-row" onclick="showToast('Export History — would show list of past exports')">
+          <span><span class="menu-icon">📤</span>Export History</span>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="menu-row" onclick="showToast('Settings — notifications, defaults, etc.')">
+          <span><span class="menu-icon">⚙️</span>App Settings</span>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="menu-row" onclick="showToast('Help & Support — FAQ, contact')">
+          <span><span class="menu-icon">❓</span>Help & Support</span>
+          <span class="menu-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-row" onclick="showToast('Privacy Policy')">
+          <span><span class="menu-icon">🔒</span>Privacy Policy</span>
+          <span class="menu-arrow">›</span>
+        </div>
+        <div class="menu-row" onclick="showToast('Terms of Service')">
+          <span><span class="menu-icon">📄</span>Terms of Service</span>
+          <span class="menu-arrow">›</span>
+        </div>
+      </div>
+
+      <div style="text-align:center;padding:20px;color:var(--text-tert);font-size:13px">
+        ReceiptSnap v1.0.0<br>
+        Made with ❤️ for freelancers
+      </div>
+    </div>
+
+    <!-- ============ ONBOARDING OVERLAY ============ -->
+    <div class="screen onboarding-screen" id="onboarding-screen">
+      <div class="onboard-slides" id="onboard-slides">
+        
+        <!-- Slide 1 -->
+        <div class="onboard-slide active" data-slide="0">
+          <div class="onboard-illustration">💸</div>
+          <div class="onboard-title">Stop losing tax deductions</div>
+          <div class="onboard-subtitle">
+            Every crumpled receipt is money left on the table. 
+            Scan and track every business expense effortlessly.
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="onboard-slide future" data-slide="1">
+          <div class="onboard-illustration">📸</div>
+          <div class="onboard-title">Snap a receipt. We handle the rest.</div>
+          <div class="onboard-subtitle">
+            AI reads the vendor, amount, and date automatically. 
+            Smart categorization for your Schedule C.
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="onboard-slide future" data-slide="2">
+          <div class="onboard-illustration">🎁</div>
+          <div class="onboard-title">Try 50 receipts free.</div>
+          <div class="onboard-subtitle">
+            No credit card required. Upgrade to 
+            Pro anytime for unlimited scanning.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="onboard-footer">
+        <div class="onboard-dots" id="onboard-dots">
+          <div class="onboard-dot active" data-dot="0"></div>
+          <div class="onboard-dot" data-dot="1"></div>
+          <div class="onboard-dot" data-dot="2"></div>
+        </div>
+        <button class="onboard-btn" id="onboard-btn" onclick="nextOnboardSlide()">Next →</button>
+        <div class="onboard-skip" onclick="skipOnboarding()">Skip</div>
+      </div>
+    </div>
+
+    <!-- ============ PAYWALL OVERLAY ============ -->
+    <div class="paywall-overlay" id="paywall-overlay">
+      <div class="paywall-sheet">
+        <div style="text-align:center;font-size:40px;margin-bottom:8px">🧾</div>
+        <div class="paywall-header">ReceiptSnap Pro</div>
+        <div class="paywall-sub">Everything you need for tax-ready receipts</div>
+        
+        <ul class="paywall-features">
+          <li>Unlimited receipt scanning</li>
+          <li>CSV & PDF export for your accountant</li>
+          <li>IRS Schedule C category mapping</li>
+          <li>Priority support</li>
+          <li>No watermarks — clean exports</li>
+        </ul>
+
+        <div class="plan-option selected" id="plan-monthly" onclick="selectPlan('monthly')">
+          <div>
+            <div class="plan-name">Monthly</div>
+            <div style="font-size:13px;color:var(--text-sec)">Billed monthly</div>
+          </div>
+          <div class="plan-price">$7.99<span style="font-size:13px;color:var(--text-sec);font-weight:400">/mo</span></div>
+        </div>
+
+        <div class="plan-option" id="plan-annual" onclick="selectPlan('annual')">
+          <div>
+            <div class="plan-name">Annual</div>
+            <div style="font-size:13px;color:var(--text-sec)">Billed annually</div>
+          </div>
+          <div>
+            <div class="plan-price">$59.99<span style="font-size:13px;color:var(--text-sec);font-weight:400">/yr</span></div>
+            <div class="plan-save">Save 37%</div>
+          </div>
+        </div>
+
+        <button class="paywall-btn" onclick="subscribe()">Subscribe →</button>
+        <div class="paywall-footer">
+          Cancel anytime · <span style="color:var(--blue);cursor:pointer" onclick="showToast('Would restore previous purchase')">Restore Purchases</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TOAST ============ -->
+    <div class="toast" id="toast"></div>
+
+  </div> <!-- /screens -->
+
+  <!-- Tab Bar -->
+  <div class="tab-bar" id="tab-bar">
+    <div class="tab-item active" data-tab="camera" onclick="switchTab('camera')">
+      <span class="tab-icon">📷</span>
+      <span>Camera</span>
+    </div>
+    <div class="tab-item" data-tab="receipts" onclick="switchTab('receipts')">
+      <span class="tab-icon">📋</span>
+      <span>Receipts</span>
+    </div>
+    <div class="tab-item" data-tab="more" onclick="switchTab('more')">
+      <span class="tab-icon">⋯</span>
+      <span>More</span>
+    </div>
+  </div>
+
+</div> <!-- /phone -->
+
+<script>
+// ============================================================
+// RECEIPTSNAP INTERACTIVE LOGIC
+// ============================================================
+
+// Simulated receipt data for camera mode
+const receipts = [
+  { vendor: 'Starbucks',      amount: '$4.75',   category: 'Meals',    color: '#FF9500', date: 'Jun 5, 2026' },
+  { vendor: 'Adobe CC',       amount: '$59.99',  category: 'Software', color: '#007AFF', date: 'Jun 4, 2026' },
+  { vendor: 'WeWork',         amount: '$29.00',  category: 'Office',   color: '#34C759', date: 'Jun 3, 2026' },
+  { vendor: 'Uber',           amount: '$18.50',  category: 'Travel',   color: '#5856D6', date: 'Jun 2, 2026' },
+  { vendor: "McDonald's",     amount: '$11.23',  category: 'Meals',    color: '#FF9500', date: 'Jun 1, 2026' },
+  { vendor: 'Figma',          amount: '$15.00',  category: 'Software', color: '#007AFF', date: 'May 30, 2026' },
+  { vendor: 'Office Depot',   amount: '$32.99',  category: 'Supplies', color: '#AF52DE', date: 'May 29, 2026' },
+  { vendor: 'Lyft',           amount: '$24.50',  category: 'Travel',   color: '#5856D6', date: 'May 28, 2026' },
+];
+
+let receiptIndex = 0;
+let remainingFree = 47;
+let currentTab = 'camera';
+let onboardSlide = 0;
+let isProcessing = false;
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+
+function switchTab(tab) {
+  if (isProcessing) return;
+  if (tab === currentTab) return;
+
+  // Close any open overlays
+  document.getElementById('result-sheet').classList.remove('active');
+  document.getElementById('paywall-overlay').classList.remove('active');
+
+  // Get screens
+  const camera = document.getElementById('screen-camera');
+  const receipts = document.getElementById('screen-receipts');
+  const detail = document.getElementById('screen-detail');
+  const more = document.getElementById('screen-more');
+
+  // Direction: if going from camera to receipts (forward), slide right-to-left
+  const tabOrder = ['camera', 'receipts', 'more'];
+  const fromIdx = tabOrder.indexOf(currentTab);
+  const toIdx = tabOrder.indexOf(tab);
+  const goingForward = toIdx > fromIdx;
+
+  // Hide all non-active screens
+  const allScreens = [camera, receipts, detail, more];
+  allScreens.forEach(s => {
+    s.classList.remove('hidden-left', 'hidden-right', 'hidden-fade');
+  });
+
+  // Position screens
+  if (goingForward) {
+    // Current screen slides left, new screen comes from right
+    allScreens.forEach(s => {
+      if (s.id === 'screen-' + currentTab) s.classList.add('hidden-left');
+      else if (s.id === 'screen-' + tab) s.classList.remove('hidden-right');
+      else s.classList.add('hidden-right');
+    });
+  } else {
+    // Current screen slides right, new screen comes from left
+    allScreens.forEach(s => {
+      if (s.id === 'screen-' + currentTab) s.classList.add('hidden-right');
+      else if (s.id === 'screen-' + tab) s.classList.remove('hidden-left');
+      else s.classList.add('hidden-left');
+    });
+  }
+
+  // Close detail if it was open
+  if (currentTab === 'detail') {
+    detail.classList.add('hidden-right');
+  }
+
+  currentTab = tab;
+
+  // Update tab bar
+  document.querySelectorAll('.tab-item').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+}
+
+// ============================================================
+// CAMERA: SHUTTER → PROCESSING → RESULT
+// ============================================================
+
+document.getElementById('shutter-btn').addEventListener('click', function() {
+  if (isProcessing) return;
+  if (remainingFree <= 0) {
+    showLimitReached();
+    return;
+  }
+
+  isProcessing = true;
+
+  // Flash effect on viewfinder
+  const vf = document.getElementById('viewfinder');
+  vf.style.transition = 'filter 0.15s';
+  vf.style.filter = 'brightness(2)';
+  setTimeout(() => {
+    vf.style.filter = 'brightness(1)';
+  }, 150);
+
+  // Show processing
+  setTimeout(() => {
+    document.getElementById('processing-overlay').classList.add('active');
+  }, 200);
+
+  // Simulate AI processing (1.5s)
+  setTimeout(() => {
+    document.getElementById('processing-overlay').classList.remove('active');
+    
+    // Pick a random receipt
+    const r = receipts[Math.floor(Math.random() * receipts.length)];
+    
+    // Update result sheet
+    document.getElementById('result-vendor').textContent = r.vendor;
+    document.getElementById('result-amount').textContent = r.amount;
+    document.getElementById('result-category').textContent = r.category;
+    document.getElementById('result-cat-dot').style.background = r.color;
+    document.getElementById('result-date').textContent = r.date;
+    
+    // Decrement free count
+    remainingFree--;
+    document.getElementById('remaining-count').textContent = remainingFree;
+    
+    // Update the usage bar in More tab too
+    updateUsageStats();
+    
+    // Show result sheet
+    document.getElementById('result-sheet').classList.add('active');
+    
+    isProcessing = false;
+  }, 1800);
+});
+
+// Done button
+document.getElementById('btn-done').addEventListener('click', function() {
+  document.getElementById('result-sheet').classList.remove('active');
+  showToast('Receipt saved! ✓');
+});
+
+// Edit button
+document.getElementById('btn-edit').addEventListener('click', function() {
+  showToast('Edit mode would open — vendor, amount, category, date, note');
+  document.getElementById('result-sheet').classList.remove('active');
+});
+
+// ============================================================
+// RECEIPT LIST → DETAIL
+// ============================================================
+
+function openDetail(vendor, amount, category, color, date, note) {
+  document.getElementById('detail-vendor-name').textContent = vendor;
+  document.getElementById('detail-vendor').textContent = vendor;
+  document.getElementById('detail-amount').textContent = amount;
+  document.getElementById('detail-cat-name').textContent = category;
+  document.getElementById('detail-cat-dot').style.background = color;
+  document.getElementById('detail-date').textContent = date;
+  document.getElementById('detail-note').textContent = note;
+
+  const detail = document.getElementById('screen-detail');
+  const receipts = document.getElementById('screen-receipts');
+  
+  receipts.classList.add('hidden-left');
+  detail.classList.remove('hidden-right');
+  
+  currentTab = 'detail';
+  
+  // Deselect all tab bar items
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+}
+
+function closeDetail() {
+  const detail = document.getElementById('screen-detail');
+  const receipts = document.getElementById('screen-receipts');
+  
+  detail.classList.add('hidden-right');
+  receipts.classList.remove('hidden-left');
+  
+  currentTab = 'receipts';
+  document.querySelectorAll('.tab-item').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === 'receipts');
+  });
+}
+
+function cycleCategory() {
+  const categories = ['Meals', 'Software', 'Office', 'Travel', 'Supplies', 'Phone', 'Marketing', 'Insurance'];
+  const colors = ['#FF9500', '#007AFF', '#34C759', '#5856D6', '#AF52DE', '#5AC8FA', '#FF2D55', '#FFCC00'];
+  const current = document.getElementById('detail-cat-name').textContent;
+  const idx = categories.indexOf(current);
+  const next = categories[(idx + 1) % categories.length];
+  document.getElementById('detail-cat-name').textContent = next;
+  document.getElementById('detail-cat-dot').style.background = colors[(idx + 1) % colors.length];
+  showToast('Category changed to ' + next);
+}
+
+// ============================================================
+// PAYWALL
+// ============================================================
+
+let selectedPlan = 'monthly';
+
+function openPaywall() {
+  document.getElementById('paywall-overlay').classList.add('active');
+}
+
+function closePaywall() {
+  document.getElementById('paywall-overlay').classList.remove('active');
+}
+
+document.getElementById('paywall-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closePaywall();
+});
+
+function selectPlan(plan) {
+  selectedPlan = plan;
+  document.getElementById('plan-monthly').classList.toggle('selected', plan === 'monthly');
+  document.getElementById('plan-annual').classList.toggle('selected', plan === 'annual');
+}
+
+function subscribe() {
+  closePaywall();
+  showToast('🎉 Welcome to Pro! Unlimited receipts unlocked.');
+  
+  // Update subscription card to Pro mode
+  document.getElementById('sub-status-text').textContent = 'Pro — Unlimited';
+  document.getElementById('usage-fill').style.width = '100%';
+  document.getElementById('usage-fill').style.background = '#34C759';
+  document.getElementById('usage-text').textContent = 'Unlimited receipts · All features unlocked';
+  document.querySelector('.subscription-card .sub-tier').textContent = '⭐ Pro Tier';
+  document.querySelector('.subscription-card .upgrade-btn').style.display = 'none';
+  document.querySelector('.subscription-card .pro-benefits').textContent = 'You\'re all set! 🎉';
+  
+  // Reset remaining count
+  remainingFree = 999;
+  document.getElementById('remaining-count').textContent = '∞';
+  document.getElementById('free-badge').innerHTML = '<span style="color:#34C759">Pro</span> Unlimited';
+}
+
+function showLimitReached() {
+  document.getElementById('paywall-overlay').classList.add('active');
+  showToast('50 receipt limit reached. Upgrade to Pro!');
+}
+
+function updateUsageStats() {
+  const used = 50 - remainingFree;
+  const pct = Math.min((used / 50) * 100, 100);
+  document.getElementById('usage-fill').style.width = pct + '%';
+  document.getElementById('usage-text').textContent = remainingFree + ' free receipts remaining this month';
+  document.getElementById('sub-status-text').textContent = used + ' of 50 receipts used';
+}
+
+// ============================================================
+// ONBOARDING
+// ============================================================
+
+function nextOnboardSlide() {
+  if (onboardSlide < 2) {
+    // Move to next slide
+    const slides = document.querySelectorAll('.onboard-slide');
+    slides[onboardSlide].classList.remove('active');
+    slides[onboardSlide].classList.add('past');
+    onboardSlide++;
+    slides[onboardSlide].classList.remove('future');
+    slides[onboardSlide].classList.add('active');
+    
+    // Update dots
+    document.querySelectorAll('.onboard-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === onboardSlide);
+    });
+    
+    // Update button text
+    const btn = document.getElementById('onboard-btn');
+    if (onboardSlide === 2) {
+      btn.textContent = 'Get Started →';
+    } else {
+      btn.textContent = 'Next →';
+    }
+  } else {
+    finishOnboarding();
+  }
+}
+
+function skipOnboarding() {
+  finishOnboarding();
+}
+
+function finishOnboarding() {
+  document.getElementById('onboarding-screen').style.opacity = '0';
+  document.getElementById('onboarding-screen').style.pointerEvents = 'none';
+  document.getElementById('onboarding-screen').style.transition = 'opacity 0.4s ease';
+  
+  setTimeout(() => {
+    document.getElementById('onboarding-screen').style.display = 'none';
+  }, 400);
+
+  showToast('Welcome! Start snapping receipts 📸');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2000);
+}
+
+// ============================================================
+// SEARCH FILTERING
+// ============================================================
+
+document.getElementById('search-input').addEventListener('input', function(e) {
+  const query = e.target.value.toLowerCase();
+  document.querySelectorAll('#screen-receipts .receipt-card').forEach(card => {
+    const vendor = card.querySelector('.receipt-vendor').textContent.toLowerCase();
+    card.style.display = vendor.includes(query) ? 'flex' : 'none';
+  });
+});
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+
+// Initialize usage stats
+updateUsageStats();
+</script>
+
+</body>
+</html>
