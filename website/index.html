@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReceiptSnap — AI Receipt Scanner for Freelancers</title>
+    <meta name="description" content="Stop losing tax deductions. Snap a photo of any business receipt and ReceiptSnap's AI categorizes it by IRS Schedule C rules. 50 receipts free.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+            position: relative;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 30%, rgba(0,122,255,0.15) 0%, transparent 70%);
+        }
+        .hero-content { position: relative; z-index: 1; max-width: 700px; }
+        .hero h1 { font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+        .hero .highlight { color: #007AFF; }
+        .hero .subtitle { font-size: clamp(1.1rem, 3vw, 1.5rem); opacity: 0.85; margin-bottom: 2rem; }
+        .cta-button {
+            display: inline-block;
+            background: #007AFF;
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: 100px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cta-button:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,122,255,0.5); }
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .feature {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: border-color 0.2s;
+        }
+        .feature:hover { border-color: rgba(0,122,255,0.5); }
+        .feature .icon { font-size: 2rem; margin-bottom: 1rem; }
+        .feature h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: #007AFF; }
+        .feature p { opacity: 0.7; font-size: 0.95rem; }
+        .pricing {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, transparent 0%, rgba(0,122,255,0.05) 50%, transparent 100%);
+        }
+        .pricing h2 { font-size: 2.5rem; margin-bottom: 3rem; }
+        .pricing-cards {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            flex: 1;
+            min-width: 250px;
+        }
+        .pricing-card.pro { border-color: #007AFF; background: rgba(0,122,255,0.08); }
+        .pricing-card h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+        .pricing-card .price { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; }
+        .pricing-card .price span { font-size: 1rem; opacity: 0.5; font-weight: 400; }
+        .pricing-card ul { list-style: none; text-align: left; margin: 1.5rem 0; }
+        .pricing-card ul li { padding: 0.4rem 0; opacity: 0.7; font-size: 0.9rem; }
+        .pricing-card ul li::before { content: '✓ '; color: #34C759; }
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            opacity: 0.4;
+            font-size: 0.85rem;
+        }
+        .footer a { color: #007AFF; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <h1><span class="highlight">Snap</span> a receipt.<br>Save on <span class="highlight">taxes</span>.</h1>
+            <p class="subtitle">AI receipt scanner built for US freelancers.<br>Auto-categorized by IRS Schedule C rules. CPA-ready exports.</p>
+            <a href="#" class="cta-button">Coming to App Store</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+            <div class="icon">📸</div>
+            <h3>Instant Capture</h3>
+            <p>App opens to camera. One tap. No menus, no friction. Snap a receipt in under 2 seconds.</p>
+        </div>
+        <div class="feature">
+            <div class="icon">🤖</div>
+            <h3>AI-Powered OCR</h3>
+            <p>Extracts vendor, amount, date from any receipt. Auto-assigns the right IRS tax category.</p>
+        </div>
+        <div class="feature">
+            <div class="icon">📊</div>
+            <h3>Smart Dashboard</h3>
+            <p>"THIS MONTH: 23 receipts · $847.50 in deductions." See your tax savings in real time.</p>
+        </div>
+        <div class="feature">
+            <div class="icon">📤</div>
+            <h3>CPA-Ready Export</h3>
+            <p>One-tap PDF or CSV. Formatted. Categorized. Hand it to your accountant at tax time.</p>
+        </div>
+        <div class="feature">
+            <div class="icon">🔒</div>
+            <h3>100% On-Device</h3>
+            <p>All receipt data stays on your phone. No server. No cloud. Your data is yours.</p>
+        </div>
+        <div class="feature">
+            <div class="icon">🌓</div>
+            <h3>Dark Mode</h3>
+            <p>Full light and dark theme. Follows your system preference automatically.</p>
+        </div>
+    </section>
+
+    <section class="pricing">
+        <h2>Simple Pricing</h2>
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span>/forever</span></div>
+                <ul>
+                    <li>50 receipts free</li>
+                    <li>AI-powered OCR</li>
+                    <li>IRS Schedule C categories</li>
+                    <li>PDF & CSV export</li>
+                </ul>
+            </div>
+            <div class="pricing-card pro">
+                <h3>Pro</h3>
+                <div class="price">$4.99<span>/mo</span></div>
+                <ul>
+                    <li>Unlimited receipts</li>
+                    <li>Everything in Free</li>
+                    <li>Priority support</li>
+                    <li>$39.99/year (save 33%)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>ReceiptSnap © 2026 · <a href="privacy">Privacy Policy</a> · <a href="terms">Terms</a> · Built for freelancers, by freelancers 🧾</p>
+    </footer>
+</body>
+</html>
