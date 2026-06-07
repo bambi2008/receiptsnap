@@ -6,6 +6,7 @@ import '../providers/receipt_provider.dart';
 import '../providers/subscription_provider.dart';
 import '../config/categories.dart';
 import '../models/receipt.dart';
+import '../services/ocr_service.dart';
 import '../widgets/result_sheet.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -70,54 +71,68 @@ class _CameraScreenState extends State<CameraScreen> {
   Future<void> _processImage(String imagePath) async {
     setState(() => _isProcessing = true);
 
-    // Simulate OCR processing (real OCR via ML Kit in production)
-    await Future.delayed(const Duration(milliseconds: 1200));
+    try {
+      // Real OCR via Apple Vision framework
+      final ocr = await OcrService.recognizeText(imagePath);
 
-    // For demo: generate placeholder extraction
-    final extracted = _simulateOcr();
+      if (!mounted) return;
 
-    if (mounted) {
       setState(() => _isProcessing = false);
+
       final result = await showModalBottomSheet<Receipt>(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (_) => ResultSheet(
           imagePath: imagePath,
-          vendorName: extracted['vendor']!,
-          amount: extracted['amount']!,
-          category: extracted['category']!,
-          date: extracted['date']!,
+          vendorName: ocr.vendor.isNotEmpty ? ocr.vendor : 'Unknown Vendor',
+          amount: ocr.total ?? 0.0,
+          category: ocr.category,
+          date: ocr.date != null ? DateTime.tryParse(ocr.date) ?? DateTime.now() : DateTime.now(),
         ),
       );
 
       if (result != null && mounted) {
         await context.read<ReceiptProvider>().addReceipt(result);
+        context.read<SubscriptionProvider>().incrementReceiptCount();
         HapticFeedback.mediumImpact();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Receipt saved! ✓'),
-              duration: Duration(seconds: 1),
+            SnackBar(
+              content: Text(
+                'Receipt saved! ✓  (confidence: ${(ocr.confidence * 100).toStringAsFixed(0)}%)',
+              ),
+              duration: const Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
             ),
           );
         }
       }
+    } on OcrException catch (e) {
+      if (!mounted) return;
+      setState(() => _isProcessing = false);
+      _showOcrError(e.message);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isProcessing = false);
+      _showOcrError(e.toString());
     }
   }
 
-  Map<String, dynamic> _simulateOcr() {
-    final vendors = ['Starbucks', 'Adobe Creative Cloud', 'WeWork', 'Uber', 'Verizon'];
-    final amounts = [4.75, 59.99, 29.00, 18.50, 89.99];
-    final idx = DateTime.now().millisecond % vendors.length;
-    final vendor = vendors[idx];
-    return {
-      'vendor': vendor,
-      'amount': amounts[idx],
-      'category': guessCategory(vendor),
-      'date': DateTime.now(),
-    };
+  void _showOcrError(String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('OCR Failed'),
+        content: Text('Could not read the receipt. Please try again with better lighting.\n\n$message'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showUpgradePrompt() {
