@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:receiptsnap/config/categories.dart';
-import 'package:receiptsnap/config/theme.dart';
 
 void main() {
   group('ReceiptCategory', () {

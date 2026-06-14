@@ -11,4 +11,8 @@ class AppConstants {
   static const String onboardingKey = 'has_onboarded';
   static const String subscriptionKey = 'is_pro';
   static const String receiptCountKey = 'receipt_count';
+
+  // StoreKit product IDs
+  static const String proMonthlyId = 'com.receiptsnap.pro.monthly';
+  static const String proAnnualId = 'com.receiptsnap.pro.annual';
 }

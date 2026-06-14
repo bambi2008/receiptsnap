@@ -149,7 +149,8 @@ class _PaywallSheetState extends State<PaywallSheet> {
   }
 
   void _subscribe() {
-    context.read<SubscriptionProvider>().upgradeToPro();
+    final productId = _isAnnual ? AppConstants.proAnnualId : AppConstants.proMonthlyId;
+    context.read<SubscriptionProvider>().purchase(productId);
     Navigator.pop(context);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(

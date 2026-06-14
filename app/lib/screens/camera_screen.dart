@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../providers/receipt_provider.dart';
 import '../providers/subscription_provider.dart';
-import '../config/categories.dart';
 import '../models/receipt.dart';
 import '../services/ocr_service.dart';
 import '../widgets/result_sheet.dart';
@@ -88,7 +87,7 @@ class _CameraScreenState extends State<CameraScreen> {
           vendorName: ocr.vendor.isNotEmpty ? ocr.vendor : 'Unknown Vendor',
           amount: ocr.total ?? 0.0,
           category: ocr.category,
-          date: ocr.date != null ? DateTime.tryParse(ocr.date) ?? DateTime.now() : DateTime.now(),
+          date: ocr.date != null ? DateTime.tryParse(ocr.date!) ?? DateTime.now() : DateTime.now(),
         ),
       );
 
