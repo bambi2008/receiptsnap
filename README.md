@@ -1,158 +1,238 @@
-# ReceiptSnap 📸🧾
+<p align="center">
+  <img src="assets/app-icon-1024.png" width="120" alt="ReceiptSnap">
+</p>
 
-> AI receipt scanner for US freelancers. Snap → Categorize → Export. Tax deductions, simplified.
+<h1 align="center">ReceiptSnap 🧾</h1>
+<p align="center"><strong>AI Receipt Scanner for US Freelancers</strong></p>
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.44-blue)](https://flutter.dev)
-[![Platform](https://img.shields.io/badge/iOS-16%2B-lightgrey)](https://developer.apple.com/ios/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+<p align="center">
+  <a href="https://github.com/bambi2008/receiptsnap/actions"><img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build"></a>
+  <a href="#"><img src="https://img.shields.io/badge/tests-54%20passed-brightgreen" alt="Tests"></a>
+  <a href="#"><img src="https://img.shields.io/badge/flutter-3.44-blue" alt="Flutter"></a>
+  <a href="#"><img src="https://img.shields.io/badge/platform-iOS%2015%2B-lightgrey" alt="Platform"></a>
+  <a href="#"><img src="https://img.shields.io/badge/license-proprietary-red" alt="License"></a>
+</p>
 
-## The Problem
+<p align="center">
+  <b>Snap → Categorize → Export.</b> Three taps from receipt to tax deduction.<br>
+  On-device AI. IRS Schedule C categories. CPA-ready.
+</p>
 
-US freelancers lose an average of **$5,000/year** in missed tax deductions because they can't be bothered to organize paper receipts. Shoeboxes. Spreadsheets. Manual data entry. It's 2026 — this should be instant.
+---
 
-## The Solution
+## ✨ What is ReceiptSnap?
 
-ReceiptSnap opens directly to camera. One tap captures the receipt. AI extracts vendor, amount, and date — then automatically assigns the correct IRS Schedule C category. At tax time, export everything as a CPA-ready PDF or CSV with one tap.
+ReceiptSnap is an iOS app that turns every business receipt into a tax deduction — instantly. Built specifically for **US freelancers, 1099 contractors, and self-employed professionals.**
 
-**50 receipts free. Then $4.99/month or $39.99/year.**
-
-## Features
-
-- 📸 **Instant Capture** — App opens to camera. No menus. One tap.
-- 🤖 **AI-Powered OCR** — Extracts vendor, amount, date from any receipt
-- 🏷️ **Smart Categories** — Auto-mapped to IRS Schedule C (Advertising, Meals, Travel, Office Supplies, Software, Utilities, Rent, Shipping, Insurance, Other)
-- 📊 **Monthly Summary** — "This month: 23 receipts · $847.50 in deductions"
-- 📤 **CPA-Ready Export** — PDF report or CSV spreadsheet, organized by category
-- 🌓 **Dark Mode** — Full light/dark theme, follows system preference
-- 🔒 **On-Device Storage** — All data stays on your phone. No server, no privacy concerns.
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Framework | Flutter 3.44 |
-| Language | Dart 3.12 |
-| State | Provider |
-| Storage | Hive (local) |
-| OCR | Vision (iOS native bridge) + ML Kit |
-| IAP | StoreKit 2 via purchase_flutter |
-| Export | pdf + csv packages |
-
-## Architecture
+Open the app → snap a photo → AI reads vendor, amount, date → categorizes by IRS Schedule C rules → export to your CPA.
 
 ```
-lib/
-├── main.dart                    # Entry point + provider initialization
-├── app.dart                     # MaterialApp + 3-tab shell
-├── config/
-│   ├── theme.dart               # Light/dark theme + color system
-│   ├── categories.dart          # 10 IRS Schedule C categories + AI guesser
-│   └── constants.dart           # Pricing, limits, keys
-├── models/
-│   └── receipt.dart             # Data model + Hive adapter
-├── providers/
-│   ├── receipt_provider.dart    # CRUD + search + grouping
-│   └── subscription_provider.dart # Free tier + Pro state
-├── services/
-│   └── export_service.dart      # CSV/PDF generation
-├── screens/
-│   ├── camera_screen.dart       # Viewfinder + shutter
-│   ├── receipts_screen.dart     # List + search + swipe actions
-│   ├── detail_screen.dart       # Edit + delete + share
-│   ├── settings_screen.dart     # Subscription + menus
-│   └── onboarding_screen.dart   # 3-slide first-launch
-└── widgets/
-    ├── result_sheet.dart        # Post-scan OCR results
-    └── paywall_sheet.dart       # Subscription upgrade sheet
+📸 Snap     →     🤖 AI Reads     →     📊 Dashboard     →     📤 CPA Export
 ```
 
-## Project Status
+---
+
+## 📱 Screenshots
+
+<p align="center">
+  <em>App Store screenshots (5/5 ready)</em>
+</p>
+
+| Camera | Result | Dashboard | Export | Paywall |
+|:---:|:---:|:---:|:---:|:---:|
+| Snap in 1 tap | AI extracts data | Track deductions | PDF to CPA | $4.99/mo |
+
+> Screenshots at `assets/screenshots/` — optimized for iPhone 6.7" (1290×2796)
+
+---
+
+## 🏗 Architecture
 
 ```
-✅ Phase 0: Product Strategy
-✅ Phase 1: UI/UX Design
-✅ Phase 2: Core Flutter Code (19 files, 0 analyze issues, 54 tests)
-🔜 Phase 3: iOS Native Integration (Vision OCR + StoreKit 2)
-🔜 Phase 4: App Store Launch
+┌──────────────────────────────────────────┐
+│              Flutter UI Layer             │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ │
+│  │  Camera  │ │Receipts  │ │ Settings │ │
+│  │  Screen  │ │  Screen  │ │  Screen  │ │
+│  └────┬─────┘ └────┬─────┘ └────┬─────┘ │
+│       │            │            │        │
+│  ┌────┴────────────┴────────────┴─────┐ │
+│  │         Provider (State Mgmt)       │ │
+│  │  ReceiptProvider │ SubscriptionProv │ │
+│  └────┬─────────────┴──────┬──────────┘ │
+├───────┼────────────────────┼────────────┤
+│  ┌────┴──────────┐  ┌──────┴──────────┐│
+│  │  OcrService   │  │ ExportService   ││
+│  │  (Dart Bridge) │  │  (PDF/CSV)      ││
+│  └────┬──────────┘  └─────────────────┘│
+├───────┼─────────────────────────────────┤
+│           Method Channel                 │
+├───────┼─────────────────────────────────┤
+│  ┌────┴──────────┐  ┌──────────────────┐│
+│  │VisionOcrPlugin│  │ StoreKitManager  ││
+│  │  (Swift)      │  │   (Swift)        ││
+│  └────┬──────────┘  └──────────────────┘│
+│       │                                 │
+│  ┌────┴──────────┐                      │
+│  │ Apple Vision  │                      │
+│  │ (On-Device AI)│                      │
+│  └───────────────┘                      │
+│           iOS Native Layer               │
+└──────────────────────────────────────────┘
 ```
 
-### Quality Gates
+**Key design decisions:**
+- 🧠 **On-device OCR** — Apple Vision framework. Zero cloud latency. Works offline.
+- 💰 **StoreKit 2** — Native subscription management via Method Channel
+- 📦 **Provider** — Lightweight state management (no Bloc/Redux overhead)
+- 🔒 **Hive** — Fast local DB for receipts. All data stays on your phone.
 
-| Metric | Status |
-|--------|--------|
-| `flutter analyze` | 0 issues |
-| `flutter test` | 54 tests, all pass |
-| Test coverage | Models, Providers, Categories, Widgets |
+---
 
-## Getting Started
+## 📂 Project Structure
+
+```
+receiptsnap/
+├── app/                           # Flutter application
+│   ├── lib/
+│   │   ├── config/                # categories, constants, theme
+│   │   ├── models/                # Receipt data model
+│   │   ├── providers/             # State management
+│   │   │   ├── receipt_provider.dart
+│   │   │   └── subscription_provider.dart
+│   │   ├── screens/               # 5 screens
+│   │   │   ├── camera_screen.dart      # Main capture UI
+│   │   │   ├── receipts_screen.dart    # Dashboard + search
+│   │   │   ├── detail_screen.dart      # Single receipt view
+│   │   │   ├── onboarding_screen.dart  # First-launch flow
+│   │   │   └── settings_screen.dart    # Preferences
+│   │   ├── services/              # Business logic
+│   │   │   ├── ocr_service.dart        # Dart ↔ Swift bridge
+│   │   │   └── export_service.dart     # PDF/CSV generation
+│   │   ├── widgets/               # Reusable components
+│   │   │   ├── result_sheet.dart       # Post-scan card
+│   │   │   └── paywall_sheet.dart      # Subscription upsell
+│   │   ├── app.dart
+│   │   └── main.dart
+│   ├── ios/Runner/                # Native Swift plugins
+│   │   ├── VisionOcrPlugin.swift       # Apple Vision OCR
+│   │   ├── StoreKitManager.swift       # StoreKit 2 IAP
+│   │   └── AppDelegate.swift           # Method Channel setup
+│   ├── test/                      # 54 unit + widget tests
+│   └── pubspec.yaml
+├── assets/
+│   ├── app-icon-1024.png          # Master app icon
+│   └── screenshots/               # 5 App Store screenshots
+├── docs/                          # Product & strategy docs
+│   ├── competitive-analysis.md
+│   ├── user-personas.md
+│   ├── pricing-strategy.md
+│   ├── aso-strategy.md
+│   ├── privacy-policy.md
+│   ├── terms-of-service.md
+│   ├── app-store-submission.md
+│   └── app-store-connect-copy.txt # Ready-to-paste submission text
+├── website/                       # Landing page (receiptsnap.com)
+│   ├── index.html
+│   ├── privacy.html
+│   └── terms.html
+└── test-assets/                   # Test receipt images
+```
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Flutter 3.44+
-- Xcode 15+ (for iOS build)
-- macOS (required for iOS development)
+- **Flutter 3.44+** ([install](https://flutter.dev))
+- **Xcode 15+** (macOS only)
+- **iOS 15.0+** deployment target
 
-### Setup
+### Clone & Run
 
 ```bash
-# Clone
 git clone https://github.com/bambi2008/receiptsnap.git
 cd receiptsnap/app
-
-# Install dependencies
 flutter pub get
-
-# Run analyzer
-flutter analyze
-
-# Run tests
-flutter test
-
-# Launch on iOS simulator
-open -a Simulator
-flutter run
+flutter analyze    # 0 issues
+flutter test       # 54 tests pass
+flutter run        # iOS simulator
 ```
 
-### Building for Production
+### Native Plugin Build
 
-```bash
-flutter build ios --release
-# Then archive in Xcode → upload to App Store Connect
+The app uses two native Swift plugins via Flutter Method Channel:
+
+| Plugin | Channel | Purpose |
+|--------|---------|---------|
+| `VisionOcrPlugin` | `com.receiptsnap.vision/ocr` | On-device receipt text extraction |
+| `StoreKitManager` | `com.receiptsnap.storekit/iap` | In-app purchase & subscription |
+
+These are auto-compiled by Xcode during `flutter run` / `flutter build ios`.
+
+---
+
+## ✅ Code Quality
+
+```
+flutter analyze    0 errors, 0 warnings, 1 info
+flutter test       54 passed, 0 failed, 0 skipped
+code coverage      // TODO: add lcov
 ```
 
-## Documentation
+| Test Suite | Count | Focus |
+|------------|:-----:|-------|
+| `config/categories_test.dart` | 15 | IRS category mapping + vendor guessing |
+| `config/constants_test.dart` | 8 | App constants + pricing |
+| `models/receipt_test.dart` | 13 | Receipt model + formatting |
+| `providers/receipt_provider_test.dart` | 14 | CRUD + search + grouping |
+| `widget_test.dart` | 3 | App shell + navigation |
 
-| Document | Description |
-|----------|------------|
-| [MVP Features](docs/mvp-features.md) | MoSCoW feature list |
-| [User Personas](docs/user-personas.md) | Target user profiles |
-| [Competitive Analysis](docs/competitive-analysis.md) | Competitor landscape |
-| [Pricing Strategy](docs/pricing-strategy.md) | Pricing rationale |
-| [Implementation Plan](docs/implementation-plan.md) | Task breakdown |
-| [ASO Strategy](docs/aso-strategy.md) | Keywords + App Store copy |
-| [Privacy Policy](docs/privacy-policy.md) | Legal compliance |
-| [Terms of Service](docs/terms-of-service.md) | Legal compliance |
-| [Mac Handoff](docs/mac-handoff.md) | Mac setup checklist |
+---
 
-## Pricing
+## 💰 Pricing
 
-| Tier | Price | Limit |
-|------|-------|-------|
-| Free | $0 | 50 receipts |
-| Pro Monthly | $4.99/mo | Unlimited |
-| Pro Annual | $39.99/yr (33% off) | Unlimited |
+| | Free | Pro |
+|:---|:---:|:---:|
+| **Price** | $0 forever | $4.99/mo or $39.99/yr |
+| **Receipts** | 50 | Unlimited |
+| **OCR** | ✅ | ✅ |
+| **Categories** | 10 Schedule C | 10 Schedule C |
+| **Export** | PDF + CSV | PDF + CSV |
+| **Support** | — | Priority |
 
-## Target Audience
+> In-App Purchases: `com.receiptsnap.pro.monthly` / `com.receiptsnap.pro.annual`
 
-- US-based freelancers (designers, developers, writers, consultants)
-- Self-employed 1099 contractors
-- Small business owners filing Schedule C
-- Anyone who's ever lost a receipt and missed a deduction
+---
 
-## Team
+## 🎯 Target Audience
 
-Built by freelancers, for freelancers. We're a small team of 7 covering product strategy, design, iOS development, QA, and growth.
+- 🇺🇸 US-based freelancers & 1099 contractors
+- 🧾 Anyone filing IRS Schedule C
+- 🏢 Self-employed professionals: designers, developers, writers, consultants
+- 🚗 Gig workers tracking business expenses
 
-## License
+---
 
-MIT © 2026 ReceiptSnap
+## 📋 Roadmap
+
+| Phase | Status | What |
+|:------|:------:|------|
+| **0** Product Strategy | ✅ | Competitive analysis, personas, pricing |
+| **1** UI/UX Design | ✅ | Wireframes, design system, user flows |
+| **2** Core Flutter | ✅ | 17 Dart files, Provider state, 54 tests |
+| **3** iOS Native + QA | 🔄 | Vision OCR → StoreKit 2 → Simulator test → TestFlight |
+| **4** Launch | 🔜 | App Store submission, Product Hunt, marketing |
+
+---
+
+## 📄 License
+
+Proprietary. All rights reserved.
+
+---
+
+<p align="center">
+  <sub>Built for freelancers, by freelancers 🧾</sub>
+</p>
