@@ -6,7 +6,7 @@
 <p align="center"><strong>AI Receipt Scanner for US Freelancers</strong></p>
 
 <p align="center">
-  <a href="https://github.com/bambi2008/receiptsnap/actions"><img src="https://img.shields.io/badge/build-passing-brightgreen" alt="Build"></a>
+  <a href="https://github.com/bambi2008/receiptsnap/actions"><img src="https://github.com/bambi2008/receiptsnap/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="#"><img src="https://img.shields.io/badge/tests-54%20passed-brightgreen" alt="Tests"></a>
   <a href="#"><img src="https://img.shields.io/badge/flutter-3.44-blue" alt="Flutter"></a>
   <a href="#"><img src="https://img.shields.io/badge/platform-iOS%2015%2B-lightgrey" alt="Platform"></a>
