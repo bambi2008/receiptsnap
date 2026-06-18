@@ -105,7 +105,7 @@ class SettingsScreen extends StatelessWidget {
           const Center(
             child: Column(
               children: [
-                Text('ReceiptSnap v1.0.0', style: TextStyle(color: AppTheme.textTertiary, fontSize: 13)),
+                Text('SnapDeduct v1.0.0', style: TextStyle(color: AppTheme.textTertiary, fontSize: 13)),
                 SizedBox(height: 4),
                 Text('Made with ❤️ for freelancers', style: TextStyle(color: AppTheme.textTertiary, fontSize: 13)),
               ],

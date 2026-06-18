@@ -7,8 +7,8 @@ import StoreKit
 class StoreKitManager: NSObject, FlutterPlugin {
 
     // Product IDs matching App Store Connect configuration
-    private static let monthlyId = "com.receiptsnap.pro.monthly"
-    private static let annualId  = "com.receiptsnap.pro.annual"
+    private static let monthlyId = "com.snapdeduct.pro.monthly"
+    private static let annualId  = "com.snapdeduct.pro.annual"
 
     static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(

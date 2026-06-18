@@ -3,8 +3,8 @@ import 'package:receiptsnap/config/constants.dart';
 
 void main() {
   group('AppConstants', () {
-    test('appName is ReceiptSnap', () {
-      expect(AppConstants.appName, 'ReceiptSnap');
+    test('appName is SnapDeduct', () {
+      expect(AppConstants.appName, 'SnapDeduct');
     });
 
     test('freeReceiptLimit is 50', () {

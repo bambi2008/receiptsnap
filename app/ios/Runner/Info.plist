@@ -4,10 +4,14 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>SnapDeduct needs camera access to scan your receipts.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>SnapDeduct needs photo library access to import existing receipt images.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Receiptsnap</string>
+	<string>SnapDeduct</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

@@ -31,7 +31,7 @@ class IapProduct {
 
 /// Manages subscription state via native StoreKit 2 plugin.
 class SubscriptionProvider extends ChangeNotifier {
-  static const _channel = MethodChannel('com.receiptsnap.storekit/iap');
+  static const _channel = MethodChannel('com.snapdeduct.storekit/iap');
 
   bool _isPro = false;
   int _receiptCount = 0;
@@ -99,14 +99,14 @@ class SubscriptionProvider extends ChangeNotifier {
       // No StoreKit — show local fallback pricing
       _products = [
         IapProduct(
-          id: 'com.receiptsnap.pro.monthly',
+          id: 'com.snapdeduct.pro.monthly',
           displayName: 'Pro Monthly',
           description: 'Unlimited scans, export, categories',
           price: 4.99,
           displayPrice: r'$4.99',
         ),
         IapProduct(
-          id: 'com.receiptsnap.pro.annual',
+          id: 'com.snapdeduct.pro.annual',
           displayName: 'Pro Annual',
           description: 'All Pro features, best value',
           price: 39.99,

@@ -71,46 +71,38 @@ class _CameraScreenState extends State<CameraScreen> {
     setState(() => _isProcessing = true);
 
     try {
-      // Real OCR via Apple Vision framework
-      final ocr = await OcrService.recognizeText(imagePath);
+      final ocrResult = await OcrService.processImage(imagePath);
 
-      if (!mounted) return;
+      if (mounted) {
+        setState(() => _isProcessing = false);
+        final result = await showModalBottomSheet<Receipt>(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (_) => ResultSheet(
+            imagePath: imagePath,
+            vendorName: ocrResult.vendorName,
+            amount: ocrResult.amount,
+            category: ocrResult.category,
+            date: ocrResult.date ?? DateTime.now(),
+          ),
+        );
 
-      setState(() => _isProcessing = false);
-
-      final result = await showModalBottomSheet<Receipt>(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (_) => ResultSheet(
-          imagePath: imagePath,
-          vendorName: ocr.vendor.isNotEmpty ? ocr.vendor : 'Unknown Vendor',
-          amount: ocr.total ?? 0.0,
-          category: ocr.category,
-          date: ocr.date != null ? DateTime.tryParse(ocr.date!) ?? DateTime.now() : DateTime.now(),
-        ),
-      );
-
-      if (result != null && mounted) {
-        await context.read<ReceiptProvider>().addReceipt(result);
-        context.read<SubscriptionProvider>().incrementReceiptCount();
-        HapticFeedback.mediumImpact();
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Receipt saved! ✓  (confidence: ${(ocr.confidence * 100).toStringAsFixed(0)}%)',
+        if (result != null && mounted) {
+          await context.read<ReceiptProvider>().addReceipt(result);
+          context.read<SubscriptionProvider>().incrementReceiptCount();
+          HapticFeedback.mediumImpact();
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Receipt saved! ✓'),
+                duration: Duration(seconds: 2),
+                behavior: SnackBarBehavior.floating,
               ),
-              duration: const Duration(seconds: 2),
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+            );
+          }
         }
       }
-    } on OcrException catch (e) {
-      if (!mounted) return;
-      setState(() => _isProcessing = false);
-      _showOcrError(e.message);
     } catch (e) {
       if (!mounted) return;
       setState(() => _isProcessing = false);

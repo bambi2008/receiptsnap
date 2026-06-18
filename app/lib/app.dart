@@ -7,8 +7,8 @@ import 'screens/receipts_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/onboarding_screen.dart';
 
-class ReceiptSnapApp extends StatelessWidget {
-  const ReceiptSnapApp({super.key});
+class SnapDeductApp extends StatelessWidget {
+  const SnapDeductApp({super.key});
 
   @override
   Widget build(BuildContext context) {

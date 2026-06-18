@@ -18,7 +18,7 @@ class ExportService {
       ];
       final csv = const ListToCsvConverter().convert(rows);
       final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/receiptsnap_export.csv');
+      final file = File('${dir.path}/snapdeduct_export.csv');
       await file.writeAsString(csv);
       return file.path;
     } catch (e) {
@@ -56,7 +56,7 @@ class ExportService {
       buf.writeln('TOTAL: \$${total.toStringAsFixed(2)}');
 
       final dir = await getTemporaryDirectory();
-      final file = File('${dir.path}/receiptsnap_report.txt');
+      final file = File('${dir.path}/snapdeduct_report.txt');
       await file.writeAsString(buf.toString());
       return file.path;
     } catch (e) {

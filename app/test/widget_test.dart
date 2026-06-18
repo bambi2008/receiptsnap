@@ -29,7 +29,7 @@ void main() {
           ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
           ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
         ],
-        child: const ReceiptSnapApp(),
+        child: const SnapDeductApp(),
       ),
     );
     await tester.pumpAndSettle();
@@ -43,7 +43,7 @@ void main() {
           ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
           ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
         ],
-        child: const ReceiptSnapApp(),
+        child: const SnapDeductApp(),
       ),
     );
     await tester.pumpAndSettle();
@@ -60,7 +60,7 @@ void main() {
           ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
           ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
         ],
-        child: const ReceiptSnapApp(),
+        child: const SnapDeductApp(),
       ),
     );
     await tester.pumpAndSettle();

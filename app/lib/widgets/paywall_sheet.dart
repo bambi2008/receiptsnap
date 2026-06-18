@@ -37,7 +37,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
           // Icon + title
           const Icon(Icons.auto_awesome, size: 40, color: AppTheme.blue),
           const SizedBox(height: 12),
-          const Text('ReceiptSnap Pro', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          const Text('SnapDeduct Pro', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           const Text('Everything you need for tax-ready receipts',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 15), textAlign: TextAlign.center),

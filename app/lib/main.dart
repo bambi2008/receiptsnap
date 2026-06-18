@@ -19,7 +19,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
         ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
       ],
-      child: const ReceiptSnapApp(),
+      child: const SnapDeductApp(),
     ),
   );
 }
