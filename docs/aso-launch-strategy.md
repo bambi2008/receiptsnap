@@ -10,15 +10,15 @@
 
 ## App Name (30 char max)
 ```
-SnapDeduct: Receipt Scanner
+SnapDeduct: Tax Savings Tracker
 ```
-*(27 chars — brand + top keyword)*
+*(29 chars — repositions from "scanner" to ongoing value)*
 
 ## Subtitle (30 char max)
 ```
-Tax write-offs made simple
+See your tax savings grow
 ```
-*(26 chars — emotional + keyword "tax write-offs")*
+*(25 chars — monthly habit hook)*
 
 **Alternate subtitle options to A/B test:**
 - `Snap receipts, save on taxes` (28)
@@ -96,7 +96,8 @@ Receipts are stored on your device. We never sell your data. No bank account lin
 
 PRICING
 • Free: Scan up to 50 receipts — no credit card, no time limit
-• Pro: $4.99/month or $39.99/year for unlimited scans, PDF & CSV export, and priority support
+• Pro Annual: $39.99/year ($3.33/month) — best value, save 52% vs monthly
+• Pro Monthly: $6.99/month — full access, cancel anytime
 
 Start with 50 free receipts today. See how much you've been missing.
 

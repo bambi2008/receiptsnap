@@ -69,7 +69,8 @@ class _PaywallSheetState extends State<PaywallSheet> {
                 'Annual',
                 '\$${(AppConstants.annualPrice / 12).toStringAsFixed(2)}/mo',
                 _isAnnual,
-                saveBadge: 'Save 33%',
+                saveBadge: 'Save 52%',
+                isBestValue: true,
               )),
             ],
           ),
@@ -109,15 +110,15 @@ class _PaywallSheetState extends State<PaywallSheet> {
     'Priority support',
   ];
 
-  Widget _buildPlanOption(String label, String price, bool selected, {String? saveBadge}) {
+  Widget _buildPlanOption(String label, String price, bool selected, {String? saveBadge, bool isBestValue = false}) {
     return GestureDetector(
       onTap: () => setState(() => _isAnnual = label == 'Annual'),
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          border: Border.all(color: selected ? AppTheme.blue : AppTheme.separator, width: selected ? 2 : 1),
+          border: Border.all(color: selected ? AppTheme.blue : isBestValue ? AppTheme.blue.withValues(alpha: 0.3) : AppTheme.separator, width: selected ? 2 : 1),
           borderRadius: BorderRadius.circular(12),
-          color: selected ? AppTheme.blue.withValues(alpha: 0.05) : null,
+          color: selected ? AppTheme.blue.withValues(alpha: 0.05) : isBestValue ? AppTheme.blue.withValues(alpha: 0.02) : null,
         ),
         child: Stack(
           clipBehavior: Clip.none,
@@ -127,6 +128,17 @@ class _PaywallSheetState extends State<PaywallSheet> {
                 Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                 const SizedBox(height: 4),
                 Text(price, style: TextStyle(color: selected ? AppTheme.blue : AppTheme.textSecondary, fontSize: 16, fontWeight: FontWeight.w600)),
+                if (isBestValue) ...[
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: AppTheme.green.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text('BEST VALUE', style: TextStyle(color: AppTheme.green, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+                  ),
+                ],
               ],
             ),
             if (saveBadge != null)

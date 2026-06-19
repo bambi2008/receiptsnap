@@ -1,7 +1,7 @@
 class AppConstants {
   static const String appName = 'SnapDeduct';
   static const int freeReceiptLimit = 50;
-  static const double monthlyPrice = 4.99;
+  static const double monthlyPrice = 6.99;
   static const double annualPrice = 39.99;
   static const String appVersion = '1.0.0';
   static const String privacyUrl = 'https://snapdeduct.com/privacy';
