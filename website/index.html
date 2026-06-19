@@ -192,13 +192,14 @@
       const email = document.getElementById(emailId).value.trim();
       if(!email || !email.includes('@')) return;
 
-      // === FAKE DOOR TEST TRACKING ===
-      // In production, POST to Formspree / Mailchimp / your backend:
-      //   fetch('https://formspree.io/f/YOUR_ID', {method:'POST', body: JSON.stringify({email}), headers:{'Content-Type':'application/json'}})
-      // For now, store locally + log for demo
-      const signups = JSON.parse(localStorage.getItem('snapdeduct_emails') || '[]');
-      signups.push({email, ts: new Date().toISOString()});
-      localStorage.setItem('snapdeduct_emails', JSON.stringify(signups));
+      // === REAL EMAIL CAPTURE via Formspree ===
+      fetch('https://formspree.io/f/xqeorkzo', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify({email: email, source: 'snapdeduct-landing'})
+      }).catch(function(err){ console.error('Signup error:', err); });
+
+      // Local counter (visual social proof only)
       localStorage.setItem(COUNT_KEY, getCount() + 1);
 
       // Analytics event (wire to Plausible/GA in production)
