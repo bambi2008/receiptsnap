@@ -16,22 +16,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final _slides = [
     {
-      'icon': Icons.savings_outlined,
-      'iconColor': AppTheme.green,
-      'title': 'Stop losing tax deductions',
-      'subtitle': 'Every crumpled receipt is money left on the table. Scan and track every business expense effortlessly.',
+      'icon': Icons.warning_amber_rounded,
+      'iconColor': AppTheme.red,
+      'title': 'Don\'t let the IRS\nsurprise you',
+      'subtitle': 'A freelancer got fined \$8,000 because TurboTax never told them about quarterly taxes. We make sure you never learn this the hard way.',
     },
     {
-      'icon': Icons.camera_alt_outlined,
+      'icon': Icons.lightbulb_outline,
       'iconColor': AppTheme.blue,
-      'title': 'Snap a receipt.\nWe handle the rest.',
-      'subtitle': 'AI automatically extracts vendor, amount, and category. Identify every tax deduction in seconds.',
+      'title': 'Know what you can\ndeduct, and when',
+      'subtitle': 'Snap receipts, get quarterly tax reminders, and discover deductions your CPA hasn\'t told you about.',
     },
     {
-      'icon': Icons.auto_awesome,
-      'iconColor': AppTheme.purple,
-      'title': 'Try 50 receipts free.',
-      'subtitle': 'No credit card required. Upgrade to Pro anytime for unlimited scans and premium export.',
+      'icon': Icons.shield_outlined,
+      'iconColor': AppTheme.green,
+      'title': 'Your tax safety net.\n\$3/month.',
+      'subtitle': '50 receipts free. Pro: \$39.99/year — less than the penalty for one missed quarterly payment.',
     },
   ];
 

@@ -37,9 +37,9 @@ class _PaywallSheetState extends State<PaywallSheet> {
           // Icon + title
           const Icon(Icons.auto_awesome, size: 40, color: AppTheme.blue),
           const SizedBox(height: 12),
-          const Text('SnapDeduct Pro', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          const Text('Protect yourself from IRS surprises', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          const Text('Everything you need for tax-ready receipts',
+          const Text('Quarterly tax reminders · deduction discovery · CPA-ready reports',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 15), textAlign: TextAlign.center),
           const SizedBox(height: 24),
 
@@ -104,9 +104,10 @@ class _PaywallSheetState extends State<PaywallSheet> {
   }
 
   static const _features = [
+    'Quarterly tax reminders',
     'Unlimited receipt scans',
+    'Deduction discovery tips',
     'CSV & PDF export',
-    'Schedule C categories',
     'Priority support',
   ];
 
