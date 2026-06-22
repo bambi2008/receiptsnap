@@ -89,8 +89,10 @@ class _CameraScreenState extends State<CameraScreen> {
         );
 
         if (result != null && mounted) {
-          await context.read<ReceiptProvider>().addReceipt(result);
-          context.read<SubscriptionProvider>().incrementReceiptCount();
+          final receiptProvider = context.read<ReceiptProvider>();
+          final subscriptionProvider = context.read<SubscriptionProvider>();
+          await receiptProvider.addReceipt(result);
+          subscriptionProvider.incrementReceiptCount();
           HapticFeedback.mediumImpact();
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -111,22 +113,6 @@ class _CameraScreenState extends State<CameraScreen> {
         );
       }
     }
-  }
-
-  void _showOcrError(String message) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('OCR Failed'),
-        content: Text('Could not read the receipt. Please try again with better lighting.\n\n$message'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   void _showUpgradePrompt() {
