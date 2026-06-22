@@ -104,9 +104,12 @@ class _CameraScreenState extends State<CameraScreen> {
         }
       }
     } catch (e) {
-      if (!mounted) return;
-      setState(() => _isProcessing = false);
-      _showOcrError(e.toString());
+      if (mounted) {
+        setState(() => _isProcessing = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to process image: $e')),
+        );
+      }
     }
   }
 
