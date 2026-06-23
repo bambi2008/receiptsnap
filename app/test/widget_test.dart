@@ -6,6 +6,7 @@ import 'package:receiptsnap/app.dart';
 import 'package:receiptsnap/models/receipt.dart';
 import 'package:receiptsnap/providers/receipt_provider.dart';
 import 'package:receiptsnap/providers/subscription_provider.dart';
+import 'package:receiptsnap/providers/insights_provider.dart';
 
 void main() {
   setUp(() async {
@@ -22,52 +23,42 @@ void main() {
     await Hive.deleteFromDisk();
   });
 
-  testWidgets('app builds and shows camera tab', (tester) async {
-    await tester.pumpWidget(
-      MultiProvider(
+  Widget buildApp() => MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
           ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
+          ChangeNotifierProvider(create: (_) => InsightsProvider()..init()),
         ],
         child: const SnapDeductApp(),
-      ),
-    );
+      );
+
+  testWidgets('app builds and shows home tab', (tester) async {
+    await tester.pumpWidget(buildApp());
     await tester.pumpAndSettle();
     expect(find.byType(BottomNavigationBar), findsOneWidget);
   });
 
-  testWidgets('app has 3 navigation tabs', (tester) async {
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
-          ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
-        ],
-        child: const SnapDeductApp(),
-      ),
-    );
+  testWidgets('app has 4 navigation tabs', (tester) async {
+    await tester.pumpWidget(buildApp());
     await tester.pumpAndSettle();
 
+    expect(find.text('Home'), findsOneWidget);
     expect(find.text('Camera'), findsOneWidget);
     expect(find.text('Receipts'), findsOneWidget);
     expect(find.text('More'), findsOneWidget);
   });
 
   testWidgets('tapping tabs switches content', (tester) async {
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
-          ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
-        ],
-        child: const SnapDeductApp(),
-      ),
-    );
+    await tester.pumpWidget(buildApp());
     await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Camera'));
+    await tester.pumpAndSettle();
+    expect(find.text('Position receipt in frame'), findsOneWidget);
 
     await tester.tap(find.text('Receipts'));
     await tester.pumpAndSettle();
-    expect(find.text('No receipts yet'), findsOneWidget);
+    expect(find.text('THIS MONTH'), findsOneWidget);
 
     await tester.tap(find.text('More'));
     await tester.pumpAndSettle();

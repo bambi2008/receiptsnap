@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'config/theme.dart';
 import 'config/constants.dart';
+import 'screens/dashboard_screen.dart';
 import 'screens/camera_screen.dart';
 import 'screens/receipts_screen.dart';
 import 'screens/settings_screen.dart';
@@ -60,6 +61,7 @@ class _AppShellState extends State<AppShell> {
     }
 
     final screens = const [
+      DashboardScreen(),
       CameraScreen(),
       ReceiptsScreen(),
       SettingsScreen(),
@@ -74,6 +76,11 @@ class _AppShellState extends State<AppShell> {
         currentIndex: _currentIndex,
         onTap: (i) => setState(() => _currentIndex = i),
         items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard_outlined),
+            activeIcon: Icon(Icons.dashboard),
+            label: 'Home',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt_outlined),
             activeIcon: Icon(Icons.camera_alt),

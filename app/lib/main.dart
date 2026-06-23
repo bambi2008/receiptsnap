@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'models/receipt.dart';
 import 'providers/receipt_provider.dart';
 import 'providers/subscription_provider.dart';
+import 'providers/insights_provider.dart';
 import 'app.dart';
 
 void main() async {
@@ -18,6 +19,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
         ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
+        ChangeNotifierProvider(create: (_) => InsightsProvider()..init()),
       ],
       child: const SnapDeductApp(),
     ),
