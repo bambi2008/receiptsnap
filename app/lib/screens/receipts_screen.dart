@@ -33,16 +33,18 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.bg,
       appBar: AppBar(title: const Text('Receipts')),
-      body: receipts.isEmpty
-          ? _buildEmptyState()
-          : ListView(
-              children: [
-                _buildSummaryCard(provider),
-                _buildSearchBar(),
-                ...grouped.entries.map((e) => _buildMonthSection(e.key, e.value)),
-                const SizedBox(height: 80),
-              ],
-            ),
+      body: Column(
+        children: [
+          _buildSummaryCard(provider),
+          if (receipts.isEmpty)
+            _buildEmptyState()
+          else ...[
+            _buildSearchBar(),
+            ...grouped.entries.map((e) => _buildMonthSection(e.key, e.value)),
+            const SizedBox(height: 80),
+          ],
+        ],
+      ),
     );
   }
 
