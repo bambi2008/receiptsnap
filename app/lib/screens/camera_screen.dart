@@ -89,8 +89,10 @@ class _CameraScreenState extends State<CameraScreen> {
         );
 
         if (result != null && mounted) {
-          await context.read<ReceiptProvider>().addReceipt(result);
-          context.read<SubscriptionProvider>().incrementReceiptCount();
+          final receiptProvider = context.read<ReceiptProvider>();
+          final subscriptionProvider = context.read<SubscriptionProvider>();
+          await receiptProvider.addReceipt(result);
+          subscriptionProvider.incrementReceiptCount();
           HapticFeedback.mediumImpact();
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(

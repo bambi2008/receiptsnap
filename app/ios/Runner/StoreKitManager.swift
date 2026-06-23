@@ -12,7 +12,7 @@ class StoreKitManager: NSObject, FlutterPlugin {
 
     static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(
-            name: "com.receiptsnap.storekit/iap",
+            name: "com.snapdeduct.storekit/iap",
             binaryMessenger: registrar.messenger()
         )
         let instance = StoreKitManager()

@@ -11,8 +11,8 @@ void main() {
       expect(AppConstants.freeReceiptLimit, 50);
     });
 
-    test('monthlyPrice is 4.99', () {
-      expect(AppConstants.monthlyPrice, 4.99);
+    test('monthlyPrice is 6.99', () {
+      expect(AppConstants.monthlyPrice, 6.99);
     });
 
     test('annualPrice gives ~33% discount vs monthly', () {
