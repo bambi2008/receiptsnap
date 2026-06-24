@@ -4,6 +4,7 @@ import '../providers/receipt_provider.dart';
 import '../providers/subscription_provider.dart';
 import '../providers/insights_provider.dart';
 import '../config/theme.dart';
+import '../services/mileage_log.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -67,12 +68,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             icon: Icons.directions_car,
             iconColor: AppTheme.orange,
             title: 'Mileage Tracking',
-            subtitle: insights.mileageEnabled
-                ? '~${insights.mileageEstimate} mi/mo · \$${insights.mileageValue.toStringAsFixed(0)}/yr'
-                : '\$0.70/mile. 300 mi/mo = \$2,520/yr. Enable now.',
-            actionLabel: insights.mileageEnabled ? 'Active' : 'Enable',
-            enabled: insights.mileageEnabled,
-            onTap: () => insights.mileageEnabled ? _showMileageDialog(insights) : insights.toggleMileage(),
+            subtitle: () {
+              final monthlyMi = MileageLog.monthlyMiles();
+              if (monthlyMi > 0) {
+                return '${MileageLog.monthlyTripCount()} trips · $monthlyMi mi · \$${MileageLog.monthlyValue().toStringAsFixed(0)}/mo';
+              }
+              return '\$0.70/mile. Log your first trip → save on taxes.';
+            }(),
+            actionLabel: MileageLog.monthlyMiles() > 0 ? '+\$${MileageLog.monthlyValue().toStringAsFixed(0)}' : 'Log Trip',
+            enabled: MileageLog.monthlyMiles() > 0,
+            onTap: () => _showMileageMenu(),
           ),
           const SizedBox(height: 8),
           _buildInsightCard(
@@ -315,30 +320,176 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  void _showMileageDialog(InsightsProvider insights) {
-    final ctrl = TextEditingController(text: insights.mileageEstimate.toString());
+  void _showMileageMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 20),
+            const Text('Mileage Log', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text('\$0.70/mile IRS rate · ${MileageLog.monthlyTripCount()} trips this month · ${MileageLog.monthlyMiles()} mi',
+                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () { Navigator.pop(context); _showAddTripDialog(); },
+                icon: const Icon(Icons.add, size: 20),
+                label: const Text('Log a Trip'),
+              ),
+            ),
+            const SizedBox(height: 8),
+            if (MileageLog.monthlyMiles() > 0)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () { Navigator.pop(context); _showTripHistory(); },
+                  icon: const Icon(Icons.history, size: 20),
+                  label: Text('View History (${MileageLog.load().length} trips)'),
+                ),
+              ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showAddTripDialog() {
+    final milesCtrl = TextEditingController();
+    final purposeCtrl = TextEditingController();
+    final quickPresets = [5.0, 12.0, 25.0, 50.0];
+
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Monthly Mileage'),
-        content: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Text('How many miles do you drive for business each month?'),
-          const SizedBox(height: 12),
-          TextField(controller: ctrl, keyboardType: TextInputType.number,
-            decoration: const InputDecoration(suffixText: 'miles', hintText: '300', border: OutlineInputBorder())),
-          const SizedBox(height: 8),
-          Text('IRS rate: \$0.70/mile. 300 mi × 12 = \$2,520/year.',
-              style: TextStyle(color: Colors.grey[500], fontSize: 12)),
-        ]),
-        actions: [
-          TextButton(onPressed: () { insights.toggleMileage(); Navigator.pop(context); }, child: const Text('Disable')),
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          FilledButton(onPressed: () {
-            final v = int.tryParse(ctrl.text);
-            if (v != null && v > 0) insights.setMileageEstimate(v);
-            Navigator.pop(context);
-          }, child: const Text('Save')),
-        ],
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: const Text('Log a Trip'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('How many miles?', style: TextStyle(fontSize: 14)),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: quickPresets.map((m) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: ActionChip(
+                    label: Text('${m.toInt()} mi'),
+                    onPressed: () {
+                      milesCtrl.text = m.toInt().toString();
+                      setDialogState(() {});
+                    },
+                  ),
+                )).toList(),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: milesCtrl,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(hintText: 'e.g. 15', suffixText: 'miles', border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: purposeCtrl,
+                decoration: const InputDecoration(hintText: 'Purpose (optional)', border: OutlineInputBorder()),
+              ),
+              if (milesCtrl.text.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text('Value: \$${(double.tryParse(milesCtrl.text) ?? 0) * 0.70}',
+                    style: const TextStyle(color: AppTheme.green, fontWeight: FontWeight.w600)),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+            FilledButton(
+              onPressed: () {
+                final miles = double.tryParse(milesCtrl.text);
+                if (miles != null && miles > 0) {
+                  MileageLog.addTrip(miles, purposeCtrl.text);
+                  Navigator.pop(context);
+                  setState(() {});
+                }
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showTripHistory() {
+    final trips = MileageLog.load();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 16),
+            Row(children: [
+              const Text('Trip History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Spacer(),
+              Text('${trips.length} trips', style: const TextStyle(color: AppTheme.textSecondary)),
+            ]),
+            const SizedBox(height: 12),
+            Expanded(
+              child: trips.isEmpty
+                  ? const Center(child: Text('No trips logged yet', style: TextStyle(color: AppTheme.textSecondary)))
+                  : ListView.builder(
+                      itemCount: trips.length,
+                      itemBuilder: (_, i) {
+                        final t = trips[i];
+                        return Dismissible(
+                          key: Key('trip_${t.date.toIso8601String()}_$i'),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20),
+                            color: AppTheme.red,
+                            child: const Icon(Icons.delete, color: Colors.white),
+                          ),
+                          onDismissed: (_) {
+                            MileageLog.deleteTrip(i);
+                            setState(() {});
+                          },
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: AppTheme.orange.withValues(alpha: 0.12),
+                              child: const Icon(Icons.directions_car, color: AppTheme.orange, size: 20),
+                            ),
+                            title: Text(t.purpose, style: const TextStyle(fontWeight: FontWeight.w500)),
+                            subtitle: Text('${t.date.month}/${t.date.day} · ${t.miles} mi'),
+                            trailing: Text('\$${(t.miles * 0.70).toStringAsFixed(2)}',
+                                style: const TextStyle(color: AppTheme.green, fontWeight: FontWeight.w600)),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

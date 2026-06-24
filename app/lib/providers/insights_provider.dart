@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../services/mileage_log.dart';
 
 class InsightsProvider extends ChangeNotifier {
   static const _mileageKey = 'mileage_enabled';
@@ -100,14 +101,17 @@ class InsightsProvider extends ChangeNotifier {
     return total;
   }
 
-  // Deduction discovery — returns deductions the user might be missing
+  // Deduction discovery
   List<DeductionTip> get missingDeductions {
     final tips = <DeductionTip>[];
-    if (!_mileageEnabled) {
+    final monthlyMi = MileageLog.monthlyMiles();
+    if (monthlyMi < 100) {
       tips.add(DeductionTip(
         title: 'Mileage — \$0.70/mile',
-        description: 'Every business mile is worth \$0.70. 300 mi/month = \$2,520/year. Most freelancers miss this entirely.',
-        action: 'Enable tracking',
+        description: monthlyMi > 0
+            ? 'You logged $monthlyMi mi this month = \$${(monthlyMi * 0.70).toStringAsFixed(0)}. Most freelancers drive 200+ mi/mo. Log every trip!'
+            : 'Every business mile is worth \$0.70. 200 mi/mo = \$1,680/year. Start logging trips.',
+        action: 'Log a trip',
         icon: '🚗',
       ));
     }
@@ -145,7 +149,8 @@ class InsightsProvider extends ChangeNotifier {
   // Total missed value estimate
   double get missedDeductionValue {
     double total = 0;
-    if (!_mileageEnabled) total += 2520;
+    final monthlyMi = MileageLog.monthlyMiles();
+    if (monthlyMi < 100) total += 1680; // ~potential missed mileage
     if (_homeOfficeSqft == 0) total += 1500;
     if (_annualIncome > 50000) total += _annualIncome * 0.05;
     total += _annualIncome * 0.02; // phone/internet rough
