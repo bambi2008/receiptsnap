@@ -14,11 +14,15 @@ import UIKit
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
 
     // Custom plugins: Vision OCR + StoreKit 2
-    let visionRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "VisionOcrPlugin")
+    guard let visionRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "VisionOcrPlugin") else {
+      return
+    }
     VisionOcrPlugin.register(with: visionRegistrar)
 
     if #available(iOS 15.0, *) {
-      let storeKitRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "StoreKitManager")
+      guard let storeKitRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "StoreKitManager") else {
+        return
+      }
       StoreKitManager.register(with: storeKitRegistrar)
     }
   }

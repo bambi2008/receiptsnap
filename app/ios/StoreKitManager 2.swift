@@ -177,7 +177,7 @@ class StoreKitManager: NSObject, FlutterPlugin {
     private func checkVerified<T>(_ verification: VerificationResult<T>) throws -> T {
         switch verification {
         case .unverified:
-            throw NSError(domain: "StoreKitManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Transaction unverified"])
+            throw StoreKitError(.unknown)
         case .verified(let safe):
             return safe
         }
