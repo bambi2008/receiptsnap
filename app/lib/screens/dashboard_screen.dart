@@ -113,6 +113,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             enabled: false,
             onTap: () => _showDiscoveryDialog(insights),
           ),
+          const SizedBox(height: 8),
+          _buildInsightCard(
+            icon: Icons.trending_up,
+            iconColor: AppTheme.indigo,
+            title: 'Industry Average',
+            subtitle: receipts.monthlyCount > 0
+                ? 'You\'ve deducted \$${receipts.monthlyTotal.toStringAsFixed(0)} · Avg freelancer \$4,200/yr'
+                : 'Freelancers like you average \$4,200/yr in deductions',
+            actionLabel: receipts.monthlyCount > 0 ? '${(receipts.monthlyTotal / 42).toStringAsFixed(0)}%' : 'Goal',
+            enabled: receipts.monthlyCount > 0,
+            onTap: () {},
+          ),
         ],
       ),
     );
