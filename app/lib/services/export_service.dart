@@ -36,8 +36,8 @@ class ExportService {
 
       // Build simple text-based report (PDF generation with full formatting in production)
       final buf = StringBuffer();
-      buf.writeln('RECEIPTSNAP - Expense Report');
-      buf.writeln('============================');
+      buf.writeln('SNAPDEDUCT - Tax Deduction Report');
+      buf.writeln('=====================================');
       buf.writeln();
 
       double total = 0;
