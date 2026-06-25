@@ -17,6 +17,7 @@ void main() {
     await Hive.openBox<Receipt>('receipts');
     await Hive.openBox('settings');
     Hive.box('settings').put('has_onboarded', true);
+    Hive.box('settings').put('disclaimer_accepted', true);
   });
 
   tearDown(() async {

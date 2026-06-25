@@ -56,6 +56,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           _buildQuarterlyTaxCard(insights),
           const SizedBox(height: 12),
+          _buildSETaxCard(insights),
+          const SizedBox(height: 12),
           _buildMonthlySummary(receipts.monthlyCount, receipts.monthlyTotal),
           const SizedBox(height: 12),
 
@@ -180,13 +182,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (insights.estimatedQuarterlyPayment > 0) ...[
             const SizedBox(height: 8),
             Text(
-              'Est. payment: \$${insights.estimatedQuarterlyPayment.toStringAsFixed(0)}',
+              'Est. payment: \$${insights.estimatedQuarterlyPaymentFormatted}  (estimate)',
               style: TextStyle(color: color, fontSize: 15, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 6),
             Text(
-              'Based on \$${(insights.annualIncome > 0 ? (insights.annualIncome ~/ 1000).toString() : '?')}K annual income · 25% effective rate',
+              'Based on \$${(insights.annualIncome > 0 ? (insights.annualIncome ~/ 1000).toString() : '?')}K income · ~25% effective rate',
               style: TextStyle(color: color.withValues(alpha: 0.6), fontSize: 12),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'Source: IRS Pub 505, Form 1040-ES. Estimate only — not tax advice.',
+              style: TextStyle(color: color.withValues(alpha: 0.4), fontSize: 10, fontStyle: FontStyle.italic),
             ),
           ] else ...[
             const SizedBox(height: 8),
@@ -235,6 +242,51 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Icon(Icons.chevron_right, color: AppTheme.textSecondary),
           ],
         ),
+      ),
+    );
+  }
+
+  // ── SE Tax Explanation Card ──
+  Widget _buildSETaxCard(InsightsProvider insights) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppTheme.indigo.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.indigo.withValues(alpha: 0.12)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Icon(Icons.info_outline, color: AppTheme.indigo, size: 18),
+            const SizedBox(width: 8),
+            const Text('Self-Employment Tax: 15.3%', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+            const Spacer(),
+            if (insights.annualIncome > 0)
+              Text('~\$${insights.estimatedSETax.toStringAsFixed(0)}/yr',
+                  style: TextStyle(color: AppTheme.indigo, fontWeight: FontWeight.w600, fontSize: 14)),
+          ]),
+          const SizedBox(height: 8),
+          Text(
+            '12.4% Social Security + 2.9% Medicare on your net earnings. '
+            'This is IN ADDITION to income tax. Most new freelancers are surprised by this bill.',
+            style: TextStyle(color: AppTheme.indigo.withValues(alpha: 0.7), fontSize: 12),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Source: IRC §1401; IRS Schedule SE. Estimate only.',
+            style: TextStyle(color: AppTheme.indigo.withValues(alpha: 0.35), fontSize: 10, fontStyle: FontStyle.italic),
+          ),
+          if (insights.annualIncome <= 0) ...[
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () => _showIncomeDialog(insights),
+              child: Text('Tap to set income → see your estimated SE tax',
+                  style: TextStyle(color: AppTheme.indigo, fontSize: 12, decoration: TextDecoration.underline, decorationColor: AppTheme.indigo)),
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -348,7 +400,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 20),
             const Text('Mileage Log', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            Text('\$0.70/mile IRS rate · ${MileageLog.monthlyTripCount()} trips this month · ${MileageLog.monthlyMiles()} mi',
+            Text('\$0.70/mile IRS rate (Pub 463) · ${MileageLog.monthlyTripCount()} trips this month · ${MileageLog.monthlyMiles()} mi\n${MileageLog.annualMiles()} mi YTD · \$${MileageLog.annualValue().toStringAsFixed(0)}/yr',
                 style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
             const SizedBox(height: 20),
             SizedBox(
@@ -379,6 +431,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void _showAddTripDialog() {
     final milesCtrl = TextEditingController();
     final purposeCtrl = TextEditingController();
+    final destCtrl = TextEditingController();
+    final odoCtrl = TextEditingController();
     final quickPresets = [5.0, 12.0, 25.0, 50.0];
 
     showDialog(
@@ -389,7 +443,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('How many miles?', style: TextStyle(fontSize: 14)),
+              const Text('Miles driven:', style: TextStyle(fontSize: 14)),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -406,18 +460,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: milesCtrl,
-                keyboardType: TextInputType.number,
+                controller: milesCtrl, keyboardType: TextInputType.number,
                 decoration: const InputDecoration(hintText: 'e.g. 15', suffixText: 'miles', border: OutlineInputBorder()),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               TextField(
                 controller: purposeCtrl,
-                decoration: const InputDecoration(hintText: 'Purpose (optional)', border: OutlineInputBorder()),
+                decoration: const InputDecoration(hintText: 'Purpose (e.g. client meeting)', border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: destCtrl,
+                decoration: const InputDecoration(hintText: 'Destination (IRS recommended)', border: OutlineInputBorder()),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: odoCtrl, keyboardType: TextInputType.number,
+                decoration: const InputDecoration(hintText: 'Odometer reading (optional)', border: OutlineInputBorder()),
               ),
               if (milesCtrl.text.isNotEmpty) ...[
                 const SizedBox(height: 8),
-                Text('Value: \$${(double.tryParse(milesCtrl.text) ?? 0) * 0.70}',
+                Text('IRS value: \$${(double.tryParse(milesCtrl.text) ?? 0) * MileageLog.irsMileageRate}',
                     style: const TextStyle(color: AppTheme.green, fontWeight: FontWeight.w600)),
               ],
             ],
@@ -428,7 +491,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
               onPressed: () {
                 final miles = double.tryParse(milesCtrl.text);
                 if (miles != null && miles > 0) {
-                  MileageLog.addTrip(miles, purposeCtrl.text);
+                  MileageLog.addTrip(
+                    miles: miles,
+                    purpose: purposeCtrl.text,
+                    destination: destCtrl.text,
+                    odometerStart: int.tryParse(odoCtrl.text),
+                  );
                   Navigator.pop(context);
                   setState(() {});
                 }
@@ -492,7 +560,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: const Icon(Icons.directions_car, color: AppTheme.orange, size: 20),
                             ),
                             title: Text(t.purpose, style: const TextStyle(fontWeight: FontWeight.w500)),
-                            subtitle: Text('${t.date.month}/${t.date.day} · ${t.miles} mi'),
+                            subtitle: Text(t.destination.isNotEmpty
+                                ? '${t.date.month}/${t.date.day} · ${t.destination} · ${t.miles} mi'
+                                : '${t.date.month}/${t.date.day} · ${t.miles} mi'),
                             trailing: Text('\$${(t.miles * 0.70).toStringAsFixed(2)}',
                                 style: const TextStyle(color: AppTheme.green, fontWeight: FontWeight.w600)),
                           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'config/theme.dart';
 import 'config/constants.dart';
 import 'screens/dashboard_screen.dart';
@@ -7,6 +8,7 @@ import 'screens/camera_screen.dart';
 import 'screens/receipts_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'providers/insights_provider.dart';
 
 class SnapDeductApp extends StatelessWidget {
   const SnapDeductApp({super.key});
@@ -39,6 +41,7 @@ class _AppShellState extends State<AppShell> {
   void initState() {
     super.initState();
     _checkOnboarding();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkDisclaimer());
   }
 
   void _checkOnboarding() {
@@ -52,6 +55,36 @@ class _AppShellState extends State<AppShell> {
   void _onOnboardingComplete() {
     Hive.box('settings').put(AppConstants.onboardingKey, true);
     setState(() => _showOnboarding = false);
+  }
+
+  void _checkDisclaimer() {
+    try {
+      final insights = context.read<InsightsProvider>();
+      if (!insights.disclaimerAccepted && mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => AlertDialog(
+            title: const Text('Important'),
+            content: const Text(
+              'SnapDeduct provides educational estimates based on IRS guidelines. '
+              'It is not tax, legal, or financial advice.\n\n'
+              'Consult a qualified tax professional for your specific situation.\n\n'
+              'Sources: IRS Publications 463, 505, 535, 587; IRC §1401, §162.',
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  insights.acceptDisclaimer();
+                  Navigator.pop(context);
+                },
+                child: const Text('I Understand'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (_) {}
   }
 
   @override
