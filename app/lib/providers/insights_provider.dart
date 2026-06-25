@@ -159,6 +159,26 @@ class InsightsProvider extends ChangeNotifier {
       action: 'Add expense',
       icon: '📱',
     ));
+    tips.add(DeductionTip(
+      title: 'Business vs Personal Expenses (IRS Pub 535)',
+      description: 'You can ONLY deduct the business portion of mixed expenses. That Netflix subscription? No. That Adobe license for client work? Yes — the business % of it.',
+      action: 'Learn the rules',
+      icon: '⚖️',
+    ));
+    tips.add(DeductionTip(
+      title: 'Separate Bank Accounts (IRS Pub 583)',
+      description: 'IRS strongly recommends separate business accounts. Commingling is a top audit trigger. Even a free checking account counts if used exclusively for business.',
+      action: 'Why it matters',
+      icon: '🏦',
+    ));
+    if (_annualIncome > 20000) {
+      tips.add(DeductionTip(
+        title: 'Contractor vs Employee (IRS Pub 15-A)',
+        description: 'Hire freelancers? Misclassifying workers as 1099 when they should be W-2 carries penalties up to 100% of unpaid taxes. Use the IRS 20-factor test.',
+        action: 'Understand classification',
+        icon: '👥',
+      ));
+    }
     return tips;
   }
 
