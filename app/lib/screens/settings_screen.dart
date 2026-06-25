@@ -7,6 +7,7 @@ import '../providers/subscription_provider.dart';
 import '../config/theme.dart';
 import '../config/constants.dart';
 import '../services/export_service.dart';
+import '../services/notification_service.dart';
 import '../widgets/paywall_sheet.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -77,7 +78,8 @@ class SettingsScreen extends StatelessWidget {
           // Main menu
           ..._buildMenuSection([
             _MenuItem(Icons.file_download_outlined, 'Export All Receipts', () => _exportAll(context)),
-            _MenuItem(Icons.notifications_outlined, 'Quarterly Tax Reminders', () => _showReminderInfo(context)),
+            _MenuItem(Icons.notifications_outlined, 'Daily Mileage Reminder (8 PM)', () => _toggleMileageReminder(context)),
+            _MenuItem(Icons.info_outline, 'Tax Deadlines & Info', () => _showReminderInfo(context)),
             _MenuItem(Icons.info_outline, 'Disclaimer & Sources', () => _showDisclaimer(context)),
           ]),
 
@@ -142,6 +144,21 @@ class SettingsScreen extends StatelessWidget {
     if (path != null) {
       await Share.shareXFiles([XFile(path)], subject: 'SnapDeduct Tax Export');
     }
+  }
+
+  void _toggleMileageReminder(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final granted = await NotificationService.requestPermission();
+    if (!granted) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Please enable notifications in Settings to receive mileage reminders')),
+      );
+      return;
+    }
+    await NotificationService.scheduleMileageReminder();
+    messenger.showSnackBar(
+      const SnackBar(content: Text('✅ Daily reminder set for 8 PM')),
+    );
   }
 
   void _showReminderInfo(BuildContext context) {

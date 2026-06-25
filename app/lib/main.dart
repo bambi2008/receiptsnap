@@ -5,6 +5,7 @@ import 'models/receipt.dart';
 import 'providers/receipt_provider.dart';
 import 'providers/subscription_provider.dart';
 import 'providers/insights_provider.dart';
+import 'services/notification_service.dart';
 import 'app.dart';
 
 void main() async {
@@ -13,6 +14,7 @@ void main() async {
   Hive.registerAdapter(ReceiptAdapter());
   await Hive.openBox<Receipt>('receipts');
   await Hive.openBox('settings');
+  await NotificationService.init();
 
   runApp(
     MultiProvider(
