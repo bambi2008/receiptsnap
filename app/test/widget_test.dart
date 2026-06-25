@@ -18,6 +18,7 @@ void main() {
     await Hive.openBox('settings');
     Hive.box('settings').put('has_onboarded', true);
     Hive.box('settings').put('disclaimer_accepted', true);
+    Hive.box('settings').put('demo_shown', true);
   });
 
   tearDown(() async {

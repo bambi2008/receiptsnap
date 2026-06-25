@@ -8,6 +8,7 @@ import 'screens/camera_screen.dart';
 import 'screens/receipts_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'widgets/app_demo.dart';
 import 'providers/insights_provider.dart';
 
 class SnapDeductApp extends StatelessWidget {
@@ -36,6 +37,7 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   int _currentIndex = 0;
   bool _showOnboarding = true;
+  bool _showDemo = true;
 
   @override
   void initState() {
@@ -50,11 +52,20 @@ class _AppShellState extends State<AppShell> {
     if (hasOnboarded) {
       setState(() => _showOnboarding = false);
     }
+    final demoShown = box.get('demo_shown', defaultValue: false);
+    if (demoShown) {
+      setState(() => _showDemo = false);
+    }
   }
 
   void _onOnboardingComplete() {
     Hive.box('settings').put(AppConstants.onboardingKey, true);
     setState(() => _showOnboarding = false);
+  }
+
+  void _onDemoComplete() {
+    Hive.box('settings').put('demo_shown', true);
+    setState(() => _showDemo = false);
   }
 
   void _checkDisclaimer() {
@@ -89,6 +100,10 @@ class _AppShellState extends State<AppShell> {
 
   @override
   Widget build(BuildContext context) {
+    if (_showDemo) {
+      return AppDemo(onDone: _onDemoComplete);
+    }
+
     if (_showOnboarding) {
       return OnboardingScreen(onComplete: _onOnboardingComplete);
     }
