@@ -116,12 +116,11 @@ class SettingsScreen extends StatelessWidget {
           border: Border.all(color: AppTheme.blue.withValues(alpha: 0.15)),
         ),
         child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('🔒 Pro Features', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-          SizedBox(height: 8),
-          Text('• Unlimited receipt scans', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
-          Text('• Advanced deduction discovery', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
-          Text('• Industry comparison benchmarks', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
-          Text('• Priority email support', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+        Text('🔒 Pro Features', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+        SizedBox(height: 8),
+        Text('• Unlimited receipt scans', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+        Text('• Industry comparison benchmarks', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+        Text('• Priority email support', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
         ]),
       ),
     );

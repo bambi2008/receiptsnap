@@ -96,7 +96,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             subtitle: '${insights.missingDeductions.length} potential deductions · recurring expenses · business vs personal',
             actionLabel: 'Explore',
             enabled: false,
-            onTap: () => sub.isPro ? _showDiscoveryDialog(insights) : _showPaywall(context),
+            onTap: () => _showDiscoveryDialog(insights),
           ),
           const SizedBox(height: 8),
           _buildInsightCard(
