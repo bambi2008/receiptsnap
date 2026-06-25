@@ -77,8 +77,8 @@ class SettingsScreen extends StatelessWidget {
 
           // Main menu
           ..._buildMenuSection([
-            _MenuItem(Icons.file_download_outlined, 'Export All Receipts', () => _exportAll(context)),
-            _MenuItem(Icons.notifications_outlined, 'Daily Mileage Reminder (8 PM)', () => _toggleMileageReminder(context)),
+            _MenuItem(Icons.file_download_outlined, 'Export All Receipts', () => sub.canExport ? _exportAll(context) : _showPaywall(context)),
+            _MenuItem(Icons.notifications_outlined, 'Daily Mileage Reminder (8 PM)', () => sub.canUseReminders ? _toggleMileageReminder(context) : _showPaywall(context)),
             _MenuItem(Icons.info_outline, 'Tax Deadlines & Info', () => _showReminderInfo(context)),
             _MenuItem(Icons.info_outline, 'Disclaimer & Sources', () => _showDisclaimer(context)),
           ]),
@@ -118,9 +118,10 @@ class SettingsScreen extends StatelessWidget {
         child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('🔒 Pro Features', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
         SizedBox(height: 8),
-        Text('• Unlimited receipt scans', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+        Text('• Unlimited receipt scans & mileage trips', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+        Text('• CSV/PDF export for your CPA', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+        Text('• Daily mileage reminders', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
         Text('• Industry comparison benchmarks', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
-        Text('• Priority email support', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
         ]),
       ),
     );

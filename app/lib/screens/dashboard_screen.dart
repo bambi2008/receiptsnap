@@ -76,7 +76,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }(),
             actionLabel: MileageLog.monthlyMiles() > 0 ? '+\$${MileageLog.monthlyValue().toStringAsFixed(0)}' : 'Log Trip',
             enabled: MileageLog.monthlyMiles() > 0,
-            onTap: () => _showMileageMenu(),
+            onTap: () => sub.canLogTrip ? _showMileageMenu() : _showPaywall(context),
           ),
           const SizedBox(height: 8),
           _buildInsightCard(

@@ -50,6 +50,11 @@ class SubscriptionProvider extends ChangeNotifier {
   bool get hasReachedLimit => !_isPro && _receiptCount >= AppConstants.freeReceiptLimit;
   double get usageFraction => _isPro ? 1.0 : (_receiptCount / AppConstants.freeReceiptLimit).clamp(0.0, 1.0);
 
+  // Mileage tracking (same free limit)
+  bool get canLogTrip => isPro || _receiptCount < AppConstants.freeReceiptLimit;
+  bool get canExport => isPro;
+  bool get canUseReminders => isPro;
+
   /// Initialize: check entitlement + fetch products.
   Future<void> init() async {
     _isLoading = true;
