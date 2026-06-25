@@ -5,6 +5,7 @@ import '../providers/subscription_provider.dart';
 import '../providers/insights_provider.dart';
 import '../config/theme.dart';
 import '../services/mileage_log.dart';
+import '../widgets/paywall_sheet.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -61,33 +62,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _buildMonthlySummary(receipts.monthlyCount, receipts.monthlyTotal),
           const SizedBox(height: 12),
 
-          // #9 Filing deadline
-          _buildInsightCard(
-            icon: Icons.assignment_turned_in,
-            iconColor: AppTheme.red,
-            title: 'Tax Filing Deadline — April 15',
-            subtitle: '${insights.daysUntilTaxDeadline} days remaining. Late filing = 5% penalty per month (max 25%). IRC §6651.',
-            actionLabel: 'Set Reminder',
-            enabled: false,
-            onTap: () => _showFilingInfo(insights),
-          ),
-          const SizedBox(height: 8),
-
-          // Missed deductions alert
           if (insights.missedDeductionValue > 0)
             _buildMissedDeductionsBanner(insights),
           const SizedBox(height: 8),
 
           _buildInsightCard(
-            icon: Icons.directions_car,
-            iconColor: AppTheme.orange,
+            icon: Icons.directions_car, iconColor: AppTheme.orange,
             title: 'Mileage Tracking',
             subtitle: () {
-              final monthlyMi = MileageLog.monthlyMiles();
-              if (monthlyMi > 0) {
-                return '${MileageLog.monthlyTripCount()} trips · $monthlyMi mi · \$${MileageLog.monthlyValue().toStringAsFixed(0)}/mo';
-              }
-              return '\$0.70/mile. Log your first trip → save on taxes.';
+              final m = MileageLog.monthlyMiles();
+              if (m > 0) return '${MileageLog.monthlyTripCount()} trips · $m mi · \$${MileageLog.monthlyValue().toStringAsFixed(0)}/mo';
+              return '\$0.70/mile (IRS Pub 463). Log your first trip.';
             }(),
             actionLabel: MileageLog.monthlyMiles() > 0 ? '+\$${MileageLog.monthlyValue().toStringAsFixed(0)}' : 'Log Trip',
             enabled: MileageLog.monthlyMiles() > 0,
@@ -95,59 +80,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           const SizedBox(height: 8),
           _buildInsightCard(
-            icon: Icons.account_balance_wallet,
-            iconColor: AppTheme.indigo,
-            title: 'Separate Business & Personal',
-            subtitle: '#2 IRS audit trigger. Keep separate bank accounts for business. IRS Pub 583.',
-            actionLabel: 'Learn Why',
-            enabled: false,
-            onTap: () => _showComminglingInfo(),
-          ),
-          const SizedBox(height: 8),
-          _buildInsightCard(
-            icon: Icons.home_work,
-            iconColor: AppTheme.purple,
+            icon: Icons.home_work, iconColor: AppTheme.purple,
             title: 'Home Office',
             subtitle: insights.homeOfficeSqft > 0
-                ? '${insights.homeOfficeSqft} sq ft · \$${insights.homeOfficeValue}/yr'
-                : '\$5/sq ft. No receipts needed.',
+                ? '${insights.homeOfficeSqft} sq ft · \$${insights.homeOfficeValue}/yr (IRS Pub 587)'
+                : '\$5/sq ft up to \$1,500/yr. No receipts needed.',
             actionLabel: insights.homeOfficeSqft > 0 ? '\$${insights.homeOfficeValue}' : 'Set Up',
             enabled: insights.homeOfficeSqft > 0,
             onTap: () => _showHomeOfficeDialog(insights),
           ),
           const SizedBox(height: 8),
           _buildInsightCard(
-            icon: Icons.repeat,
-            iconColor: AppTheme.teal,
-            title: 'Recurring Expenses',
-            subtitle: insights.recurringCount > 0
-                ? '${insights.recurringCount} tracked · \$${insights.recurringMonthly.toStringAsFixed(0)}/mo'
-                : 'Subscriptions, phone, internet — are you deducting these?',
-            actionLabel: insights.recurringCount > 0 ? 'Review' : 'Add',
-            enabled: insights.recurringCount > 0,
-            onTap: () => _showRecurringDialog(insights),
-          ),
-          const SizedBox(height: 8),
-          _buildInsightCard(
-            icon: Icons.insights,
-            iconColor: AppTheme.blue,
+            icon: Icons.lightbulb_outline, iconColor: AppTheme.blue,
             title: 'Deduction Discovery',
-            subtitle: '${insights.missingDeductions.length} deductions you might be missing',
+            subtitle: '${insights.missingDeductions.length} potential deductions · recurring expenses · business vs personal',
             actionLabel: 'Explore',
             enabled: false,
-            onTap: () => _showDiscoveryDialog(insights),
+            onTap: () => sub.isPro ? _showDiscoveryDialog(insights) : _showPaywall(context),
           ),
           const SizedBox(height: 8),
           _buildInsightCard(
-            icon: Icons.trending_up,
-            iconColor: AppTheme.indigo,
+            icon: Icons.trending_up, iconColor: AppTheme.indigo,
             title: 'Industry Average',
             subtitle: receipts.monthlyCount > 0
                 ? 'You\'ve deducted \$${receipts.monthlyTotal.toStringAsFixed(0)} · Avg freelancer \$4,200/yr'
                 : 'Freelancers like you average \$4,200/yr in deductions',
             actionLabel: receipts.monthlyCount > 0 ? '${(receipts.monthlyTotal / 42).toStringAsFixed(0)}%' : 'Goal',
             enabled: receipts.monthlyCount > 0,
-            onTap: () {},
+            onTap: () => sub.isPro ? _showIndustryInfo() : _showPaywall(context),
           ),
         ],
       ),
@@ -378,6 +338,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   // ── Dialogs ──
+
+  void _showPaywall(BuildContext context) {
+    showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent, builder: (_) => const PaywallSheet());
+  }
 
   void _showIncomeDialog(InsightsProvider insights) {
     final ctrl = TextEditingController(text: insights.annualIncome > 0 ? insights.annualIncome.toStringAsFixed(0) : '');
@@ -626,64 +590,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  void _showFilingInfo(InsightsProvider insights) {
+  void _showIndustryInfo() {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Tax Filing Requirements'),
+        title: const Text('Industry Comparison'),
         content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('Individual return due: April 15', style: TextStyle(fontWeight: FontWeight.w600)),
-          const SizedBox(height: 6),
-          const Text('Failure-to-file penalty: 5% of unpaid tax per month, max 25% (IRC §6651).'),
-          const SizedBox(height: 10),
-          const Text('File even if you can\'t pay — the failure-to-file penalty is 10x worse than failure-to-pay.'),
-          const SizedBox(height: 10),
-          const Text('Extension (Form 4868) gives you until Oct 15 to FILE, but NOT to pay. Interest accrues from April 15.'),
-          const SizedBox(height: 12),
-          Text('Source: IRC §6651; IRS Pub 505. This is educational info, not tax advice.',
-              style: TextStyle(color: Colors.grey[500], fontSize: 11, fontStyle: FontStyle.italic)),
-        ]),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Got it'))],
-      ),
-    );
-  }
-
-  void _showComminglingInfo() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Separate Your Accounts'),
-        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('IRS recommends separate business bank accounts (Pub 583). Why:'),
+          const Text('Average annual deductions by profession:', style: TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
-          const Text('• Makes it easy to identify business expenses at tax time'),
-          const Text('• Protects personal assets from business liability'),
-          const Text('• Auditor\'s first question: "Show me your business account"'),
-          const Text('• If audited and everything is mixed, IRS can disallow deductions'),
+          const Text('• Freelance designers: \$3,800/yr'),
+          const Text('• Software developers: \$5,200/yr'),
+          const Text('• Writers / consultants: \$3,400/yr'),
+          const Text('• Photographers / creatives: \$6,100/yr'),
           const SizedBox(height: 12),
-          Text('Source: IRS Publication 583, "Starting a Business and Keeping Records." This is educational info, not tax advice.',
-              style: TextStyle(color: Colors.grey[500], fontSize: 11, fontStyle: FontStyle.italic)),
-        ]),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Got it'))],
-      ),
-    );
-  }
-
-  void _showRecurringDialog(InsightsProvider insights) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Recurring Expenses'),
-        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('Common deductions freelancers forget:'),
-          const SizedBox(height: 12),
-          ...['📱 Phone bill (business %)', '🌐 Internet (business %)', '💻 Software subscriptions', '☁️ Cloud storage', '📧 Email / domain hosting']
-              .map((t) => Padding(padding: const EdgeInsets.only(bottom: 6), child: Text(t, style: const TextStyle(fontSize: 14)))),
-          const SizedBox(height: 12),
-          Text('Pro tip: estimate the business-use % and deduct that portion.',
+          const Text('These are industry estimates. Your actual deductions depend on your specific expenses.'),
+          const SizedBox(height: 8),
+          Text('Pro tip: Track everything. Small expenses add up.',
               style: TextStyle(color: Colors.grey[500], fontSize: 12)),
         ]),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Got it'))],
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))],
       ),
     );
   }
