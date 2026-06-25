@@ -58,7 +58,7 @@ class SettingsScreen extends StatelessWidget {
                     SizedBox(width: double.infinity, child: FilledButton.icon(
                       onPressed: () => _showPaywall(context),
                       icon: const Icon(Icons.auto_awesome, size: 18),
-                      label: const Text('Upgrade to Pro — \$39.99/year'),
+                      label: const Text('Upgrade to Pro — \$89.99/year'),
                     )),
                   ] else ...[
                     const Row(children: [

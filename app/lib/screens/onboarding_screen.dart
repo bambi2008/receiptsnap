@@ -30,8 +30,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'icon': Icons.shield_outlined,
       'iconColor': AppTheme.green,
-      'title': 'Your tax safety net.\n\$3/month.',
-      'subtitle': '50 receipts free. Pro: \$39.99/year — less than the penalty for one missed quarterly payment.',
+      'title': 'Your tax safety net.\n\$7.50/month.',
+      'subtitle': '50 receipts free. Pro: \$89.99/year — less than one hour with a CPA. Avoid one penalty and it pays for itself 100× over.',
     },
   ];
 

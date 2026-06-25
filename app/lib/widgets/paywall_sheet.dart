@@ -69,7 +69,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
                 'Annual',
                 '\$${(AppConstants.annualPrice / 12).toStringAsFixed(2)}/mo',
                 _isAnnual,
-                saveBadge: 'Save 52%',
+                saveBadge: 'Save 17%',
                 isBestValue: true,
               )),
             ],
