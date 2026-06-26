@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../providers/receipt_provider.dart';
@@ -8,6 +7,7 @@ import '../config/theme.dart';
 import '../config/constants.dart';
 import '../services/export_service.dart';
 import '../services/notification_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/paywall_sheet.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -85,8 +85,8 @@ class SettingsScreen extends StatelessWidget {
 
           // Legal
           ..._buildMenuSection([
-            _MenuItem(Icons.description_outlined, 'Privacy Policy', () => _openLocalAsset(context, 'assets/privacy.html', 'Privacy Policy')),
-            _MenuItem(Icons.gavel_outlined, 'Terms of Service', () => _openLocalAsset(context, 'assets/terms.html', 'Terms of Service')),
+            _MenuItem(Icons.description_outlined, 'Privacy Policy', () => _openUrl(AppConstants.privacyUrl)),
+            _MenuItem(Icons.gavel_outlined, 'Terms of Service', () => _openUrl(AppConstants.termsUrl)),
           ]),
 
           const SizedBox(height: 24),
@@ -209,42 +209,13 @@ class SettingsScreen extends StatelessWidget {
     ));
   }
 
-  void _openLocalAsset(BuildContext context, String assetPath, String title) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => _LocalHtmlViewer(assetPath: assetPath, title: title)));
-  }
-}
-
-// ── In-app HTML viewer for bundled assets ──
-
-class _LocalHtmlViewer extends StatefulWidget {
-  final String assetPath;
-  final String title;
-  const _LocalHtmlViewer({required this.assetPath, required this.title});
-
-  @override
-  State<_LocalHtmlViewer> createState() => _LocalHtmlViewerState();
-}
-
-class _LocalHtmlViewerState extends State<_LocalHtmlViewer> {
-  String _html = 'Loading...';
-
-  @override
-  void initState() {
-    super.initState();
-    rootBundle.loadString(widget.assetPath).then((s) => setState(() => _html = s));
+  void _openUrl(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: SelectableText(_html.replaceAll(RegExp(r'<[^>]+>'), '\n').replaceAll(RegExp(r'\n{3,}'), '\n\n').trim(),
-            style: const TextStyle(fontSize: 14, height: 1.5)),
-      ),
-    );
-  }
 }
 
 // ── Menu Components ──

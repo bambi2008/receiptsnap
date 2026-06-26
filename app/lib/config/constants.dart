@@ -5,8 +5,8 @@ class AppConstants {
   static const double annualPrice = 89.99;
   static const String appVersion = '1.0.0';
   static const String tagline = 'Avoid IRS surprises. Know what you owe.';
-  static const String privacyUrl = 'https://snapdeduct.com/privacy';
-  static const String termsUrl = 'https://snapdeduct.com/terms';
+  static const String privacyUrl = 'https://bambi2008.github.io/receiptsnap/privacy.html';
+  static const String termsUrl = 'https://bambi2008.github.io/receiptsnap/terms.html';
   static const String supportEmail = 'support@snapdeduct.com';
   static const String appStoreId = '';
   static const String onboardingKey = 'has_onboarded';
