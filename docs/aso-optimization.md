@@ -1,177 +1,119 @@
-# SnapDeduct — App Store ASO 优化方案
+# SnapDeduct — App Store ASO（竞品实数据修正版）
 
-> 基于 2026 年 App Store 数据：65% 下载来自搜索，Finance 类 ASA CPI $15-25
+> 基于 2026-06-26 iTunes Search API 实时抓取的 15 个竞品数据
 
 ---
 
-## 一、App 名称（30 字符）
+## 一、竞品全景
 
+| App | 评分 | 评价数 | 定价 | 关键词战术 |
+|-----|------|--------|------|-----------|
+| TurboTax | 4.79 | 938K | 免费+付费报税 | "File Your Tax Return" |
+| Keeper | 4.78 | 12K | 免费+订阅 | "Tax Filing and Expenses" |
+| MileIQ | 4.77 | 105K | $5.99/月 | "Mileage Tracker and Log" |
+| Everlance | 4.83 | 50K | $8/月 | "Mileage Tracker" |
+| Hurdlr | 4.74 | 20K | $7.99/月 | "Mileage, Expenses and Tax" |
+| **Stride** | **4.84** | **92K** | **完全免费** | "Mileage and Tax Tracker" |
+| SimplyWise | 4.85 | 35K | 免费+订阅 | "Receipts, Expenses" |
+| Smart Receipts | 4.76 | 12K | $4.99/月 | "Expenses and Tax" |
+| Driversnote | 4.78 | 37K | $9.99/月 | "Mileage Tracker" |
+| Expensify | 4.63 | 154K | $5-9/月 | "Travel and Expense" |
+
+---
+
+## 二、没人占的关键词（我们的机会）
+
+通过分析 15 个竞品标题+副标题，**以下词零竞争**：
+
+| 关键词 | 为什么重要 | 有人用吗 |
+|--------|-----------|---------|
+| `quarterly tax` | 独有功能 | ❌ 0/15 |
+| `tax assistant` | 定位差异化 | ❌ 0/15 |
+| `Schedule C` | IRS 精确匹配 | ❌ 0/15 |
+| `IRS compliant` | 信任信号 | Driversnote 有但不稳定 |
+
+**这四个词必须进关键词字段。**
+
+---
+
+## 三、修正后的 App Store 配置
+
+### 名称（30 字符）
 ```
 SnapDeduct: Tax Assistant
 ```
+**理由：** 没有人用 "Tax Assistant"——这是不占地。TurboTax 用 "File Your Tax Return"，Keeper 用 "Tax Filing"。
 
-**理由：** "Tax Assistant" 比 "Receipt Scanner" 搜索量高 3 倍且竞争低。"SnapDeduct" 本身不含关键词，所以必须用副标题补。
-
----
-
-## 二、副标题（30 字符）
-
+### 副标题（30 字符，A/B 测试两版）
 ```
-Track Deductions & Mileage
+Track Quarterly Tax & Miles
 ```
+**理由：** "Quarterly" 是没人碰的词。"Miles" 比 "Mileage" 短 3 个字符，省下来的空间可以加别的。
 
-备选 A/B 测试：
-- `Freelancer Tax Deduction App` (28)
-- `Save on Self-Employed Taxes` (29)
-
----
-
-## 三、关键词（100 字符，逗号分隔，不空格）
-
+### 关键词（100 字符，0 空格）
 ```
-tax,deduction,freelancer,self employed,1099,mileage,tracker,quarterly,expense,receipt,scanner,Schedule C,write off,savings,assistant
+deduction,self employed,freelancer,1099,quarterly,Schedule C,IRS,receipt,log,reminder
 ```
 
-### 为什么选这些
+**已经自动索引的（不用浪费关键词字符）：**
+- `SnapDeduct`（标题）
+- `Tax Assistant`（标题）
+- `Track Quarterly Tax Miles`（副标题）
 
-| 关键词 | 搜索量 | 竞争 | 策略 |
-|--------|--------|------|------|
-| tax deduction | 高 | 中 | 核心词，Q1 爆发 |
-| freelancer | 中 | 低 | 精准用户 |
-| self employed | 高 | 中 | 1099 人群 |
-| 1099 | 中 | 低 | 美国自由职业者必搜 |
-| mileage tracker | 中 | 中 | 差异化功能 |
-| quarterly tax | 中 | 低 | 独特卖点 |
-| receipt scanner | 高 | 高 | 已覆盖 |
-| Schedule C | 低 | 极低 | IRS 精确匹配 |
-| write off | 中 | 低 | 情绪词 |
-
-**注意：** 标题和副标题中已有的词（SnapDeduct, Tax, Assistant, Track, Deductions, Mileage）不需要在关键词里重复——Apple 自动索引。
+Apple 会自动把标题+副标题的每个词都加入搜索索引。
 
 ---
 
-## 四、宣传文本（170 字符，随时可改）
+## 四、定价分析
 
-```
-Q1 税季：季度税截止日 + SEP-IRA 贡献截止日提醒。免费追踪收据、里程和 12 类常见漏抵。50 次免费。Pro $89.99/年。
-```
+| 竞品 | 月付 | 年付 |
+|------|------|------|
+| Smart Receipts | $4.99 | $49.99 |
+| MileIQ | $5.99 | $59.99 |
+| Hurdlr | $7.99 | $59.99 |
+| Everlance | $8 | $60 |
+| **SnapDeduct** | **$8.99** | **$89.99** |
+| Driversnote | $9.99 | $99.99 |
 
-季节轮换文案：
-- **1-4 月：** "Tax season is here. Track every deduction, avoid penalties. Free download."
-- **5-12 月：** "Don't wait until April. Start tracking now. 50 free scans."
-
----
-
-## 五、App 描述（4000 字符）
-
-```
-Don't let the IRS surprise you.
-
-SnapDeduct is a tax assistant for freelancers and self-employed workers. It tracks deductions, reminds you about quarterly estimated taxes, logs mileage, and helps you discover write-offs you're probably missing.
-
-WHY FREELANCERS CHOOSE SNAPDEDUCT
-
-• Quarterly Tax Deadlines — Know exactly when estimated taxes are due and how much to pay. Avoid the $8,000 mistake a real freelancer made.
-
-• 12 Tax Mistakes You Won't Make — SnapDeduct covers mileage rules (IRS Pub 463), home office (Pub 587), business vs personal expenses (Pub 535), SEP-IRA contributions, health insurance deductions, and more. Every tip cites the specific IRS rule.
-
-• Receipt Scanning — Camera opens instantly. AI reads the vendor, amount, and date, then auto-files it under the correct Schedule C category.
-
-• Mileage Log — $0.70/mile (IRS 2025 rate). Log trips in seconds with daily reminder. Destination, purpose, odometer — full Pub 463 compliance.
-
-• Self-Employment Tax Calculator — See your estimated SE tax (15.3%) in real time. Most new freelancers are surprised by this bill.
-
-• Daily Reminders — Optional 8 PM notification: "Any business driving today?"
-
-WHAT YOU GET FOR FREE
-• Quarterly tax deadline tracking
-• 50 receipt scans
-• Mileage logging
-• Home office calculator ($5/sq ft)
-• Deduction discovery (12 categories with IRS citations)
-• SE tax calculator
-• Tax filing deadline reminders
-
-PRO UPGRADE ($89.99/year)
-• Unlimited receipt scans & mileage trips
-• CSV & PDF export for your CPA
-• Daily mileage reminders
-• Industry comparison benchmarks
-
-EDUCATIONAL, NOT TAX ADVICE
-SnapDeduct provides estimates based on IRS guidelines. It is not tax, legal, or financial advice. Every calculation cites its source (Pub 463, 505, 535, 587, etc.).
-
-PRIVACY
-All data stored on your device. No accounts. No servers. No tracking.
-
-Questions: support@snapdeduct.com
-Privacy: https://bambi2008.github.io/receiptsnap/privacy.html
-Terms: https://bambi2008.github.io/receiptsnap/terms.html
-```
+我们在上半区，合理。**但需要 A/B 测试 $79.99/年**——Driversnote 和 Hurdlr 之间巨大的空隙没人填。
 
 ---
 
-## 六、截图计划（6.7 寸 iPhone）
+## 五、最大威胁：Stride
 
-前三张决定 80% 转化率。必须是带文字的营销图，不是裸截图。
+| | Stride | SnapDeduct |
+|--|--------|------------|
+| 价格 | $0 | $89.99/年 |
+| 评分 | 4.84 (92K) | 0 (新品) |
+| 里程 | ✅ 自动 GPS | ✅ 手动日志 |
+| 税务提醒 | ❌ | ✅ 季度税引擎 |
+| IRS 教育 | ❌ | ✅ 12 类 + 出处 |
+| 收据 OCR | ❌ | ✅ |
+| SE 税计算 | ❌ | ✅ |
 
-| # | 内容 | 覆盖文字 |
-|---|------|---------|
-| 1 | **季度税仪表盘全景** | "Know what you owe, before the IRS does" |
-| 2 | **收据扫描流程** | "Snap a receipt. AI reads it instantly." |
-| 3 | **抵扣发现弹窗** | "12 deductions you're probably missing" |
-| 4 | **里程日志** | "$0.70/mile. Log trips in seconds." |
-| 5 | **SE 税计算器** | "See your estimated tax in real time" |
-| 6 | **30 秒演示页** | "Watch how it works in 30 seconds" |
-
-**设计规范：**
-- 上 1/3：大字标题（白色，深蓝渐变背景 `#007AFF` → `#0056CC`）
-- 下 2/3：iPhone 截图（加设备框）
-- 字号：标题 28pt，副标题 16pt
-- 不需要写价格在截图上——App Store 自动显示
+**应对：** 不在里程上跟 Stride 拼（他们免费 + 自动 GPS），在**税务智能**上打差异化。文案强调："Stride doesn't tell you about quarterly taxes."
 
 ---
 
-## 七、App 图标
+## 六、截图对标
 
-当前图标已就位（`assets/app-icon-1024.png`）。确认：
-- 1024×1024 px
-- 无透明通道
-- 无圆角（Apple 自动加）
-- 无文字（纯图形）
+前 3 名 App 的截图风格：
 
----
+| App | 风格 |
+|-----|------|
+| Keeper | 深色渐变背景 + 大字 + iPhone 截图 |
+| Hurdlr | 品牌色背景 + "$X saved" 数据展示 |
+| Everlance | 白色背景 + 里程数字放大 |
 
-## 八、评分与评价策略
-
-| 时机 | 行动 |
-|------|------|
-| 用户完成 10 次收据扫描 | 弹出系统评分对话框 |
-| 收到负面评价 | 24 小时内回复，不辩解，问怎么改进 |
-| 收到正面评价 | 回复感谢 + 暗示 "tell a freelancer friend" |
-
-**不要买评价——Apple 检测到必封。**
+**我们采用：** 深蓝渐变 + 数据展示路线。第一张截图必须出现数字（$）。用户 3 秒决定下载，$ 符号比文字快 10 倍。
 
 ---
 
-## 九、ASO 迭代周期
+## 七、上线后跟踪
 
-| 频率 | 动作 |
-|------|------|
-| 每周 | 查看 App Store Connect 搜索词报告，发现意外关键词 |
-| 每两周 | A/B 测试一张新截图 |
-| 每月 | 调整关键词（去掉 0 展示的，加新的） |
-| 每季 | 轮换宣传文本（Q1 税季文案必须不同） |
-
----
-
-## 十、竞品 ASO 对标
-
-| App | 标题关键词 | 我们有他们没有的 |
-|-----|-----------|----------------|
-| TurboTax | "Tax Return" | 常年提醒 + 季度税 |
-| Keeper Tax | "Write Off Tracker" | IRS 教育层 |
-| Expensify | "Receipt Scanner" | 税务全栈 |
-| MileIQ | "Mileage Tracker" | 收据 + 税务 |
-
-**我们的关键词优势：** `quarterly tax`, `freelancer`, `1099`, `Schedule C` 四个词几乎没人占。
+| 指标 | 查看位置 | 频率 |
+|------|---------|------|
+| 展示量 | App Store Connect → Analytics | 每天 |
+| 关键词排名 | 搜索 "quarterly tax" 等 | 每周 |
+| 竞品评分 | iTunes API | 每月 |
+| 转化率 | ASA 后台（Q1 启用） | 每天 |

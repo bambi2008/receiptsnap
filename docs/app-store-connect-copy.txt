@@ -5,10 +5,10 @@ Copy-paste ready. Updated June 2026.
 SnapDeduct: Tax Assistant
 
 === Subtitle (30 chars) ===
-Track Deductions & Mileage
+Track Quarterly Tax & Miles
 
 === Keywords (100 chars, CSV, NO SPACES) ===
-tax,deduction,freelancer,self employed,1099,mileage,tracker,quarterly,expense,receipt,Schedule C,write off,savings,reminder
+deduction,self employed,freelancer,1099,quarterly,Schedule C,IRS,receipt,log,reminder
 
 === Promotional Text (170 chars) ===
 Track quarterly taxes, mileage, receipts & 12 deduction categories. Free: 50 scans. Pro: $89.99/yr. All data on-device. No accounts.
