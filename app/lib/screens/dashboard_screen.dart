@@ -4,6 +4,7 @@ import '../providers/receipt_provider.dart';
 import '../providers/subscription_provider.dart';
 import '../providers/insights_provider.dart';
 import '../config/theme.dart';
+import '../config/constants.dart';
 import '../services/mileage_log.dart';
 import '../widgets/paywall_sheet.dart';
 
@@ -32,7 +33,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: AppTheme.bg,
       appBar: AppBar(
-        title: const Text('SnapDeduct'),
+        title: Text(AppConstants.appName),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
