@@ -148,9 +148,15 @@ class InsightsProvider extends ChangeNotifier {
     if (_annualIncome > 50000) {
       tips.add(DeductionTip(
         title: 'SEP-IRA — reduce taxable income (IRS Pub 560)',
-        description: 'You can contribute up to 25% of your net earnings to a SEP-IRA. On \$80K income, that\'s up to \$16K in tax-deferred savings.',
-        action: 'Learn more',
-        icon: '💰',
+        description: 'You can contribute up to 25% of your net earnings to a SEP-IRA. On \$80K income, that\'s up to \$16K in tax-deferred savings. No paperwork — just open an account.',
+        action: 'See limits',
+        icon: '💼',
+      ));
+      tips.add(DeductionTip(
+        title: 'Solo 401(k) vs SEP-IRA (IRS Pub 560)',
+        description: 'Solo 401(k) often beats SEP-IRA by \$6K+\$ at lower incomes. Under \$60K: Solo 401(k) allows higher contributions. Over \$100K: SEP-IRA is simpler but Solo 401(k) still caps higher.',
+        action: 'Compare options',
+        icon: '🏦',
       ));
     }
     tips.add(DeductionTip(
@@ -186,6 +192,12 @@ class InsightsProvider extends ChangeNotifier {
       ));
     }
     // 2026 tax law changes (P.L. 119-21)
+    tips.add(DeductionTip(
+      title: '🆕 QBI Deduction — 20% Off Your Income (Form 8995)',
+      description: 'The Qualified Business Income deduction lets you deduct 20% of your net business income. On \$80K profit, that\'s \$16K right off the top. Made permanent by P.L. 119-21.',
+      action: 'Calculate yours',
+      icon: '📉',
+    ));
     tips.add(DeductionTip(
       title: '🆕 2026: Overtime Pay Deduction',
       description: 'Up to \$12,500 of overtime-equivalent pay may now be deducted from income for 2025-2028. Applies to gig workers too. P.L. 119-21.',
