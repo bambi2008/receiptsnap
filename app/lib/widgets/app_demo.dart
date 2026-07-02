@@ -76,8 +76,8 @@ class _AppDemoState extends State<AppDemo> with TickerProviderStateMixin {
                 children: const [
                   _DemoPage(
                     emoji: '💰',
-                    title: 'Know What You Owe\nBefore the IRS Does',
-                    subtitle: 'Quarterly tax deadlines.\nEstimated payments.\nNo surprises at tax time.',
+                    title: 'Track Quarterly\nEstimated Taxes',
+                    subtitle: 'Know your deadlines.\nEstimate your payments.\nBe prepared for tax time.',
                     color: AppTheme.blue,
                   ),
                   _DemoPage(
@@ -89,7 +89,7 @@ class _AppDemoState extends State<AppDemo> with TickerProviderStateMixin {
                   _DemoPage(
                     emoji: '🚗',
                     title: 'Every Mile Counts.\n\$0.70 Each.',
-                    subtitle: 'Log trips in seconds.\nDaily reminder so you never forget.\nIRS-compliant records.',
+                    subtitle: 'Log trips in seconds.\nDaily reminder to help you stay on track.\nIRS-compliant records.',
                     color: AppTheme.orange,
                   ),
                   _DemoPage(

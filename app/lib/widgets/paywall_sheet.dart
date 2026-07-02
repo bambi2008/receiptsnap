@@ -37,7 +37,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
           // Icon + title
           const Icon(Icons.auto_awesome, size: 40, color: AppTheme.blue),
           const SizedBox(height: 12),
-          const Text('Protect yourself from IRS surprises', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          const Text('Stay on top of your taxes', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           const Text('Quarterly tax reminders · deduction discovery · CPA-ready reports',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 15), textAlign: TextAlign.center),

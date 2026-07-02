@@ -18,8 +18,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'icon': Icons.warning_amber_rounded,
       'iconColor': AppTheme.red,
-      'title': 'Don\'t let the IRS\nsurprise you',
-      'subtitle': 'A freelancer got fined \$8,000 because TurboTax never told them about quarterly taxes. SnapDeduct helps you stay on top of deadlines so this doesn\'t happen to you.',
+      'title': 'Quarterly taxes made\nsimple',
+      'subtitle': 'A freelancer once shared they were surprised by \$8,000 in quarterly tax penalties — because no tool told them about it. SnapDeduct helps you track quarterly deadlines and estimated payments.',
     },
     {
       'icon': Icons.lightbulb_outline,
@@ -31,7 +31,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'icon': Icons.shield_outlined,
       'iconColor': AppTheme.green,
       'title': 'Your tax safety net.\n\$7.50/month.',
-      'subtitle': '50 receipts free. Pro: \$89.99/year — less than one hour with a CPA. Avoid one penalty and it pays for itself 100× over.',
+      'subtitle': '50 receipts free. Pro: \$89.99/year — less than one hour with a CPA. If you stay organized, it pays for itself.',
     },
   ];
 
