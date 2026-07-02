@@ -54,7 +54,11 @@ class InsightsProvider extends ChangeNotifier {
   double get annualIncome => _annualIncome;
   bool get remindersEnabled => _remindersEnabled;
 
-  /// Estimated quarterly payment: (income × 25%)/4. Estimate only.
+  /// Estimated quarterly payment: (income × 25%)/4.
+  /// 25% is a blended estimate for federal income tax only.
+  /// See SE Tax card below for the separate 15.3% self-employment tax.
+  /// Actual combined rate ~26-30% for most freelancers.
+  /// Estimate only — consult a tax professional.
   String get estimatedQuarterlyPaymentFormatted =>
       estimatedQuarterlyPayment > 0
           ? '\$${estimatedQuarterlyPayment.toStringAsFixed(0)}'
