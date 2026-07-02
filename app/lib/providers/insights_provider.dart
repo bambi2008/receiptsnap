@@ -18,7 +18,8 @@ class InsightsProvider extends ChangeNotifier {
   // ── IRS-Sourced Constants ──
 
   /// IRS 2025 standard mileage rate: $0.70/mile
-  /// Source: IRS Publication 463, Chapter 4
+  /// Source: IRS Publication 463, Chapter 4.
+  /// 2026 rate typically announced in December. Update then.
   static const double irsMileageRate = 0.70;
 
   /// IRS simplified home office: $5/sq ft, max 300 sq ft ($1,500/yr)
@@ -56,8 +57,9 @@ class InsightsProvider extends ChangeNotifier {
 
   /// Estimated quarterly payment: (income × 25%)/4.
   /// 25% is a blended estimate for federal income tax only.
+  /// Actual: ~21.5% at $50K, ~27.3% at $100K, ~28.9% at $150K.
   /// See SE Tax card below for the separate 15.3% self-employment tax.
-  /// Actual combined rate ~26-30% for most freelancers.
+  /// 2026 SS wage base: $184,500 (Pub 15).
   /// Estimate only — consult a tax professional.
   String get estimatedQuarterlyPaymentFormatted =>
       estimatedQuarterlyPayment > 0
@@ -183,6 +185,25 @@ class InsightsProvider extends ChangeNotifier {
         icon: '👥',
       ));
     }
+    // 2026 tax law changes (P.L. 119-21)
+    tips.add(DeductionTip(
+      title: '🆕 2026: Overtime Pay Deduction',
+      description: 'Up to \$12,500 of overtime-equivalent pay may now be deducted from income for 2025-2028. Applies to gig workers too. P.L. 119-21.',
+      action: 'Learn more',
+      icon: '🕐',
+    ));
+    tips.add(DeductionTip(
+      title: '🆕 2026: Tips Are Tax-Free',
+      description: 'Self-employed workers can now deduct qualified tips from income. If you receive tips for your work, track them — they may be fully deductible. P.L. 119-21.',
+      action: 'Track tips',
+      icon: '💵',
+    ));
+    tips.add(DeductionTip(
+      title: '🆕 2026: 100% Bonus Depreciation',
+      description: 'Buy equipment for your business? 100% first-year expensing is now permanent. Camera, laptop, car — write off the full cost immediately. IRS Pub 946.',
+      action: 'Track assets',
+      icon: '🏗️',
+    ));
     return tips;
   }
 
