@@ -83,6 +83,31 @@ class SettingsScreen extends StatelessWidget {
             _MenuItem(Icons.info_outline, 'Disclaimer & Sources', () => _showDisclaimer(context)),
           ]),
 
+          // Privacy
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: AppTheme.green.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppTheme.green.withValues(alpha: 0.12)),
+              ),
+              child: const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(children: [
+                  Icon(Icons.lock_outline, color: AppTheme.green, size: 18),
+                  SizedBox(width: 8),
+                  Text('Your Privacy', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                ]),
+                SizedBox(height: 8),
+                Text('🟢 All data stored on your device', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+                Text('🟢 No accounts. No servers. No tracking.', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+                Text('🟢 Receipt images never leave your phone', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+                Text('🟢 No third-party analytics or ads', style: TextStyle(fontSize: 13, color: AppTheme.textSecondary)),
+              ]),
+            ),
+          ),
+
           // Legal
           ..._buildMenuSection([
             _MenuItem(Icons.description_outlined, 'Privacy Policy', () => _openUrl(AppConstants.privacyUrl)),
@@ -93,6 +118,8 @@ class SettingsScreen extends StatelessWidget {
           const Center(
             child: Column(children: [
               Text('SnapDeduct v${AppConstants.appVersion}', style: TextStyle(color: AppTheme.textTertiary, fontSize: 13)),
+              SizedBox(height: 4),
+              Text('IRS rates: 2025 tax year · Auto-updates', style: TextStyle(color: AppTheme.textTertiary, fontSize: 11)),
               SizedBox(height: 4),
               Text('Made with ❤️ for freelancers', style: TextStyle(color: AppTheme.textTertiary, fontSize: 13)),
             ]),

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../services/mileage_log.dart';
+import '../services/irs_config.dart';
 
 /// IRS-sourced constants and estimates for SnapDeduct.
 /// All estimates are clearly labeled. See inline citations.
@@ -15,27 +16,13 @@ class InsightsProvider extends ChangeNotifier {
   bool _remindersEnabled = true;
   bool _disclaimerAccepted = false;
 
-  // ── IRS-Sourced Constants ──
+  // ── IRS-Sourced Values (auto-updated via IrsConfig) ──
 
-  /// IRS 2025 standard mileage rate: $0.70/mile
-  /// Source: IRS Publication 463, Chapter 4.
-  /// 2026 rate typically announced in December. Update then.
-  static const double irsMileageRate = 0.70;
-
-  /// IRS simplified home office: $5/sq ft, max 300 sq ft ($1,500/yr)
-  /// Source: IRS Publication 587, "Simplified Method"
-  static const double irsHomeOfficeRate = 5.0;
-  static const int irsHomeOfficeMaxSqft = 300;
-
-  /// Self-employment tax: 12.4% Social Security + 2.9% Medicare = 15.3%
-  /// Source: IRC §1401; IRS Publication 334
-  static const double selfEmploymentTaxRate = 0.153;
-
-  /// Effective income tax rate estimate for $50K–$150K filers.
-  /// ESTIMATE ONLY — actual rate depends on total income, deductions,
-  /// filing status, and state. This is a blended approximation.
-  /// Source: 2025 tax brackets (IRS Rev. Proc. 2024-40)
-  static const double estimatedEffectiveRate = 0.25;
+  double get irsMileageRate => IrsConfig.mileageRate;
+  double get irsHomeOfficeRate => IrsConfig.homeOfficeRate;
+  int get irsHomeOfficeMaxSqft => IrsConfig.homeOfficeMaxSqft;
+  double get selfEmploymentTaxRate => IrsConfig.seTaxRate;
+  double get estimatedEffectiveRate => IrsConfig.estimatedEffectiveRate;
 
   // ── Disclaimer ──
 

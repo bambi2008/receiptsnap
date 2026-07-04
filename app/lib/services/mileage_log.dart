@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'irs_config.dart';
 
 /// IRS Publication 463 Table 5-1 compliant mileage trip record.
 class MileageTrip {
@@ -78,8 +79,8 @@ class MileageLog {
     }
   }
 
-  /// IRS 2025 rate: $0.70/mile (Pub 463 Ch.4)
-  static const double irsMileageRate = 0.70;
+  /// IRS mileage rate from IrsConfig (auto-updated annually).
+  static double get irsMileageRate => IrsConfig.mileageRate;
 
   static double monthlyMiles({int? month, int? year}) {
     final now = DateTime.now();
