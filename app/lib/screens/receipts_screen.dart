@@ -50,15 +50,30 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
   Widget _buildEmptyState() {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.receipt_long_outlined, size: 80, color: Colors.grey[300]),
-          const SizedBox(height: 16),
-          Text('No receipts yet', style: TextStyle(fontSize: 18, color: Colors.grey[500])),
-          const SizedBox(height: 8),
-          Text('Start snapping!', style: TextStyle(fontSize: 14, color: Colors.grey[400])),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 80, height: 80,
+              decoration: BoxDecoration(
+                color: AppTheme.blue.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.receipt_long_outlined, size: 40, color: AppTheme.blue),
+            ),
+            const SizedBox(height: 20),
+            const Text('No receipts — yet.',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppTheme.text)),
+            const SizedBox(height: 8),
+            const Text(
+              'Every coffee run, software subscription,\nand office supply adds up.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 15, color: AppTheme.textSecondary, height: 1.4),
+            ),
+          ],
+        ),
       ),
     );
   }

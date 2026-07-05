@@ -96,9 +96,9 @@ class _CameraScreenState extends State<CameraScreen> {
           HapticFeedback.mediumImpact();
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Receipt saved! ✓'),
-                duration: Duration(seconds: 2),
+              SnackBar(
+                content: const Text('✓ Saved. That\'s deductible.'),
+                duration: const Duration(seconds: 2),
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -116,12 +116,12 @@ class _CameraScreenState extends State<CameraScreen> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('OCR Failed'),
-        content: Text('Could not read the receipt. Please try again with better lighting.\n\n$message'),
+        title: const Text('Couldn\'t read that'),
+        content: Text('Try again with better lighting and a steady hand.\nBlurry receipts are tricky — even for humans.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            child: const Text('Try again'),
           ),
         ],
       ),
@@ -271,17 +271,19 @@ class _CameraScreenState extends State<CameraScreen> {
             if (_isProcessing)
               Container(
                 color: Colors.black87,
-                child: const Center(
+                child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 48,
                         height: 48,
                         child: CircularProgressIndicator(color: Colors.white),
                       ),
-                      SizedBox(height: 16),
-                      Text('Reading receipt…', style: TextStyle(color: Colors.white, fontSize: 18)),
+                      const SizedBox(height: 16),
+                      Text('Reading your receipt…', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                      const SizedBox(height: 4),
+                      Text('This stays on your device', style: TextStyle(color: Colors.white30, fontSize: 12)),
                     ],
                   ),
                 ),

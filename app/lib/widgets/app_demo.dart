@@ -94,8 +94,8 @@ class _AppDemoState extends State<AppDemo> with TickerProviderStateMixin {
                   ),
                   _DemoPage(
                     emoji: '🛡️',
-                    title: '12 Tax Mistakes\nYou Won\'t Make',
-                    subtitle: 'Quarterly taxes. Mileage. Home office.\nSE tax. Deductions you\'re missing.\n\$89.99/year = less than one CPA hour.',
+                    title: 'We\'ve Got Your Back\nat Tax Time',
+                    subtitle: 'Quarterly reminders. Mileage tracking.\nDeduction discovery. IRS sources cited.\n\$89.99/year — less than one CPA hour.',
                     color: AppTheme.purple,
                   ),
                 ],

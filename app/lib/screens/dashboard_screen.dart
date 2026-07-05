@@ -523,7 +523,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 12),
             Expanded(
               child: trips.isEmpty
-                  ? const Center(child: Text('No trips logged yet', style: TextStyle(color: AppTheme.textSecondary)))
+                  ? const Center(
+                      child: Column(mainAxisSize: MainAxisSize.min, children: [
+                        Text('No trips yet', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppTheme.textSecondary)),
+                        SizedBox(height: 8),
+                        Text('Every mile counts at \$0.70 each.\nLog your first trip.', textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14, color: AppTheme.textTertiary, height: 1.4)),
+                      ]))
                   : ListView.builder(
                       itemCount: trips.length,
                       itemBuilder: (_, i) {
