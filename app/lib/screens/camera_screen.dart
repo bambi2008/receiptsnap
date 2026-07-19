@@ -6,7 +6,9 @@ import '../providers/receipt_provider.dart';
 import '../providers/subscription_provider.dart';
 import '../models/receipt.dart';
 import '../services/ocr_service.dart';
+import '../services/receipt_image_store.dart';
 import '../widgets/result_sheet.dart';
+import '../widgets/paywall_sheet.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -29,16 +31,18 @@ class _CameraScreenState extends State<CameraScreen> {
     try {
       final XFile? photo = await _picker.pickImage(
         source: ImageSource.camera,
-        imageQuality: 90,
+        imageQuality: 85,
+        maxWidth: 3000,
+        maxHeight: 3000,
       );
       if (photo != null && mounted) {
         await _processImage(photo.path);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to capture: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to capture: $e')));
       }
     }
   }
@@ -53,16 +57,18 @@ class _CameraScreenState extends State<CameraScreen> {
     try {
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
-        imageQuality: 90,
+        imageQuality: 85,
+        maxWidth: 3000,
+        maxHeight: 3000,
       );
       if (image != null && mounted) {
         await _processImage(image.path);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to pick image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to pick image: $e')));
       }
     }
   }
@@ -71,6 +77,7 @@ class _CameraScreenState extends State<CameraScreen> {
     setState(() => _isProcessing = true);
 
     try {
+      await ReceiptImageStore.validateForOcr(imagePath);
       final ocrResult = await OcrService.processImage(imagePath);
 
       if (mounted) {
@@ -91,8 +98,9 @@ class _CameraScreenState extends State<CameraScreen> {
         if (result != null && mounted) {
           final receiptProvider = context.read<ReceiptProvider>();
           final subscriptionProvider = context.read<SubscriptionProvider>();
+          result.imagePath = await ReceiptImageStore.persist(imagePath);
           await receiptProvider.addReceipt(result);
-          subscriptionProvider.incrementReceiptCount();
+          await subscriptionProvider.incrementReceiptCount();
           HapticFeedback.mediumImpact();
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -108,9 +116,9 @@ class _CameraScreenState extends State<CameraScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isProcessing = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to process image: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to process image: $e')));
       }
     }
   }
@@ -120,10 +128,26 @@ class _CameraScreenState extends State<CameraScreen> {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Free Limit Reached'),
-        content: const Text('You\'ve used all 50 free receipts. Upgrade to Pro for unlimited scans.'),
+        content: const Text(
+          'You\'ve used all 50 free receipts. Upgrade to Pro for unlimited scans.',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Later')),
-          FilledButton(onPressed: () => Navigator.pop(context), child: const Text('Upgrade — \$4.99/mo')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Later'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(context);
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (_) => const PaywallSheet(),
+              );
+            },
+            child: const Text('View Pro plans'),
+          ),
         ],
       ),
     );
@@ -167,10 +191,30 @@ class _CameraScreenState extends State<CameraScreen> {
                             height: 30,
                             decoration: BoxDecoration(
                               border: Border(
-                                left: isLeft ? const BorderSide(color: Colors.white, width: 3) : BorderSide.none,
-                                right: !isLeft ? const BorderSide(color: Colors.white, width: 3) : BorderSide.none,
-                                top: isTop ? const BorderSide(color: Colors.white, width: 3) : BorderSide.none,
-                                bottom: !isTop ? const BorderSide(color: Colors.white, width: 3) : BorderSide.none,
+                                left: isLeft
+                                    ? const BorderSide(
+                                        color: Colors.white,
+                                        width: 3,
+                                      )
+                                    : BorderSide.none,
+                                right: !isLeft
+                                    ? const BorderSide(
+                                        color: Colors.white,
+                                        width: 3,
+                                      )
+                                    : BorderSide.none,
+                                top: isTop
+                                    ? const BorderSide(
+                                        color: Colors.white,
+                                        width: 3,
+                                      )
+                                    : BorderSide.none,
+                                bottom: !isTop
+                                    ? const BorderSide(
+                                        color: Colors.white,
+                                        width: 3,
+                                      )
+                                    : BorderSide.none,
                               ),
                             ),
                           ),
@@ -181,20 +225,30 @@ class _CameraScreenState extends State<CameraScreen> {
                         top: 8,
                         right: 8,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.black54,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             sub.isPro ? 'Pro' : 'Free: ${sub.remainingFree}',
-                            style: const TextStyle(color: Colors.white, fontSize: 12),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                       ),
                       // Placeholder receipt preview
                       const Center(
-                        child: Icon(Icons.receipt_long, color: Colors.white24, size: 80),
+                        child: Icon(
+                          Icons.receipt_long,
+                          color: Colors.white24,
+                          size: 80,
+                        ),
                       ),
                     ],
                   ),
@@ -221,7 +275,11 @@ class _CameraScreenState extends State<CameraScreen> {
                             color: Colors.white24,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(Icons.photo_library_outlined, color: Colors.white, size: 24),
+                          child: const Icon(
+                            Icons.photo_library_outlined,
+                            color: Colors.white,
+                            size: 24,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 32),
@@ -268,7 +326,10 @@ class _CameraScreenState extends State<CameraScreen> {
                         child: CircularProgressIndicator(color: Colors.white),
                       ),
                       SizedBox(height: 16),
-                      Text('Reading receipt…', style: TextStyle(color: Colors.white, fontSize: 18)),
+                      Text(
+                        'Reading receipt…',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
                     ],
                   ),
                 ),

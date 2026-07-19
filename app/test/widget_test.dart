@@ -26,10 +26,12 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
+          ChangeNotifierProvider(
+            create: (_) => ReceiptProvider()..loadReceipts(),
+          ),
           ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
         ],
-        child: const SnapDeductApp(),
+        child: const ReceiptSnapApp(),
       ),
     );
     await tester.pumpAndSettle();
@@ -40,10 +42,12 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
+          ChangeNotifierProvider(
+            create: (_) => ReceiptProvider()..loadReceipts(),
+          ),
           ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
         ],
-        child: const SnapDeductApp(),
+        child: const ReceiptSnapApp(),
       ),
     );
     await tester.pumpAndSettle();
@@ -57,10 +61,12 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => ReceiptProvider()..loadReceipts()),
+          ChangeNotifierProvider(
+            create: (_) => ReceiptProvider()..loadReceipts(),
+          ),
           ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
         ],
-        child: const SnapDeductApp(),
+        child: const ReceiptSnapApp(),
       ),
     );
     await tester.pumpAndSettle();

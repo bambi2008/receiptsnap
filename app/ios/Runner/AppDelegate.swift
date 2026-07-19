@@ -13,12 +13,8 @@ import UIKit
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
 
-    // Custom plugins: Vision OCR + StoreKit 2
-    let visionRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "VisionOcrPlugin")
-    VisionOcrPlugin.register(with: visionRegistrar)
-
-    if #available(iOS 15.0, *) {
-      let storeKitRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "StoreKitManager")
+    // Custom StoreKit 2 bridge. OCR is provided by the Flutter ML Kit plugin.
+    if let storeKitRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "StoreKitManager") {
       StoreKitManager.register(with: storeKitRegistrar)
     }
   }

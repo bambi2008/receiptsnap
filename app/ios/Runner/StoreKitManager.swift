@@ -1,6 +1,10 @@
 import Flutter
 import StoreKit
 
+private enum ReceiptSnapPurchaseError: Error {
+    case unverifiedTransaction
+}
+
 /// Native StoreKit 2 plugin for In-App Purchases.
 /// Handles Method Channel calls from Flutter for subscriptions.
 @available(iOS 15.0, *)
@@ -9,10 +13,11 @@ class StoreKitManager: NSObject, FlutterPlugin {
     // Product IDs matching App Store Connect configuration
     private static let monthlyId = "com.snapdeduct.pro.monthly"
     private static let annualId  = "com.snapdeduct.pro.annual"
+    private static let allowedProductIds = Set([monthlyId, annualId])
 
     static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(
-            name: "com.receiptsnap.storekit/iap",
+            name: "com.snapdeduct.storekit/iap",
             binaryMessenger: registrar.messenger()
         )
         let instance = StoreKitManager()
@@ -77,6 +82,12 @@ class StoreKitManager: NSObject, FlutterPlugin {
     // MARK: - Purchase
 
     private func purchase(productId: String, result: @escaping FlutterResult) async {
+        guard Self.allowedProductIds.contains(productId) else {
+            result(FlutterError(code: "INVALID_PRODUCT",
+                                message: "This product is not offered by ReceiptSnap.",
+                                details: nil))
+            return
+        }
         do {
             let products = try await Product.products(for: [productId])
             guard let product = products.first else {
@@ -167,7 +178,9 @@ class StoreKitManager: NSObject, FlutterPlugin {
     private func listenForTransactions() async {
         for await verification in Transaction.updates {
             if case let .verified(transaction) = verification {
-                await transaction.finish()
+                if Self.allowedProductIds.contains(transaction.productID) {
+                    await transaction.finish()
+                }
             }
         }
     }
@@ -177,7 +190,7 @@ class StoreKitManager: NSObject, FlutterPlugin {
     private func checkVerified<T>(_ verification: VerificationResult<T>) throws -> T {
         switch verification {
         case .unverified:
-            throw StoreKitError(.unknown)
+            throw ReceiptSnapPurchaseError.unverifiedTransaction
         case .verified(let safe):
             return safe
         }

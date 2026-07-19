@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -43,10 +44,15 @@ class _DetailScreenState extends State<DetailScreen> {
                   title: const Text('Delete Receipt?'),
                   content: const Text('This cannot be undone.'),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
+                    ),
                     FilledButton(
                       onPressed: () => Navigator.pop(context, true),
-                      style: FilledButton.styleFrom(backgroundColor: AppTheme.red),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppTheme.red,
+                      ),
                       child: const Text('Delete'),
                     ),
                   ],
@@ -81,14 +87,27 @@ class _DetailScreenState extends State<DetailScreen> {
               child: _receipt.imagePath != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset('assets/receipt_placeholder.png', fit: BoxFit.cover),
+                      child: Image.file(
+                        File(_receipt.imagePath!),
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, _, _) => const Center(
+                          child: Text('Receipt image unavailable'),
+                        ),
+                      ),
                     )
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.receipt_long, size: 60, color: Colors.grey[400]),
+                        Icon(
+                          Icons.receipt_long,
+                          size: 60,
+                          color: Colors.grey[400],
+                        ),
                         const SizedBox(height: 8),
-                        Text('Receipt Image', style: TextStyle(color: Colors.grey[500])),
+                        Text(
+                          'Receipt Image',
+                          style: TextStyle(color: Colors.grey[500]),
+                        ),
                       ],
                     ),
             ),
@@ -100,12 +119,34 @@ class _DetailScreenState extends State<DetailScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _buildField('Vendor', _receipt.vendorName, (v) => _update('vendorName', v)),
+                    _buildField(
+                      'Vendor',
+                      _receipt.vendorName,
+                      (v) => _update('vendorName', v),
+                    ),
                     const Divider(),
-                    _buildField('Amount', _receipt.formattedAmount, (v) {
-                      final a = double.tryParse(v.replaceAll('\$', ''));
-                      if (a != null) _update('amount', a);
-                    }, keyboardType: TextInputType.number),
+                    _buildField(
+                      'Amount',
+                      _receipt.formattedAmount,
+                      (v) {
+                        final a = double.tryParse(v.replaceAll('\$', ''));
+                        if (a != null &&
+                            a.isFinite &&
+                            a >= 0 &&
+                            a <= 10000000) {
+                          _update('amount', a);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Enter an amount from 0 to 10,000,000.',
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      keyboardType: TextInputType.number,
+                    ),
                     const Divider(),
                     _buildCategoryField(cat),
                     const Divider(),
@@ -152,12 +193,22 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Widget _buildField(String label, String value, Function(String) onChanged,
-      {TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildField(
+    String label,
+    String value,
+    Function(String) onChanged, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
     final ctrl = TextEditingController(text: value);
     return Row(
       children: [
-        SizedBox(width: 80, child: Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 14))),
+        SizedBox(
+          width: 80,
+          child: Text(
+            label,
+            style: TextStyle(color: Colors.grey[600], fontSize: 14),
+          ),
+        ),
         Expanded(
           child: TextField(
             controller: ctrl,
@@ -183,12 +234,16 @@ class _DetailScreenState extends State<DetailScreen> {
         final selected = await showModalBottomSheet<String>(
           context: context,
           builder: (_) => ListView(
-            children: categories.map((c) => ListTile(
-              leading: Icon(c.icon, color: c.color),
-              title: Text(c.label),
-              selected: c.key == _receipt.category,
-              onTap: () => Navigator.pop(context, c.key),
-            )).toList(),
+            children: categories
+                .map(
+                  (c) => ListTile(
+                    leading: Icon(c.icon, color: c.color),
+                    title: Text(c.label),
+                    selected: c.key == _receipt.category,
+                    onTap: () => Navigator.pop(context, c.key),
+                  ),
+                )
+                .toList(),
           ),
         );
         if (selected != null && mounted) {
@@ -199,7 +254,13 @@ class _DetailScreenState extends State<DetailScreen> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-            const SizedBox(width: 80, child: Text('Category', style: TextStyle(color: Colors.grey, fontSize: 14))),
+            const SizedBox(
+              width: 80,
+              child: Text(
+                'Category',
+                style: TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+            ),
             Icon(cat.icon, color: cat.color, size: 20),
             const SizedBox(width: 8),
             Text(cat.label, style: const TextStyle(fontSize: 14)),
@@ -228,7 +289,13 @@ class _DetailScreenState extends State<DetailScreen> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Row(
           children: [
-            const SizedBox(width: 80, child: Text('Date', style: TextStyle(color: Colors.grey, fontSize: 14))),
+            const SizedBox(
+              width: 80,
+              child: Text(
+                'Date',
+                style: TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+            ),
             Text(_receipt.formattedDate, style: const TextStyle(fontSize: 14)),
             const Spacer(),
             const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
@@ -241,10 +308,14 @@ class _DetailScreenState extends State<DetailScreen> {
   void _update(String field, dynamic value) {
     setState(() {
       switch (field) {
-        case 'vendorName': _receipt.vendorName = value as String;
-        case 'amount': _receipt.amount = value as double;
-        case 'category': _receipt.category = value as String;
-        case 'date': _receipt.date = value as DateTime;
+        case 'vendorName':
+          _receipt.vendorName = value as String;
+        case 'amount':
+          _receipt.amount = value as double;
+        case 'category':
+          _receipt.category = value as String;
+        case 'date':
+          _receipt.date = value as DateTime;
       }
     });
     context.read<ReceiptProvider>().updateReceipt(_receipt);

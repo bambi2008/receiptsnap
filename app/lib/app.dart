@@ -7,8 +7,8 @@ import 'screens/receipts_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/onboarding_screen.dart';
 
-class SnapDeductApp extends StatelessWidget {
-  const SnapDeductApp({super.key});
+class ReceiptSnapApp extends StatelessWidget {
+  const ReceiptSnapApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,10 @@ class _AppShellState extends State<AppShell> {
 
   void _checkOnboarding() {
     final box = Hive.box('settings');
-    final hasOnboarded = box.get(AppConstants.onboardingKey, defaultValue: false);
+    final hasOnboarded = box.get(
+      AppConstants.onboardingKey,
+      defaultValue: false,
+    );
     if (hasOnboarded) {
       setState(() => _showOnboarding = false);
     }
@@ -59,17 +62,10 @@ class _AppShellState extends State<AppShell> {
       return OnboardingScreen(onComplete: _onOnboardingComplete);
     }
 
-    final screens = const [
-      CameraScreen(),
-      ReceiptsScreen(),
-      SettingsScreen(),
-    ];
+    final screens = const [CameraScreen(), ReceiptsScreen(), SettingsScreen()];
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: screens,
-      ),
+      body: IndexedStack(index: _currentIndex, children: screens),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (i) => setState(() => _currentIndex = i),

@@ -25,7 +25,10 @@ class OcrService {
     final recognizedText = await _recognizer.processImage(inputImage);
 
     final fullText = recognizedText.text;
-    final lines = fullText.split('\n').where((l) => l.trim().isNotEmpty).toList();
+    final lines = fullText
+        .split('\n')
+        .where((l) => l.trim().isNotEmpty)
+        .toList();
 
     // Extract vendor name: usually the first meaningful line
     String vendor = _extractVendor(lines);
@@ -58,10 +61,28 @@ class OcrService {
   static String _extractVendor(List<String> lines) {
     // Skip common non-vendor lines
     final skipPrefixes = [
-      'total', 'subtotal', 'tax', 'change', 'cash', 'credit',
-      'debit', 'visa', 'mastercard', 'amex', 'thank', 'receipt',
-      'store', 'phone', 'www', 'http', 'date', 'time', 'qty',
-      'item', 'description', 'price',
+      'total',
+      'subtotal',
+      'tax',
+      'change',
+      'cash',
+      'credit',
+      'debit',
+      'visa',
+      'mastercard',
+      'amex',
+      'thank',
+      'receipt',
+      'store',
+      'phone',
+      'www',
+      'http',
+      'date',
+      'time',
+      'qty',
+      'item',
+      'description',
+      'price',
     ];
 
     for (final line in lines) {
@@ -89,7 +110,9 @@ class OcrService {
     // Look for total-related amounts first
     for (final line in lines) {
       final lower = line.toLowerCase();
-      if (lower.contains('total') || lower.contains('amount due') || lower.contains('balance')) {
+      if (lower.contains('total') ||
+          lower.contains('amount due') ||
+          lower.contains('balance')) {
         final match = amountPattern.firstMatch(line);
         if (match != null) {
           return double.tryParse(match.group(1)!) ?? 0.0;
@@ -110,20 +133,34 @@ class OcrService {
     // Match common date formats: MM/DD/YYYY, MM-DD-YYYY, Mon DD, YYYY
     final patterns = [
       RegExp(r'(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})'),
-      RegExp(r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+(\d{1,2}),?\s*(\d{4})'),
+      RegExp(
+        r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+(\d{1,2}),?\s*(\d{4})',
+      ),
     ];
 
     for (final pattern in patterns) {
       final match = pattern.firstMatch(text);
       if (match != null) {
         try {
-          if (match.groupCount >= 3 && match.group(1)!.contains(RegExp(r'[A-Za-z]'))) {
+          if (match.groupCount >= 3 &&
+              match.group(1)!.contains(RegExp(r'[A-Za-z]'))) {
             // Named month format
             final months = {
-              'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
-              'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12,
+              'jan': 1,
+              'feb': 2,
+              'mar': 3,
+              'apr': 4,
+              'may': 5,
+              'jun': 6,
+              'jul': 7,
+              'aug': 8,
+              'sep': 9,
+              'oct': 10,
+              'nov': 11,
+              'dec': 12,
             };
-            final m = months[match.group(1)!.substring(0, 3).toLowerCase()] ?? 1;
+            final m =
+                months[match.group(1)!.substring(0, 3).toLowerCase()] ?? 1;
             final d = int.tryParse(match.group(2)!) ?? 1;
             final y = int.tryParse(match.group(3)!) ?? DateTime.now().year;
             return DateTime(y, m, d);

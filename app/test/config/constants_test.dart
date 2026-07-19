@@ -3,22 +3,18 @@ import 'package:receiptsnap/config/constants.dart';
 
 void main() {
   group('AppConstants', () {
-    test('appName is SnapDeduct', () {
-      expect(AppConstants.appName, 'SnapDeduct');
+    test('appName is ReceiptSnap', () {
+      expect(AppConstants.appName, 'ReceiptSnap');
     });
 
     test('freeReceiptLimit is 50', () {
       expect(AppConstants.freeReceiptLimit, 50);
     });
 
-    test('monthlyPrice is 6.99', () {
-      expect(AppConstants.monthlyPrice, 6.99);
-    });
-
-    test('annualPrice gives ~33% discount vs monthly', () {
-      // $4.99 * 12 = $59.88, annual is $39.99
-      final monthlyAnnual = AppConstants.monthlyPrice * 12;
-      expect(AppConstants.annualPrice, lessThan(monthlyAnnual));
+    test('StoreKit product identifiers are defined', () {
+      expect(AppConstants.proMonthlyId, isNotEmpty);
+      expect(AppConstants.proAnnualId, isNotEmpty);
+      expect(AppConstants.proMonthlyId, isNot(AppConstants.proAnnualId));
     });
 
     test('appVersion is 1.0.0', () {

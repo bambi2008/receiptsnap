@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SnapDeduct — Stop Losing Tax Deductions | Receipt Tracker for Freelancers</title>
-<meta name="description" content="Snap a photo of any receipt. AI sorts it into IRS tax categories. Export a CPA-ready report in seconds. Built for US freelancers. Join the waitlist.">
-<meta property="og:title" content="SnapDeduct — Track every tax deduction, all year long">
+<title>ReceiptSnap — Receipt Organizer for Freelancers</title>
+<meta name="description" content="Photograph receipts, review suggested expense categories, and export PDF or CSV reports. Built for US freelancers. Join the waitlist.">
+<meta property="og:title" content="ReceiptSnap — Organize business receipts all year long">
 <meta property="og:description" content="The receipt tracker built for freelancers who hate bookkeeping. Join the early-access waitlist.">
 <meta property="og:type" content="website">
 <style>
@@ -98,13 +98,13 @@
   <div class="container">
     <div class="badge">Early Access · iOS</div>
     <h1>Stop losing money to <span class="accent">lost receipts</span></h1>
-    <p class="subtitle">SnapDeduct tracks every tax-deductible expense for US freelancers. Snap a receipt, AI sorts it, export a CPA-ready report. No bookkeeping degree required.</p>
+    <p class="subtitle">ReceiptSnap helps US freelancers organize business receipts. Photograph a receipt, review the extracted details and suggested category, then export a report for your records or accountant.</p>
 
     <form class="signup" id="signupForm">
       <input type="email" id="email" placeholder="your@email.com" required>
       <button type="submit" class="btn">Get Early Access</button>
     </form>
-    <p class="form-note">Join <span class="counter" id="count">0</span> freelancers on the waitlist · No spam, ever</p>
+    <p class="form-note" id="formStatus">Early-access email only · Submitted securely through Formspree · <a href="privacy.html" style="color:var(--text-sec)">Privacy</a></p>
   </div>
 </section>
 
@@ -114,7 +114,7 @@
     <h2>Three taps. Done.</h2>
     <div class="steps">
       <div class="step"><div class="num">1</div><h3>Snap</h3><p>Open the app — camera's already on. Photograph any receipt.</p></div>
-      <div class="step"><div class="num">2</div><h3>Sort</h3><p>AI reads vendor, amount, date — files it under the right IRS category.</p></div>
+      <div class="step"><div class="num">2</div><h3>Review</h3><p>On-device OCR reads vendor, amount and date, then suggests an expense category for you to verify.</p></div>
       <div class="step"><div class="num">3</div><h3>Export</h3><p>Tax time? One tap exports a clean PDF or CSV for your accountant.</p></div>
     </div>
   </div>
@@ -127,7 +127,7 @@
     <div class="pains">
       <div class="pain"><span class="icon">📸</span><p>Receipts buried in your camera roll between cat photos and screenshots</p></div>
       <div class="pain"><span class="icon">😰</span><p>Every March: a weekend lost digging for receipts you'll never find</p></div>
-      <div class="pain"><span class="icon">💸</span><p>Missing 20-30% of deductions because you can't prove the expense</p></div>
+      <div class="pain"><span class="icon">💸</span><p>Business expenses are harder to review when supporting receipts are missing</p></div>
       <div class="pain"><span class="icon">🤯</span><p>Expensify feels built for a 500-person company, not a team of one</p></div>
     </div>
   </div>
@@ -136,16 +136,16 @@
 <section>
   <div class="container">
     <p class="section-label">Pricing</p>
-    <h2>Less than one coffee a month</h2>
+    <h2>Start free, upgrade when needed</h2>
     <div class="price-card">
-      <div class="best">BEST VALUE · SAVE 52%</div>
-      <div class="price">$39.99<span>/year</span></div>
-      <p class="price-sub">just $3.33/month · or $6.99 billed monthly</p>
+      <div class="best">50 RECEIPTS FREE</div>
+      <div class="price">Pro<span> optional</span></div>
+      <p class="price-sub">Current localized subscription prices are shown in the app and App Store before purchase.</p>
       <ul class="features">
         <li>Unlimited receipt scans</li>
-        <li>AI auto-categorization (IRS Schedule C)</li>
+        <li>On-device OCR and category suggestions</li>
         <li>PDF & CSV export for your CPA</li>
-        <li>Monthly tax-savings dashboard</li>
+        <li>Monthly receipt totals</li>
         <li>Your data stays on your device</li>
       </ul>
       <button class="btn" style="width:100%" onclick="document.getElementById('email').scrollIntoView({behavior:'smooth'});document.getElementById('email').focus()">Start with 50 free receipts</button>
@@ -160,13 +160,13 @@
       <input type="email" id="email2" placeholder="your@email.com" required>
       <button type="submit" class="btn">Get Early Access</button>
     </form>
-    <p class="form-note">We'll email you the moment SnapDeduct launches on the App Store.</p>
+    <p class="form-note" id="formStatus2">We'll email you when ReceiptSnap launches. Submitted through Formspree.</p>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    SnapDeduct · Built for freelancers · <a href="privacy.html" style="color:var(--text-sec)">Privacy</a> · <a href="terms.html" style="color:var(--text-sec)">Terms</a>
+    ReceiptSnap · Built for freelancers · <a href="privacy.html" style="color:var(--text-sec)">Privacy</a> · <a href="terms.html" style="color:var(--text-sec)">Terms</a>
   </div>
 </footer>
 
@@ -174,40 +174,37 @@
 <div class="modal" id="modal">
   <div class="modal-box">
     <h3>You're on the list! 🎉</h3>
-    <p>We'll email you the moment SnapDeduct launches. Want to help shape it? Reply to our welcome email and tell us your biggest tax-time headache.</p>
+    <p>We'll email you when ReceiptSnap launches. You can unsubscribe or request deletion at any time.</p>
     <button class="btn" onclick="document.getElementById('modal').classList.remove('show')">Got it</button>
   </div>
 </div>
 
 <script>
-  // Waitlist counter (localStorage demo — replace with real backend/Formspree)
-  const COUNT_KEY = 'snapdeduct_waitlist';
-  function getCount(){ return parseInt(localStorage.getItem(COUNT_KEY) || '127'); }
-  function renderCount(){ document.getElementById('count').textContent = getCount(); }
-  renderCount();
-
   function handleSignup(emailId){
-    return function(e){
+    return async function(e){
       e.preventDefault();
       const email = document.getElementById(emailId).value.trim();
       if(!email || !email.includes('@')) return;
+      const button = e.target.querySelector('button');
+      const status = document.getElementById(emailId === 'email' ? 'formStatus' : 'formStatus2');
+      button.disabled = true;
+      button.textContent = 'Joining…';
 
-      // === REAL EMAIL CAPTURE via Formspree ===
-      fetch('https://formspree.io/f/xqeorkzo', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: JSON.stringify({email: email, source: 'snapdeduct-landing'})
-      }).catch(function(err){ console.error('Signup error:', err); });
-
-      // Local counter (visual social proof only)
-      localStorage.setItem(COUNT_KEY, getCount() + 1);
-
-      // Analytics event (wire to Plausible/GA in production)
-      if(window.plausible) window.plausible('Waitlist Signup');
-
-      document.getElementById('modal').classList.add('show');
-      e.target.reset();
-      renderCount();
+      try {
+        const response = await fetch('https://formspree.io/f/xqeorkzo', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+          body: JSON.stringify({email: email, source: 'receiptsnap-landing'})
+        });
+        if(!response.ok) throw new Error('Signup failed');
+        document.getElementById('modal').classList.add('show');
+        e.target.reset();
+      } catch(err) {
+        status.textContent = 'We could not join the waitlist. Please try again or email support@receiptsnap.com.';
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Get Early Access';
+      }
     };
   }
 

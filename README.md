@@ -14,17 +14,17 @@
 </p>
 
 <p align="center">
-  <b>Snap → Categorize → Export.</b> Three taps from receipt to tax deduction.<br>
-  On-device AI. IRS Schedule C categories. CPA-ready.
+  <b>Snap → Review → Export.</b> A short path from receipt photo to organized expense record.<br>
+  On-device OCR. Expense-category suggestions. Accountant-friendly exports.
 </p>
 
 ---
 
 ## ✨ What is ReceiptSnap?
 
-ReceiptSnap is an iOS app that turns every business receipt into a tax deduction — instantly. Built specifically for **US freelancers, 1099 contractors, and self-employed professionals.**
+ReceiptSnap is an iOS app that helps turn business receipt photos into organized expense records. It is built for **US freelancers, 1099 contractors, and self-employed professionals.**
 
-Open the app → snap a photo → AI reads vendor, amount, date → categorizes by IRS Schedule C rules → export to your CPA.
+Open the app → snap a photo → on-device OCR reads vendor, amount, and date → review the suggested category → export for your records or accountant.
 
 ```
 📸 Snap     →     🤖 AI Reads     →     📊 Dashboard     →     📤 CPA Export
@@ -40,7 +40,7 @@ Open the app → snap a photo → AI reads vendor, amount, date → categorizes 
 
 | Camera | Result | Dashboard | Export | Paywall |
 |:---:|:---:|:---:|:---:|:---:|
-| Snap in 1 tap | AI extracts data | Track deductions | PDF to CPA | $4.99/mo |
+| Snap in 1 tap | OCR extracts data | Organize expenses | PDF to CPA | Localized App Store pricing |
 
 > Screenshots at `assets/screenshots/` — optimized for iPhone 6.7" (1290×2796)
 
@@ -82,7 +82,7 @@ Open the app → snap a photo → AI reads vendor, amount, date → categorizes 
 ```
 
 **Key design decisions:**
-- 🧠 **On-device OCR** — Apple Vision framework. Zero cloud latency. Works offline.
+- 🧠 **On-device OCR** — Google ML Kit text recognition. Receipt images are not uploaded by ReceiptSnap for OCR.
 - 💰 **StoreKit 2** — Native subscription management via Method Channel
 - 📦 **Provider** — Lightweight state management (no Bloc/Redux overhead)
 - 🔒 **Hive** — Fast local DB for receipts. All data stays on your phone.
@@ -195,7 +195,7 @@ code coverage      // TODO: add lcov
 
 | | Free | Pro |
 |:---|:---:|:---:|
-| **Price** | $0 forever | $4.99/mo or $39.99/yr |
+| **Price** | 50 receipts free | Localized price shown in the app and App Store |
 | **Receipts** | 50 | Unlimited |
 | **OCR** | ✅ | ✅ |
 | **Categories** | 10 Schedule C | 10 Schedule C |

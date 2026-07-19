@@ -26,8 +26,18 @@ void main() {
     });
 
     test('each receipt gets unique id', () {
-      final a = Receipt(vendorName: 'A', amount: 1, date: DateTime.now(), category: 'other');
-      final b = Receipt(vendorName: 'B', amount: 2, date: DateTime.now(), category: 'other');
+      final a = Receipt(
+        vendorName: 'A',
+        amount: 1,
+        date: DateTime.now(),
+        category: 'other',
+      );
+      final b = Receipt(
+        vendorName: 'B',
+        amount: 2,
+        date: DateTime.now(),
+        category: 'other',
+      );
       expect(a.id, isNot(b.id));
     });
 
@@ -62,8 +72,20 @@ void main() {
     });
 
     test('formattedDate handles all months', () {
-      final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
       for (var i = 0; i < 12; i++) {
         final receipt = Receipt(
           vendorName: 'Test',
@@ -123,7 +145,13 @@ void main() {
     });
 
     test('csvHeaders returns correct columns', () {
-      expect(Receipt.csvHeaders, ['Date', 'Vendor', 'Category', 'Amount', 'Note']);
+      expect(Receipt.csvHeaders, [
+        'Date',
+        'Vendor',
+        'Category',
+        'Amount',
+        'Note',
+      ]);
     });
 
     test('fields are mutable after creation', () {

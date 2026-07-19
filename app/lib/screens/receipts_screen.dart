@@ -33,13 +33,23 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.bg,
       appBar: AppBar(title: const Text('Receipts')),
-      body: receipts.isEmpty
+      body: provider.receipts.isEmpty
           ? _buildEmptyState()
           : ListView(
               children: [
                 _buildSummaryCard(provider),
                 _buildSearchBar(),
-                ...grouped.entries.map((e) => _buildMonthSection(e.key, e.value)),
+                if (receipts.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Center(
+                      child: Text('No receipts match your search.'),
+                    ),
+                  )
+                else
+                  ...grouped.entries.map(
+                    (e) => _buildMonthSection(e.key, e.value),
+                  ),
                 const SizedBox(height: 80),
               ],
             ),
@@ -53,9 +63,15 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
         children: [
           Icon(Icons.receipt_long_outlined, size: 80, color: Colors.grey[300]),
           const SizedBox(height: 16),
-          Text('No receipts yet', style: TextStyle(fontSize: 18, color: Colors.grey[500])),
+          Text(
+            'No receipts yet',
+            style: TextStyle(fontSize: 18, color: Colors.grey[500]),
+          ),
           const SizedBox(height: 8),
-          Text('Start snapping!', style: TextStyle(fontSize: 14, color: Colors.grey[400])),
+          Text(
+            'Start snapping!',
+            style: TextStyle(fontSize: 14, color: Colors.grey[400]),
+          ),
         ],
       ),
     );
@@ -73,17 +89,37 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: AppTheme.blue.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: AppTheme.blue.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('THIS MONTH', style: TextStyle(color: Colors.white70, fontSize: 12, letterSpacing: 1)),
+          const Text(
+            'THIS MONTH',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+              letterSpacing: 1,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text('${provider.monthlyCount} receipts', style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-          Text('\$${provider.monthlyTotal.toStringAsFixed(2)} in deductions',
-              style: const TextStyle(color: Colors.white70, fontSize: 16)),
+          Text(
+            '${provider.monthlyCount} receipts',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '\$${provider.monthlyTotal.toStringAsFixed(2)} in recorded expenses',
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
+          ),
         ],
       ),
     );
@@ -116,7 +152,15 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
-          child: Text(month, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.textSecondary, letterSpacing: 0.5)),
+          child: Text(
+            month,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textSecondary,
+              letterSpacing: 0.5,
+            ),
+          ),
         ),
         ...receipts.map((r) => _buildReceiptCard(r)),
       ],
@@ -137,7 +181,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
             label: 'Category',
           ),
           SlidableAction(
-            onPressed: (_) => context.read<ReceiptProvider>().deleteReceipt(receipt.id),
+            onPressed: (_) => _confirmDelete(receipt),
             backgroundColor: AppTheme.red,
             foregroundColor: Colors.white,
             icon: Icons.delete_outline,
@@ -151,7 +195,12 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(receipt: receipt)));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => DetailScreen(receipt: receipt),
+                ),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.all(14),
@@ -171,14 +220,32 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(receipt.vendorName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                        Text(
+                          receipt.vendorName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
                         const SizedBox(height: 2),
-                        Text(receipt.formattedDate, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+                        Text(
+                          receipt.formattedDate,
+                          style: const TextStyle(
+                            color: AppTheme.textSecondary,
+                            fontSize: 13,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Text(receipt.formattedAmount,
-                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: AppTheme.text)),
+                  Text(
+                    receipt.formattedAmount,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppTheme.text,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -192,18 +259,45 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     final selected = await showModalBottomSheet<String>(
       context: context,
       builder: (_) => ListView(
-        children: categories.map((c) => ListTile(
-          leading: Icon(c.icon, color: c.color),
-          title: Text(c.label),
-          selected: c.key == receipt.category,
-          onTap: () => Navigator.pop(context, c.key),
-        )).toList(),
+        children: categories
+            .map(
+              (c) => ListTile(
+                leading: Icon(c.icon, color: c.color),
+                title: Text(c.label),
+                selected: c.key == receipt.category,
+                onTap: () => Navigator.pop(context, c.key),
+              ),
+            )
+            .toList(),
       ),
     );
     if (selected != null && selected != receipt.category) {
       receipt.category = selected;
       if (!mounted) return;
       await context.read<ReceiptProvider>().updateReceipt(receipt);
+    }
+  }
+
+  Future<void> _confirmDelete(Receipt receipt) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete receipt?'),
+        content: Text('Delete ${receipt.vendorName} and its saved image?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) {
+      await context.read<ReceiptProvider>().deleteReceipt(receipt.id);
     }
   }
 
