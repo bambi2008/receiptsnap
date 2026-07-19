@@ -4,35 +4,35 @@
 ReceiptSnap: AI Receipt Scanner
 
 --- Subtitle (30 chars max) ---
-Tax Deductions for Freelancers
+Receipts for Freelancers
 
 --- Keywords (100 chars) ---
-receipt,scan,tax,expense,deduction,freelance,self-employed,business,tracker,ocr,1099,schedule-c,receipt-scan,small-biz
+receipt,scan,tax,expense,freelance,self-employed,business,tracker,ocr,1099,records,invoice
 
 --- Description ---
 
-Stop losing thousands in tax deductions. ReceiptSnap turns every business receipt into tax savings — instantly.
+Turn business receipt photos into organized expense records.
 
-Snap a photo. Our AI reads the receipt, extracts the vendor, amount, and date, then automatically assigns the right IRS Schedule C category. Export everything to your CPA in one tap. Try 50 receipts free.
+Snap a photo. On-device OCR extracts the vendor, amount, and date, then suggests an expense category for you to review. Export your records as PDF or CSV. Try 50 receipts free.
 
-Your Receipts. Your Deductions. Instantly Organized.
+Your Receipts. Your Records. Organized.
 
-ReceiptSnap is the AI-powered receipt scanner built specifically for US freelancers and self-employed professionals. No more shoeboxes of paper receipts. No more manual data entry. No more missed deductions.
+ReceiptSnap is an on-device receipt scanner built for freelancers and self-employed professionals. Keep receipt details together, review every extracted field, and prepare clean records when you need them.
 
 HOW IT WORKS
 1. Snap a photo of any business receipt
 2. AI extracts vendor, amount, date — automatically
-3. Receipt is categorized by IRS Schedule C rules (Advertising, Meals, Travel, Software, and more)
-4. Export as a clean PDF or CSV for your CPA at tax time
+3. Review the suggested expense category (Advertising, Meals, Travel, Software, and more)
+4. Export a clean PDF or CSV for your records or accountant
 
 BUILT FOR FREELANCERS
-ReceiptSnap speaks "freelancer." Every receipt is mapped to the exact IRS Schedule C category your CPA needs. We don't give you a generic "food" label — we categorize it as "Meals (50% deductible)" so you know exactly what you can write off.
+ReceiptSnap uses practical expense labels such as Meals, Travel and Software/Tools. Suggestions are for organization only; you stay in control and can change every field before saving.
 
 WHY RECEIPTSNAP
 - INSTANT CAPTURE: App opens directly to camera. One tap to snap.
 - AI-POWERED OCR: Reads vendor name, amount, date from any receipt
-- SMART CATEGORIES: Auto-assigned based on IRS Schedule C
-- CPA-READY EXPORTS: PDF report or CSV spreadsheet
+- CATEGORY SUGGESTIONS: Practical labels for you to review
+- FLEXIBLE EXPORTS: PDF report or CSV spreadsheet
 - DARK MODE: Full light/dark theme support
 
 FREE FOREVER: 50 receipts. Scan up to 50 receipts completely free.
@@ -49,18 +49,18 @@ PERFECT FOR:
 ✓ Self-employed business owners
 ✓ 1099 contractors
 ✓ Gig workers tracking expenses
-✓ Anyone filing Schedule C with the IRS
+✓ Anyone organizing business expense records
 
 --- Promotional Text (170 chars) ---
-New! ReceiptSnap now auto-categorizes every receipt by IRS Schedule C rules. Perfect for 1099 freelancers — snap, categorize, export. Start your 50-receipt free trial today.
+New! ReceiptSnap extracts receipt details on device and suggests expense categories for your review. Snap, organize and export up to 50 receipts free.
 
 --- What's New (v1.0.0) ---
 Welcome to ReceiptSnap! Your AI receipt companion for freelancers.
 
 - Instant camera capture
 - AI-powered OCR with auto-categorization
-- IRS Schedule C category mapping
-- PDF & CSV export for your CPA
+- Reviewable expense category suggestions
+- PDF & CSV export for your records or accountant
 - 50 free receipts, no credit card required
 
 --- Support URL ---
@@ -75,8 +75,8 @@ File: assets/app-icon-1024.png (1024x1024, no alpha)
 --- Screenshots (6.7 inch iPhone — 1290x2796) ---
 1. assets/screenshots/camera.png — "Snap any receipt in one tap"
 2. assets/screenshots/result.png — "AI extracts vendor, amount, date"
-3. assets/screenshots/receipts.png — "All your deductions, organized"
-4. assets/screenshots/export.png — "One-tap PDF. CPA-ready."
+3. assets/screenshots/receipts.png — "All your receipts, organized"
+4. assets/screenshots/export.png — "One-tap PDF or CSV"
 5. assets/screenshots/paywall.png — "Unlimited scanning · $4.99/month"
 
 --- Rating ---

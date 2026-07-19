@@ -183,7 +183,7 @@ code coverage      // TODO: add lcov
 
 | Test Suite | Count | Focus |
 |------------|:-----:|-------|
-| `config/categories_test.dart` | 15 | IRS category mapping + vendor guessing |
+| `config/categories_test.dart` | 15 | Expense categories + vendor guessing |
 | `config/constants_test.dart` | 8 | App constants + pricing |
 | `models/receipt_test.dart` | 13 | Receipt model + formatting |
 | `providers/receipt_provider_test.dart` | 14 | CRUD + search + grouping |
@@ -198,7 +198,7 @@ code coverage      // TODO: add lcov
 | **Price** | 50 receipts free | Localized price shown in the app and App Store |
 | **Receipts** | 50 | Unlimited |
 | **OCR** | ✅ | ✅ |
-| **Categories** | 10 Schedule C | 10 Schedule C |
+| **Categories** | 10 expense categories | 10 expense categories |
 | **Export** | PDF + CSV | PDF + CSV |
 | **Support** | — | Priority |
 
@@ -209,7 +209,7 @@ code coverage      // TODO: add lcov
 ## 🎯 Target Audience
 
 - 🇺🇸 US-based freelancers & 1099 contractors
-- 🧾 Anyone filing IRS Schedule C
+- 🧾 Anyone organizing receipts for business records
 - 🏢 Self-employed professionals: designers, developers, writers, consultants
 - 🚗 Gig workers tracking business expenses
 
