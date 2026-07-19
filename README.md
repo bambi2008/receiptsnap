@@ -82,7 +82,7 @@ Open the app → snap a photo → on-device OCR reads vendor, amount, and date �
 ```
 
 **Key design decisions:**
-- 🧠 **On-device OCR** — Google ML Kit text recognition. Receipt images are not uploaded by ReceiptSnap for OCR.
+- 🧠 **On-device OCR** — Apple Vision text recognition. Receipt images are not uploaded by ReceiptSnap for OCR.
 - 💰 **StoreKit 2** — Native subscription management via Method Channel
 - 📦 **Provider** — Lightweight state management (no Bloc/Redux overhead)
 - 🔒 **Hive** — Fast local DB for receipts. All data stays on your phone.

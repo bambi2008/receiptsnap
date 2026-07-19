@@ -13,9 +13,12 @@ import UIKit
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
 
-    // Custom StoreKit 2 bridge. OCR is provided by the Flutter ML Kit plugin.
+    // Custom native bridges for StoreKit 2 and on-device Apple Vision OCR.
     if let storeKitRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "StoreKitManager") {
       StoreKitManager.register(with: storeKitRegistrar)
+    }
+    if let visionRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "VisionOcrPlugin") {
+      VisionOcrPlugin.register(with: visionRegistrar)
     }
   }
 }

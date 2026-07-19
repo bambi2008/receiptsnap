@@ -78,7 +78,7 @@ Once Hermes is running on your Mac, I can directly:
 - Replace current placeholder with native Vision framework
 - Create Method Channel bridge: Flutter ↔ Swift
 - Real-time receipt text extraction
-- Higher accuracy than ML Kit for printed receipts
+- High accuracy for printed receipts
 
 ### StoreKit 2 IAP Testing
 - Configure products in App Store Connect
