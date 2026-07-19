@@ -39,6 +39,8 @@
 ### Screenshots (6.7" iPhone — Required)
 6.7" display (iPhone 15 Pro Max / 16 Pro Max): 1290×2796 px
 
+> **Do not upload the legacy files currently under `assets/screenshots/`.** They contain obsolete tax claims, corrupted text, and hard-coded prices. Recapture every screenshot from the final app build using App Store sandbox products and the safe captions below.
+
 - [ ] **Screenshot 1:** Camera view — "Position receipt in frame"
 - [ ] **Screenshot 2:** OCR result — "Starbucks · $12.50 · Suggested: Meals"
 - [ ] **Screenshot 3:** Receipt list — "THIS MONTH · 23 receipts · $847.50 recorded"

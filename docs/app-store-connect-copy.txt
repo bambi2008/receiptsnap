@@ -73,6 +73,8 @@ https://receiptsnap.com/privacy
 File: assets/app-icon-1024.png (1024x1024, no alpha)
 
 --- Screenshots (6.7 inch iPhone — 1290x2796) ---
+DO NOT UPLOAD the legacy files currently under assets/screenshots/. They contain obsolete tax claims, corrupted text, and hard-coded prices. Recapture from the final app build with App Store sandbox products.
+
 1. assets/screenshots/camera.png — "Snap any receipt in one tap"
 2. assets/screenshots/result.png — "AI extracts vendor, amount, date"
 3. assets/screenshots/receipts.png — "All your receipts, organized"
