@@ -8,7 +8,7 @@
 
 ### App Information
 - [ ] **App Name:** ReceiptSnap: AI Receipt Scanner
-- [ ] **Subtitle:** Receipts for Freelancers
+- [ ] **Subtitle:** Tax-Time Receipt Organizer
 - [ ] **Category:** Finance
 - [ ] **Secondary Category:** Business
 - [ ] **Bundle ID:** com.receiptsnap.app

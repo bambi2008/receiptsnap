@@ -18,16 +18,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'icon': Icons.savings_outlined,
       'iconColor': AppTheme.green,
-      'title': 'Keep business receipts organized',
+      'title': 'Stay organized for tax time',
       'subtitle':
-          'Save receipt details as you go, then review them with your records or tax professional.',
+          'Keep business receipt records together, then export them for review with your tax professional.',
     },
     {
       'icon': Icons.camera_alt_outlined,
       'iconColor': AppTheme.blue,
       'title': 'Snap, review, and save.',
       'subtitle':
-          'On-device OCR extracts vendor, amount, and date and suggests a category. You stay in control of every field.',
+          'On-device OCR extracts vendor, amount, and date and suggests a common business expense category. You verify every field.',
     },
     {
       'icon': Icons.auto_awesome,

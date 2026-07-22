@@ -52,7 +52,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Everything you need for organized receipt records',
+            'Keep tax-time receipt records organized all year',
             style: TextStyle(color: AppTheme.textSecondary, fontSize: 15),
             textAlign: TextAlign.center,
           ),
@@ -158,8 +158,8 @@ class _PaywallSheetState extends State<PaywallSheet> {
 
   static const _features = [
     'Unlimited receipt scans',
-    'CSV & PDF export',
-    'Expense category suggestions',
+    'Tax-time PDF & CSV export',
+    'Reviewable expense categories',
     'Priority support',
   ];
 

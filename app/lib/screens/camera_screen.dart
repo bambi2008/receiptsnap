@@ -255,7 +255,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Position receipt in frame',
+                  'Scan receipts for tax-time records',
                   style: TextStyle(color: Colors.white70, fontSize: 16),
                 ),
                 const Spacer(),

@@ -98,6 +98,11 @@ class _ResultSheetState extends State<ResultSheet> {
               ),
               const SizedBox(height: 16),
               _buildDatePicker(),
+              const SizedBox(height: 12),
+              const Text(
+                'Category suggestions help organize records and are not tax advice. Verify tax treatment before filing.',
+                style: TextStyle(fontSize: 11, color: Colors.grey),
+              ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

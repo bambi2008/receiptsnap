@@ -4,26 +4,26 @@
 ReceiptSnap: AI Receipt Scanner
 
 --- Subtitle (30 chars max) ---
-Receipts for Freelancers
+Tax-Time Receipt Organizer
 
 --- Keywords (100 chars) ---
 receipt,scan,tax,expense,freelance,self-employed,business,tracker,ocr,1099,records,invoice
 
 --- Description ---
 
-Turn business receipt photos into organized expense records.
+Organize business receipt records before tax time arrives.
 
-Snap a photo. On-device OCR extracts the vendor, amount, and date, then suggests an expense category for you to review. Export your records as PDF or CSV. Try 50 receipts free.
+Snap a photo. On-device OCR extracts the vendor, amount, and date, then suggests a common business expense category for you to review. Export records as PDF or CSV for yourself or your tax professional. Try 50 receipts free.
 
 Your Receipts. Your Records. Organized.
 
-ReceiptSnap is an on-device receipt scanner built for freelancers and self-employed professionals. Keep receipt details together, review every extracted field, and prepare clean records when you need them.
+ReceiptSnap is an on-device receipt scanner built for freelancers and self-employed professionals. Keep receipt details together throughout the year, review every extracted field, and prepare clean records for tax time.
 
 HOW IT WORKS
 1. Snap a photo of any business receipt
 2. AI extracts vendor, amount, date — automatically
 3. Review the suggested expense category (Advertising, Meals, Travel, Software, and more)
-4. Export a clean PDF or CSV for your records or accountant
+4. Export a clean PDF or CSV for your records or tax professional
 
 BUILT FOR FREELANCERS
 ReceiptSnap uses practical expense labels such as Meals, Travel and Software/Tools. Suggestions are for organization only; you stay in control and can change every field before saving.
@@ -49,7 +49,7 @@ PERFECT FOR:
 ✓ Self-employed business owners
 ✓ 1099 contractors
 ✓ Gig workers tracking expenses
-✓ Anyone organizing business expense records
+✓ Anyone organizing business expense records for tax time
 
 --- Promotional Text (170 chars) ---
 New! ReceiptSnap extracts receipt details on device and suggests expense categories for your review. Snap, organize and export up to 50 receipts free.

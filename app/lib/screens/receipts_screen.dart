@@ -69,7 +69,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Start snapping!',
+            'Start organizing tax-time records.',
             style: TextStyle(fontSize: 14, color: Colors.grey[400]),
           ),
         ],
@@ -117,8 +117,13 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
             ),
           ),
           Text(
-            '\$${provider.monthlyTotal.toStringAsFixed(2)} in recorded expenses',
+            '\$${provider.monthlyTotal.toStringAsFixed(2)} in recorded business expenses',
             style: const TextStyle(color: Colors.white70, fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'For recordkeeping only — verify tax treatment before filing.',
+            style: TextStyle(color: Colors.white60, fontSize: 11),
           ),
         ],
       ),
