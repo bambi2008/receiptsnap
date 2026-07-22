@@ -2,6 +2,16 @@
   publish = "."
 
 [[redirects]]
+  from = "/privacy"
+  to = "/privacy.html"
+  status = 200
+
+[[redirects]]
+  from = "/terms"
+  to = "/terms.html"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
@@ -12,3 +22,6 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src https://formspree.io; img-src 'self' data:; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://formspree.io"

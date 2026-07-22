@@ -1,6 +1,6 @@
 # Terms of Service for ReceiptSnap
 
-**Last updated: June 2026**
+**Last updated: July 19, 2026**
 
 ## 1. Acceptance of Terms
 
@@ -8,7 +8,7 @@ By downloading, installing, or using ReceiptSnap ("the App"), you agree to be bo
 
 ## 2. Description of Service
 
-ReceiptSnap is a mobile application that uses Optical Character Recognition (OCR) technology to scan business receipts and extract relevant information for tax deduction tracking purposes. The App is designed for US freelancers and self-employed individuals.
+ReceiptSnap is a mobile application that uses Optical Character Recognition (OCR) technology to scan receipts and help users organize expense records. The App is designed for freelancers and self-employed individuals.
 
 ## 3. Eligibility
 
@@ -20,11 +20,7 @@ You must be at least 13 years old to use ReceiptSnap. By using the App, you repr
 ReceiptSnap offers a free tier allowing you to scan up to 50 receipts. No payment information is required for the free tier.
 
 ### 4.2 Paid Subscription
-ReceiptSnap offers auto-renewing subscriptions:
-- Monthly: $4.99 USD per month
-- Annual: $39.99 USD per year
-
-Subscriptions are processed through Apple's In-App Purchase system and are subject to Apple's terms and conditions. Payment will be charged to your Apple ID account at confirmation of purchase.
+ReceiptSnap may offer monthly and annual auto-renewing subscriptions. The localized price and billing period displayed in the App Store purchase sheet at the time of purchase control. Subscriptions are processed through Apple's In-App Purchase system and are subject to Apple's terms. Payment is charged to your Apple ID account at confirmation of purchase.
 
 ### 4.3 Auto-Renewal
 Subscriptions automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period. You can manage and cancel subscriptions in your Apple ID account settings.
@@ -35,7 +31,7 @@ Refund requests are handled by Apple in accordance with their App Store policies
 ## 5. User Responsibilities
 
 ### 5.1 Accuracy of Information
-While ReceiptSnap uses AI to extract and categorize receipt information, you are responsible for verifying the accuracy of all extracted data before using it for tax purposes. ReceiptSnap is a tool to assist with receipt organization; it is not a substitute for professional tax advice.
+ReceiptSnap uses automated processing to extract receipt information and suggest categories. You are responsible for reviewing every field and category. Suggested categories are organizational labels, not determinations that an expense is deductible or belongs on a particular tax-return line.
 
 ### 5.2 Tax Compliance
 You are solely responsible for ensuring that your use of ReceiptSnap complies with all applicable tax laws and regulations. We recommend consulting with a qualified tax professional (CPA) regarding your specific tax situation.
@@ -75,7 +71,7 @@ Our total liability for any claim arising from your use of the App shall not exc
 
 ## 10. Tax Disclaimer
 
-**ReceiptSnap is not a tax preparation service. We do not provide tax, legal, or accounting advice.** The IRS Schedule C categories provided are suggestions based on common business expense classifications. You should consult with a qualified tax professional (CPA) to verify that your deductions are valid and correctly categorized according to current IRS regulations.
+**ReceiptSnap is a receipt-record organization tool, not a tax preparation or filing service.** We do not provide tax, legal, or accounting advice, determine deductibility, calculate tax liability or guarantee compliance with recordkeeping requirements. Category suggestions and exported reports must be reviewed by you and, when appropriate, a qualified tax professional before being used for tax purposes.
 
 ## 11. Termination
 

@@ -28,12 +28,14 @@ void main() {
     });
 
     test('addReceipt increments count', () async {
-      await provider.addReceipt(Receipt(
-        vendorName: 'Starbucks',
-        amount: 12.50,
-        date: DateTime.now(),
-        category: 'meals',
-      ));
+      await provider.addReceipt(
+        Receipt(
+          vendorName: 'Starbucks',
+          amount: 12.50,
+          date: DateTime.now(),
+          category: 'meals',
+        ),
+      );
       expect(provider.count, 1);
     });
 
@@ -51,12 +53,14 @@ void main() {
 
     test('multiple addReceipts accumulate', () async {
       for (var i = 0; i < 5; i++) {
-        await provider.addReceipt(Receipt(
-          vendorName: 'Vendor $i',
-          amount: (i + 1) * 10.0,
-          date: DateTime.now(),
-          category: 'other',
-        ));
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'Vendor $i',
+            amount: (i + 1) * 10.0,
+            date: DateTime.now(),
+            category: 'other',
+          ),
+        );
       }
       expect(provider.count, 5);
     });
@@ -94,8 +98,18 @@ void main() {
     });
 
     test('deleteReceipt only removes the correct one', () async {
-      final a = Receipt(vendorName: 'A', amount: 1, date: DateTime.now(), category: 'other');
-      final b = Receipt(vendorName: 'B', amount: 2, date: DateTime.now(), category: 'other');
+      final a = Receipt(
+        vendorName: 'A',
+        amount: 1,
+        date: DateTime.now(),
+        category: 'other',
+      );
+      final b = Receipt(
+        vendorName: 'B',
+        amount: 2,
+        date: DateTime.now(),
+        category: 'other',
+      );
       await provider.addReceipt(a);
       await provider.addReceipt(b);
       expect(provider.count, 2);
@@ -107,21 +121,46 @@ void main() {
 
     test('monthlyTotal sums current month receipts', () async {
       final now = DateTime.now();
-      await provider.addReceipt(Receipt(vendorName: 'Current', amount: 100, date: now, category: 'other'));
+      await provider.addReceipt(
+        Receipt(
+          vendorName: 'Current',
+          amount: 100,
+          date: now,
+          category: 'other',
+        ),
+      );
       expect(provider.monthlyTotal, 100.0);
     });
 
     test('monthlyCount counts only current month', () async {
       final now = DateTime.now();
-      await provider.addReceipt(Receipt(vendorName: 'C1', amount: 10, date: now, category: 'other'));
-      await provider.addReceipt(Receipt(vendorName: 'C2', amount: 20, date: now, category: 'other'));
+      await provider.addReceipt(
+        Receipt(vendorName: 'C1', amount: 10, date: now, category: 'other'),
+      );
+      await provider.addReceipt(
+        Receipt(vendorName: 'C2', amount: 20, date: now, category: 'other'),
+      );
       expect(provider.monthlyCount, 2);
     });
 
     group('search', () {
       test('empty query returns all receipts reversed', () async {
-        await provider.addReceipt(Receipt(vendorName: 'First', amount: 1, date: DateTime.now(), category: 'other'));
-        await provider.addReceipt(Receipt(vendorName: 'Second', amount: 2, date: DateTime.now(), category: 'other'));
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'First',
+            amount: 1,
+            date: DateTime.now(),
+            category: 'other',
+          ),
+        );
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'Second',
+            amount: 2,
+            date: DateTime.now(),
+            category: 'other',
+          ),
+        );
 
         final results = provider.search('');
         expect(results.length, 2);
@@ -129,8 +168,22 @@ void main() {
       });
 
       test('search filters by vendor name', () async {
-        await provider.addReceipt(Receipt(vendorName: 'Starbucks', amount: 5, date: DateTime.now(), category: 'meals'));
-        await provider.addReceipt(Receipt(vendorName: 'Amazon', amount: 50, date: DateTime.now(), category: 'office_supplies'));
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'Starbucks',
+            amount: 5,
+            date: DateTime.now(),
+            category: 'meals',
+          ),
+        );
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'Amazon',
+            amount: 50,
+            date: DateTime.now(),
+            category: 'office_supplies',
+          ),
+        );
 
         final results = provider.search('star');
         expect(results.length, 1);
@@ -138,7 +191,14 @@ void main() {
       });
 
       test('search is case insensitive', () async {
-        await provider.addReceipt(Receipt(vendorName: 'STARBUCKS', amount: 5, date: DateTime.now(), category: 'meals'));
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'STARBUCKS',
+            amount: 5,
+            date: DateTime.now(),
+            category: 'meals',
+          ),
+        );
 
         expect(provider.search('starbucks').length, 1);
         expect(provider.search('STAR').length, 1);
@@ -146,15 +206,36 @@ void main() {
       });
 
       test('search no match returns empty', () async {
-        await provider.addReceipt(Receipt(vendorName: 'Starbucks', amount: 5, date: DateTime.now(), category: 'meals'));
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'Starbucks',
+            amount: 5,
+            date: DateTime.now(),
+            category: 'meals',
+          ),
+        );
         expect(provider.search('nonexistent'), isEmpty);
       });
     });
 
     group('groupedByMonth', () {
       test('groups receipts by month', () async {
-        await provider.addReceipt(Receipt(vendorName: 'Jun Receipt', amount: 10, date: DateTime(2026, 6, 1), category: 'other'));
-        await provider.addReceipt(Receipt(vendorName: 'May Receipt', amount: 20, date: DateTime(2026, 5, 15), category: 'other'));
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'Jun Receipt',
+            amount: 10,
+            date: DateTime(2026, 6, 1),
+            category: 'other',
+          ),
+        );
+        await provider.addReceipt(
+          Receipt(
+            vendorName: 'May Receipt',
+            amount: 20,
+            date: DateTime(2026, 5, 15),
+            category: 'other',
+          ),
+        );
 
         final grouped = provider.groupedByMonth;
         expect(grouped.length, 2);

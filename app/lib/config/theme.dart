@@ -19,64 +19,60 @@ class AppTheme {
   static const Color textTertiary = Color(0xFFC7C7CC);
 
   static ThemeData get lightTheme => ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: bg,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: blue,
-          brightness: Brightness.light,
-          surface: card,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFF9F9FB),
-          foregroundColor: text,
-          elevation: 0,
-          centerTitle: true,
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFFF9F9FB),
-          selectedItemColor: blue,
-          unselectedItemColor: textSecondary,
-          type: BottomNavigationBarType.fixed,
-          elevation: 0,
-        ),
-        cardTheme: CardThemeData(
-          color: card,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        fontFamily: '.SF Pro Display',
-      );
+    useMaterial3: true,
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: bg,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: blue,
+      brightness: Brightness.light,
+      surface: card,
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFFF9F9FB),
+      foregroundColor: text,
+      elevation: 0,
+      centerTitle: true,
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color(0xFFF9F9FB),
+      selectedItemColor: blue,
+      unselectedItemColor: textSecondary,
+      type: BottomNavigationBarType.fixed,
+      elevation: 0,
+    ),
+    cardTheme: CardThemeData(
+      color: card,
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    fontFamily: '.SF Pro Display',
+  );
 
   static ThemeData get darkTheme => ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF1C1C1E),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: blue,
-          brightness: Brightness.dark,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1C1C1E),
-          elevation: 0,
-          centerTitle: true,
-        ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF1C1C1E),
-          selectedItemColor: blue,
-          unselectedItemColor: textSecondary,
-          type: BottomNavigationBarType.fixed,
-          elevation: 0,
-        ),
-        cardTheme: CardThemeData(
-          color: const Color(0xFF2C2C2E),
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        fontFamily: '.SF Pro Display',
-      );
+    useMaterial3: true,
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: const Color(0xFF1C1C1E),
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: blue,
+      brightness: Brightness.dark,
+    ),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF1C1C1E),
+      elevation: 0,
+      centerTitle: true,
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: Color(0xFF1C1C1E),
+      selectedItemColor: blue,
+      unselectedItemColor: textSecondary,
+      type: BottomNavigationBarType.fixed,
+      elevation: 0,
+    ),
+    cardTheme: CardThemeData(
+      color: const Color(0xFF2C2C2E),
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    fontFamily: '.SF Pro Display',
+  );
 }

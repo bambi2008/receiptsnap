@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/subscription_provider.dart';
+import '../providers/receipt_provider.dart';
 import '../config/theme.dart';
 import '../config/constants.dart';
 import '../widgets/paywall_sheet.dart';
+import 'tax_reminders_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -29,15 +32,22 @@ class SettingsScreen extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            color: sub.isPro ? AppTheme.green.withValues(alpha: 0.15) : AppTheme.orange.withValues(alpha: 0.15),
+                            color: sub.isPro
+                                ? AppTheme.green.withValues(alpha: 0.15)
+                                : AppTheme.orange.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             sub.isPro ? 'PRO' : 'FREE',
                             style: TextStyle(
-                              color: sub.isPro ? AppTheme.green : AppTheme.orange,
+                              color: sub.isPro
+                                  ? AppTheme.green
+                                  : AppTheme.orange,
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 0.5,
@@ -48,7 +58,10 @@ class SettingsScreen extends StatelessWidget {
                         if (!sub.isPro)
                           Text(
                             '${sub.receiptCount} of ${AppConstants.freeReceiptLimit}',
-                            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+                            style: const TextStyle(
+                              color: AppTheme.textSecondary,
+                              fontSize: 14,
+                            ),
                           ),
                       ],
                     ),
@@ -66,7 +79,10 @@ class SettingsScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         '${sub.remainingFree} free receipts remaining',
-                        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+                        style: const TextStyle(
+                          color: AppTheme.textSecondary,
+                          fontSize: 13,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       SizedBox(
@@ -80,9 +96,19 @@ class SettingsScreen extends StatelessWidget {
                     ] else ...[
                       const Row(
                         children: [
-                          Icon(Icons.check_circle, color: AppTheme.green, size: 18),
+                          Icon(
+                            Icons.check_circle,
+                            color: AppTheme.green,
+                            size: 18,
+                          ),
                           SizedBox(width: 8),
-                          Text('Pro — Unlimited receipts', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                          Text(
+                            'Pro — Unlimited receipts',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -94,20 +120,56 @@ class SettingsScreen extends StatelessWidget {
 
           // Menu items
           ..._buildMenuSection([
-            _MenuItem(Icons.history, 'Export History', () {}),
-            _MenuItem(Icons.settings_outlined, 'App Settings', () {}),
-            _MenuItem(Icons.help_outline, 'Help & Support', () {}),
-            _MenuItem(Icons.lock_outline, 'Privacy Policy', () {}),
-            _MenuItem(Icons.description_outlined, 'Terms of Service', () {}),
+            _MenuItem(
+              Icons.notifications_active_outlined,
+              'Tax Reminders',
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const TaxRemindersScreen(),
+                ),
+              ),
+            ),
+            _MenuItem(
+              Icons.restore,
+              'Restore Purchases',
+              () => _restore(context),
+            ),
+            _MenuItem(
+              Icons.help_outline,
+              'Help & Support',
+              () => _openSupport(context),
+            ),
+            _MenuItem(
+              Icons.lock_outline,
+              'Privacy Policy',
+              () => _openUrl(context, AppConstants.privacyUrl),
+            ),
+            _MenuItem(
+              Icons.description_outlined,
+              'Terms of Service',
+              () => _openUrl(context, AppConstants.termsUrl),
+            ),
+            _MenuItem(
+              Icons.delete_forever_outlined,
+              'Delete All Receipt Data',
+              () => _clearData(context),
+            ),
           ]),
 
           const SizedBox(height: 32),
           const Center(
             child: Column(
               children: [
-                Text('SnapDeduct v1.0.0', style: TextStyle(color: AppTheme.textTertiary, fontSize: 13)),
+                Text(
+                  'ReceiptSnap v1.0.0',
+                  style: TextStyle(color: AppTheme.textTertiary, fontSize: 13),
+                ),
                 SizedBox(height: 4),
-                Text('Made with ❤️ for freelancers', style: TextStyle(color: AppTheme.textTertiary, fontSize: 13)),
+                Text(
+                  'Made with ❤️ for freelancers',
+                  style: TextStyle(color: AppTheme.textTertiary, fontSize: 13),
+                ),
               ],
             ),
           ),
@@ -124,6 +186,75 @@ class SettingsScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (_) => const PaywallSheet(),
     );
+  }
+
+  Future<void> _restore(BuildContext context) async {
+    final result = await context
+        .read<SubscriptionProvider>()
+        .restorePurchases();
+    if (!context.mounted) return;
+    final message = result['status'] == 'restored'
+        ? 'Purchases restored.'
+        : result['error']?.toString() ?? 'No active subscription was found.';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _openSupport(BuildContext context) async {
+    final uri = Uri(
+      scheme: 'mailto',
+      path: AppConstants.supportEmail,
+      queryParameters: {'subject': 'ReceiptSnap Support'},
+    );
+    if (!await launchUrl(uri) && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Email ${AppConstants.supportEmail} for support.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _openUrl(BuildContext context, String url) async {
+    if (!await launchUrl(
+          Uri.parse(url),
+          mode: LaunchMode.externalApplication,
+        ) &&
+        context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open this page.')),
+      );
+    }
+  }
+
+  Future<void> _clearData(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete all receipt data?'),
+        content: const Text(
+          'This permanently deletes every saved receipt and its image from this device.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete All'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    await context.read<ReceiptProvider>().clearAll();
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('All receipt data deleted.')),
+      );
+    }
   }
 }
 
@@ -150,15 +281,14 @@ List<Widget> _buildMenuSection(List<_MenuItem> items) {
     const SizedBox(height: 8),
     Card(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(children: items.map((item) {
-        final idx = items.indexOf(item);
-        return Column(
-          children: [
-            if (idx > 0) const Divider(height: 1, indent: 56),
-            item,
-          ],
-        );
-      }).toList()),
+      child: Column(
+        children: items.map((item) {
+          final idx = items.indexOf(item);
+          return Column(
+            children: [if (idx > 0) const Divider(height: 1, indent: 56), item],
+          );
+        }).toList(),
+      ),
     ),
   ];
 }

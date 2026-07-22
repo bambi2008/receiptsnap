@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../providers/receipt_provider.dart';
 import '../config/categories.dart';
+import '../config/receipt_tax_insights.dart';
 import '../config/theme.dart';
 import '../models/receipt.dart';
 import 'detail_screen.dart';
@@ -33,13 +34,23 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.bg,
       appBar: AppBar(title: const Text('Receipts')),
-      body: receipts.isEmpty
+      body: provider.receipts.isEmpty
           ? _buildEmptyState()
           : ListView(
               children: [
                 _buildSummaryCard(provider),
                 _buildSearchBar(),
-                ...grouped.entries.map((e) => _buildMonthSection(e.key, e.value)),
+                if (receipts.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Center(
+                      child: Text('No receipts match your search.'),
+                    ),
+                  )
+                else
+                  ...grouped.entries.map(
+                    (e) => _buildMonthSection(e.key, e.value),
+                  ),
                 const SizedBox(height: 80),
               ],
             ),
@@ -53,9 +64,15 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
         children: [
           Icon(Icons.receipt_long_outlined, size: 80, color: Colors.grey[300]),
           const SizedBox(height: 16),
-          Text('No receipts yet', style: TextStyle(fontSize: 18, color: Colors.grey[500])),
+          Text(
+            'No receipts yet',
+            style: TextStyle(fontSize: 18, color: Colors.grey[500]),
+          ),
           const SizedBox(height: 8),
-          Text('Start snapping!', style: TextStyle(fontSize: 14, color: Colors.grey[400])),
+          Text(
+            'Start organizing tax-time records.',
+            style: TextStyle(fontSize: 14, color: Colors.grey[400]),
+          ),
         ],
       ),
     );
@@ -73,17 +90,42 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: AppTheme.blue.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: AppTheme.blue.withValues(alpha: 0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('THIS MONTH', style: TextStyle(color: Colors.white70, fontSize: 12, letterSpacing: 1)),
+          const Text(
+            'THIS MONTH',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+              letterSpacing: 1,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text('${provider.monthlyCount} receipts', style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold)),
-          Text('\$${provider.monthlyTotal.toStringAsFixed(2)} in deductions',
-              style: const TextStyle(color: Colors.white70, fontSize: 16)),
+          Text(
+            '${provider.monthlyCount} receipts',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '\$${provider.monthlyTotal.toStringAsFixed(2)} in recorded business expenses',
+            style: const TextStyle(color: Colors.white70, fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'For recordkeeping only — verify tax treatment before filing.',
+            style: TextStyle(color: Colors.white60, fontSize: 11),
+          ),
         ],
       ),
     );
@@ -116,7 +158,15 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
-          child: Text(month, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppTheme.textSecondary, letterSpacing: 0.5)),
+          child: Text(
+            month,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textSecondary,
+              letterSpacing: 0.5,
+            ),
+          ),
         ),
         ...receipts.map((r) => _buildReceiptCard(r)),
       ],
@@ -125,6 +175,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
   Widget _buildReceiptCard(Receipt receipt) {
     final cat = categoryMap[receipt.category] ?? categories.last;
+    final taxMatch = ReceiptTaxInsights.forReceipt(receipt);
     return Slidable(
       endActionPane: ActionPane(
         motion: const BehindMotion(),
@@ -137,7 +188,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
             label: 'Category',
           ),
           SlidableAction(
-            onPressed: (_) => context.read<ReceiptProvider>().deleteReceipt(receipt.id),
+            onPressed: (_) => _confirmDelete(receipt),
             backgroundColor: AppTheme.red,
             foregroundColor: Colors.white,
             icon: Icons.delete_outline,
@@ -151,7 +202,12 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => DetailScreen(receipt: receipt)));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => DetailScreen(receipt: receipt),
+                ),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.all(14),
@@ -171,14 +227,53 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(receipt.vendorName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+                        Text(
+                          receipt.vendorName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
                         const SizedBox(height: 2),
-                        Text(receipt.formattedDate, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+                        Text(
+                          receipt.formattedDate,
+                          style: const TextStyle(
+                            color: AppTheme.textSecondary,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 7),
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 5,
+                          children: [
+                            _TaxMarker(
+                              icon: taxMatch.needsManualReview
+                                  ? Icons.help_outline
+                                  : Icons.savings_outlined,
+                              label: 'Review: ${taxMatch.expenseLabel}',
+                              color: taxMatch.needsManualReview
+                                  ? AppTheme.textSecondary
+                                  : AppTheme.green,
+                            ),
+                            _TaxMarker(
+                              icon: Icons.warning_amber_rounded,
+                              label: taxMatch.pitfallLabel,
+                              color: AppTheme.orange,
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
-                  Text(receipt.formattedAmount,
-                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: AppTheme.text)),
+                  Text(
+                    receipt.formattedAmount,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppTheme.text,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -192,12 +287,16 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     final selected = await showModalBottomSheet<String>(
       context: context,
       builder: (_) => ListView(
-        children: categories.map((c) => ListTile(
-          leading: Icon(c.icon, color: c.color),
-          title: Text(c.label),
-          selected: c.key == receipt.category,
-          onTap: () => Navigator.pop(context, c.key),
-        )).toList(),
+        children: categories
+            .map(
+              (c) => ListTile(
+                leading: Icon(c.icon, color: c.color),
+                title: Text(c.label),
+                selected: c.key == receipt.category,
+                onTap: () => Navigator.pop(context, c.key),
+              ),
+            )
+            .toList(),
       ),
     );
     if (selected != null && selected != receipt.category) {
@@ -207,11 +306,78 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     }
   }
 
+  Future<void> _confirmDelete(Receipt receipt) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete receipt?'),
+        content: Text('Delete ${receipt.vendorName} and its saved image?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) {
+      await context.read<ReceiptProvider>().deleteReceipt(receipt.id);
+    }
+  }
+
   Map<String, List<Receipt>> _groupByMonth(List<Receipt> receipts) {
     final map = <String, List<Receipt>>{};
     for (final r in receipts) {
       map.putIfAbsent(r.monthYearKey, () => []).add(r);
     }
     return map;
+  }
+}
+
+class _TaxMarker extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  const _TaxMarker({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.18)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: color),
+          const SizedBox(width: 4),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 180),
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: color,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

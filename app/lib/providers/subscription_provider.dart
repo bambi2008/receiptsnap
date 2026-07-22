@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../config/constants.dart';
 
 /// Product info from StoreKit 2.
@@ -33,6 +34,10 @@ class IapProduct {
 class SubscriptionProvider extends ChangeNotifier {
   static const _channel = MethodChannel('com.snapdeduct.storekit/iap');
 
+  SubscriptionProvider([this._settingsBox]);
+
+  Box<dynamic>? _settingsBox;
+
   bool _isPro = false;
   int _receiptCount = 0;
   List<IapProduct> _products = [];
@@ -45,10 +50,17 @@ class SubscriptionProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get hasProducts => _products.isNotEmpty;
   String? get error => _error;
-  int get remainingFree =>
-      isPro ? 999 : (AppConstants.freeReceiptLimit - _receiptCount).clamp(0, AppConstants.freeReceiptLimit);
-  bool get hasReachedLimit => !_isPro && _receiptCount >= AppConstants.freeReceiptLimit;
-  double get usageFraction => _isPro ? 1.0 : (_receiptCount / AppConstants.freeReceiptLimit).clamp(0.0, 1.0);
+  int get remainingFree => isPro
+      ? 999
+      : (AppConstants.freeReceiptLimit - _receiptCount).clamp(
+          0,
+          AppConstants.freeReceiptLimit,
+        );
+  bool get hasReachedLimit =>
+      !_isPro && _receiptCount >= AppConstants.freeReceiptLimit;
+  double get usageFraction => _isPro
+      ? 1.0
+      : (_receiptCount / AppConstants.freeReceiptLimit).clamp(0.0, 1.0);
 
   /// Initialize: check entitlement + fetch products.
   Future<void> init() async {
@@ -57,6 +69,7 @@ class SubscriptionProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      _loadReceiptCount();
       await _checkEntitlement();
       await _fetchProducts();
     } catch (e) {
@@ -68,8 +81,9 @@ class SubscriptionProvider extends ChangeNotifier {
   }
 
   /// Record a receipt scan. Called by camera screen after successful OCR+save.
-  void incrementReceiptCount() {
+  Future<void> incrementReceiptCount() async {
     _receiptCount++;
+    await _settings().put(AppConstants.receiptCountKey, _receiptCount);
     notifyListeners();
   }
 
@@ -77,12 +91,15 @@ class SubscriptionProvider extends ChangeNotifier {
 
   Future<void> _checkEntitlement() async {
     try {
-      final result = await _channel.invokeMethod<Map<dynamic, dynamic>>('checkEntitlement');
+      final result = await _channel.invokeMethod<Map<dynamic, dynamic>>(
+        'checkEntitlement',
+      );
       if (result != null) {
         _isPro = result['isPro'] == true;
       }
     } on MissingPluginException {
-      // StoreKit unavailable (e.g., Android) — stay on local state
+      _isPro = false;
+      throw StateError('Purchases are unavailable on this device.');
     }
   }
 
@@ -96,23 +113,8 @@ class SubscriptionProvider extends ChangeNotifier {
             .toList();
       }
     } on MissingPluginException {
-      // No StoreKit — show local fallback pricing
-      _products = [
-        IapProduct(
-          id: 'com.snapdeduct.pro.monthly',
-          displayName: 'Pro Monthly',
-          description: 'Unlimited scans, export, categories',
-          price: 4.99,
-          displayPrice: r'$4.99',
-        ),
-        IapProduct(
-          id: 'com.snapdeduct.pro.annual',
-          displayName: 'Pro Annual',
-          description: 'All Pro features, best value',
-          price: 39.99,
-          displayPrice: r'$39.99',
-        ),
-      ];
+      _products = [];
+      throw StateError('App Store products are unavailable.');
     }
   }
 
@@ -122,7 +124,10 @@ class SubscriptionProvider extends ChangeNotifier {
   /// Returns a map with 'status' and optionally 'error'.
   Future<Map<String, dynamic>> purchase(String productId) async {
     try {
-      final result = await _channel.invokeMethod<Map<dynamic, dynamic>>('purchase', productId);
+      final result = await _channel.invokeMethod<Map<dynamic, dynamic>>(
+        'purchase',
+        productId,
+      );
       final status = result?['status'] as String? ?? 'unknown';
 
       if (status == 'purchased') {
@@ -130,25 +135,46 @@ class SubscriptionProvider extends ChangeNotifier {
         notifyListeners();
       }
 
-      return {'status': status};
+      return {
+        'status': status,
+        if (result?['error'] != null) 'error': result?['error'],
+      };
     } on MissingPluginException {
-      // Fallback for testing: simulate purchase
-      _isPro = true;
-      notifyListeners();
-      return {'status': 'purchased'};
+      return {
+        'status': 'error',
+        'error': 'Purchases are unavailable on this device.',
+      };
     } on PlatformException catch (e) {
       return {'status': 'error', 'error': e.message};
     }
   }
 
   /// Restore previous purchases.
-  Future<void> restorePurchases() async {
+  Future<Map<String, dynamic>> restorePurchases() async {
     try {
-      await _channel.invokeMethod('restorePurchases');
-      await _checkEntitlement();
+      final result = await _channel.invokeMethod<Map<dynamic, dynamic>>(
+        'restorePurchases',
+      );
+      _isPro = result?['isPro'] == true;
       notifyListeners();
+      return {'status': _isPro ? 'restored' : 'not_found'};
     } on MissingPluginException {
-      // no-op on unsupported platforms
+      return {
+        'status': 'error',
+        'error': 'Restore is unavailable on this device.',
+      };
+    } on PlatformException catch (e) {
+      return {'status': 'error', 'error': e.message};
     }
+  }
+
+  Box<dynamic> _settings() => _settingsBox ??= Hive.box<dynamic>('settings');
+
+  void _loadReceiptCount() {
+    final value = _settings().get(
+      AppConstants.receiptCountKey,
+      defaultValue: 0,
+    );
+    _receiptCount = value is int && value >= 0 ? value : 0;
   }
 }

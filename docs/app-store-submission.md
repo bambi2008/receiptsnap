@@ -8,7 +8,7 @@
 
 ### App Information
 - [ ] **App Name:** ReceiptSnap: AI Receipt Scanner
-- [ ] **Subtitle:** Tax Deductions for Freelancers
+- [ ] **Subtitle:** Tax-Time Receipt Organizer
 - [ ] **Category:** Finance
 - [ ] **Secondary Category:** Business
 - [ ] **Bundle ID:** com.receiptsnap.app
@@ -39,10 +39,12 @@
 ### Screenshots (6.7" iPhone — Required)
 6.7" display (iPhone 15 Pro Max / 16 Pro Max): 1290×2796 px
 
+> **Do not upload the legacy files currently under `assets/screenshots/`.** They contain obsolete tax claims, corrupted text, and hard-coded prices. Recapture every screenshot from the final app build using App Store sandbox products and the safe captions below.
+
 - [ ] **Screenshot 1:** Camera view — "Position receipt in frame"
-- [ ] **Screenshot 2:** OCR result — "Starbucks · $12.50 · Meals (50% deductible)"
-- [ ] **Screenshot 3:** Receipt list — "THIS MONTH · 23 receipts · $847.50 in deductions"
-- [ ] **Screenshot 4:** Export — "One-tap PDF. CPA-ready."
+- [ ] **Screenshot 2:** OCR result — "Starbucks · $12.50 · Suggested: Meals"
+- [ ] **Screenshot 3:** Receipt list — "THIS MONTH · 23 receipts · $847.50 recorded"
+- [ ] **Screenshot 4:** Export — "One-tap PDF or CSV"
 - [ ] **Screenshot 5:** Paywall — "Unlimited scanning · $4.99/month"
 
 ### Screenshots (6.1" iPhone — Required)
@@ -64,7 +66,7 @@
 
 ### App Description (from docs/aso-strategy.md)
 - [ ] Full description pasted
-- [x] Keywords set: receipt,scan,tax,expense,deduction,freelance,self-employed,business,tracker,ocr,1099,schedule-c,receipt-scan,small-biz
+- [x] Keywords set: receipt,scan,tax,expense,freelance,self-employed,business,tracker,ocr,1099,records,invoice
 - [ ] Promotional text set
 
 ### General Information
