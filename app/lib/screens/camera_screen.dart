@@ -11,6 +11,7 @@ import '../models/receipt.dart';
 import '../services/ocr_service.dart';
 import '../services/receipt_image_store.dart';
 import '../services/tax_reminder_service.dart';
+import 'tax_guide_screen.dart';
 import 'tax_reminders_screen.dart';
 import '../widgets/result_sheet.dart';
 import '../widgets/paywall_sheet.dart';
@@ -239,10 +240,20 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Capture the record now. Review the tax treatment later.',
+                  'Keep every eligible tax dollar working for you.',
+                  style: TextStyle(
+                    color: AppTheme.blue,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    height: 1.35,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Capture the record now. Review the tax treatment with source-backed guidance.',
                   style: TextStyle(
                     color: AppTheme.textSecondary,
-                    fontSize: 15,
+                    fontSize: 14,
                     height: 1.4,
                   ),
                 ),
@@ -281,9 +292,7 @@ class _CameraScreenState extends State<CameraScreen> {
                 _TaxGuideCard(
                   onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const TaxRemindersScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const TaxGuideScreen()),
                   ),
                 ),
                 const SizedBox(height: 18),
@@ -418,7 +427,7 @@ class _TaxGuideCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Based on IRS Publication 583',
+                          'IRS sources · reviewed July 2026',
                           style: TextStyle(
                             color: AppTheme.textSecondary,
                             fontSize: 12,

@@ -43,6 +43,18 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Add the business purpose'), findsOneWidget);
+
+    await tester.tap(find.text('Tax-time guide'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tax Guide'), findsOneWidget);
+    expect(find.text('Possible deductions'), findsOneWidget);
+    expect(find.text('Common pitfalls'), findsOneWidget);
+    expect(find.text('Source-backed federal guidance'), findsOneWidget);
+    expect(find.text('Advertising and marketing'), findsOneWidget);
+    expect(find.text('Federal estimated-tax reminders'), findsNothing);
+
+    await tester.tap(find.byTooltip('Back'));
+    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Scan a receipt'), 400);
     expect(find.text('Next tax reminder'), findsOneWidget);
     expect(find.text('Scan a receipt'), findsOneWidget);
