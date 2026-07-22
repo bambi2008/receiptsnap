@@ -166,11 +166,33 @@ class _CameraScreenState extends State<CameraScreen> {
             // Viewfinder background
             Column(
               children: [
-                const Spacer(),
+                const SizedBox(height: 20),
+                const Icon(
+                  Icons.receipt_long_outlined,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Tax-Time Receipt Organizer',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'For freelancers and self-employed professionals',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white60, fontSize: 13),
+                ),
+                const SizedBox(height: 18),
                 // Viewfinder frame
                 Container(
                   width: MediaQuery.of(context).size.width * 0.85,
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.40,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.white24, width: 1),
                     borderRadius: BorderRadius.circular(4),
@@ -255,8 +277,13 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Scan receipts for tax-time records',
+                  'Scan a business receipt for your records',
                   style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  'Review all details before using them for tax purposes.',
+                  style: TextStyle(color: Colors.white38, fontSize: 11),
                 ),
                 const Spacer(),
                 // Shutter area

@@ -36,6 +36,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.byType(BottomNavigationBar), findsOneWidget);
+    expect(find.text('Tax-Time Receipt Organizer'), findsOneWidget);
   });
 
   testWidgets('app has 3 navigation tabs', (tester) async {
