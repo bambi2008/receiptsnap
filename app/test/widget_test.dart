@@ -22,7 +22,7 @@ void main() {
     await Hive.deleteFromDisk();
   });
 
-  testWidgets('app builds and shows camera tab', (tester) async {
+  testWidgets('app builds and shows home dashboard', (tester) async {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -36,7 +36,9 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.byType(BottomNavigationBar), findsOneWidget);
-    expect(find.text('Tax-Time Receipt Organizer'), findsOneWidget);
+    expect(find.text('Every receipt ready\nfor tax time.'), findsOneWidget);
+    expect(find.text('Next tax reminder'), findsOneWidget);
+    expect(find.text('Scan a receipt'), findsOneWidget);
   });
 
   testWidgets('app has 3 navigation tabs', (tester) async {
@@ -53,7 +55,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Camera'), findsOneWidget);
+    expect(find.text('Home'), findsOneWidget);
     expect(find.text('Receipts'), findsOneWidget);
     expect(find.text('More'), findsOneWidget);
   });

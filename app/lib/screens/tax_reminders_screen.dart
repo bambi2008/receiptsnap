@@ -13,8 +13,6 @@ class TaxRemindersScreen extends StatefulWidget {
 }
 
 class _TaxRemindersScreenState extends State<TaxRemindersScreen> {
-  static const _enabledKey = 'tax_reminders_enabled';
-  static const _dateKeyPrefix = 'tax_reminder_date_';
   static final _irsSource = Uri.parse(
     'https://www.irs.gov/payments/electronic-funds-withdrawal-and-credit-or-debit-card-payment-options-for-individuals',
   );
@@ -30,9 +28,15 @@ class _TaxRemindersScreenState extends State<TaxRemindersScreen> {
   void initState() {
     super.initState();
     final settings = Hive.box('settings');
-    _enabled = settings.get(_enabledKey, defaultValue: false) as bool;
+    _enabled =
+        settings.get(TaxReminderService.enabledSettingsKey, defaultValue: false)
+            as bool;
     _deadlines = TaxReminderService.federal2026Deadlines.map((deadline) {
-      final stored = settings.get('$_dateKeyPrefix${deadline.id}') as String?;
+      final stored =
+          settings.get(
+                '${TaxReminderService.dateSettingsKeyPrefix}${deadline.id}',
+              )
+              as String?;
       final parsed = stored == null ? null : DateTime.tryParse(stored);
       return deadline.copyWith(date: parsed);
     }).toList();
@@ -66,7 +70,9 @@ class _TaxRemindersScreenState extends State<TaxRemindersScreen> {
           await TaxReminderService.cancel(deadline.id);
         }
       }
-      await Hive.box('settings').put(_enabledKey, value);
+      await Hive.box(
+        'settings',
+      ).put(TaxReminderService.enabledSettingsKey, value);
       if (mounted) setState(() => _enabled = value);
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -87,9 +93,10 @@ class _TaxRemindersScreenState extends State<TaxRemindersScreen> {
     final updated = current.copyWith(
       date: DateTime(picked.year, picked.month, picked.day, 9),
     );
-    await Hive.box(
-      'settings',
-    ).put('$_dateKeyPrefix${current.id}', updated.date.toIso8601String());
+    await Hive.box('settings').put(
+      '${TaxReminderService.dateSettingsKeyPrefix}${current.id}',
+      updated.date.toIso8601String(),
+    );
     if (_enabled) {
       await TaxReminderService.cancel(current.id);
       if (TaxReminderService.reminderDateFor(updated).isAfter(DateTime.now())) {

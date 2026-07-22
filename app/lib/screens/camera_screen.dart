@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../config/theme.dart';
 import '../providers/receipt_provider.dart';
 import '../providers/subscription_provider.dart';
 import '../models/receipt.dart';
 import '../services/ocr_service.dart';
 import '../services/receipt_image_store.dart';
+import '../services/tax_reminder_service.dart';
+import 'tax_reminders_screen.dart';
 import '../widgets/result_sheet.dart';
 import '../widgets/paywall_sheet.dart';
 
@@ -153,215 +158,376 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 
+  TaxDeadline? _nextTaxDeadline() {
+    final settings = Hive.box('settings');
+    final now = DateTime.now();
+    final deadlines =
+        TaxReminderService.federal2026Deadlines
+            .map((deadline) {
+              final stored =
+                  settings.get(
+                        '${TaxReminderService.dateSettingsKeyPrefix}${deadline.id}',
+                      )
+                      as String?;
+              return deadline.copyWith(
+                date: stored == null ? null : DateTime.tryParse(stored),
+              );
+            })
+            .where((deadline) => deadline.date.isAfter(now))
+            .toList()
+          ..sort((a, b) => a.date.compareTo(b.date));
+    return deadlines.firstOrNull;
+  }
+
   @override
   Widget build(BuildContext context) {
     final sub = context.watch<SubscriptionProvider>();
+    final receipts = context.watch<ReceiptProvider>();
+    final nextDeadline = _nextTaxDeadline();
+    final remindersEnabled =
+        Hive.box(
+              'settings',
+            ).get(TaxReminderService.enabledSettingsKey, defaultValue: false)
+            as bool;
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Viewfinder background
-            Column(
+      backgroundColor: AppTheme.bg,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          SafeArea(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 22, 20, 28),
               children: [
-                const SizedBox(height: 20),
-                const Icon(
-                  Icons.receipt_long_outlined,
-                  color: Colors.white,
-                  size: 30,
+                Row(
+                  children: [
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: AppTheme.blue.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: const Icon(
+                        Icons.receipt_long_outlined,
+                        color: AppTheme.blue,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'ReceiptSnap',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const Spacer(),
+                    _PlanBadge(
+                      label: sub.isPro ? 'PRO' : '${sub.remainingFree} FREE',
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 30),
                 const Text(
-                  'Tax-Time Receipt Organizer',
-                  textAlign: TextAlign.center,
+                  'Every receipt ready\nfor tax time.',
                   style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 34,
+                    height: 1.08,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.8,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 10),
                 const Text(
-                  'For freelancers and self-employed professionals',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white60, fontSize: 13),
+                  'Capture the record now. Review the tax treatment later.',
+                  style: TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 15,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 26),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _StatCard(
+                        label: 'THIS MONTH',
+                        value: '${receipts.monthlyCount}',
+                        detail: 'receipts',
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _StatCard(
+                        label: 'MONTH TOTAL',
+                        value: NumberFormat.currency(
+                          symbol: r'$',
+                          decimalDigits: 0,
+                        ).format(receipts.monthlyTotal),
+                        detail: 'recorded',
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _StatCard(
+                        label: 'ALL RECORDS',
+                        value: '${receipts.count}',
+                        detail: 'saved',
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 18),
-                // Viewfinder frame
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  height: MediaQuery.of(context).size.height * 0.40,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white24, width: 1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Stack(
-                    children: [
-                      // Corner brackets
-                      ...['tl', 'tr', 'bl', 'br'].map((pos) {
-                        final isLeft = pos.contains('l');
-                        final isTop = pos.contains('t');
-                        return Positioned(
-                          left: isLeft ? 0 : null,
-                          right: isLeft ? null : 0,
-                          top: isTop ? 0 : null,
-                          bottom: isTop ? null : 0,
-                          child: Container(
-                            width: 30,
-                            height: 30,
-                            decoration: BoxDecoration(
-                              border: Border(
-                                left: isLeft
-                                    ? const BorderSide(
-                                        color: Colors.white,
-                                        width: 3,
-                                      )
-                                    : BorderSide.none,
-                                right: !isLeft
-                                    ? const BorderSide(
-                                        color: Colors.white,
-                                        width: 3,
-                                      )
-                                    : BorderSide.none,
-                                top: isTop
-                                    ? const BorderSide(
-                                        color: Colors.white,
-                                        width: 3,
-                                      )
-                                    : BorderSide.none,
-                                bottom: !isTop
-                                    ? const BorderSide(
-                                        color: Colors.white,
-                                        width: 3,
-                                      )
-                                    : BorderSide.none,
-                              ),
-                            ),
-                          ),
-                        );
+                _ReminderCard(
+                  deadline: nextDeadline,
+                  enabled: remindersEnabled,
+                  onTap: () =>
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const TaxRemindersScreen(),
+                        ),
+                      ).then((_) {
+                        if (mounted) setState(() {});
                       }),
-                      // Free badge
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            sub.isPro ? 'Pro' : 'Free: ${sub.remainingFree}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Placeholder receipt preview
-                      const Center(
-                        child: Icon(
-                          Icons.receipt_long,
-                          color: Colors.white24,
-                          size: 80,
-                        ),
-                      ),
-                    ],
+                ),
+                const SizedBox(height: 24),
+                FilledButton.icon(
+                  onPressed: _captureReceipt,
+                  icon: const Icon(Icons.document_scanner_outlined),
+                  label: const Text('Scan a receipt'),
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(58),
+                    textStyle: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Scan a business receipt for your records',
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                const SizedBox(height: 10),
+                OutlinedButton.icon(
+                  onPressed: _pickFromGallery,
+                  icon: const Icon(Icons.photo_library_outlined),
+                  label: const Text('Choose from Photos'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 12),
                 const Text(
-                  'Review all details before using them for tax purposes.',
-                  style: TextStyle(color: Colors.white38, fontSize: 11),
-                ),
-                const Spacer(),
-                // Shutter area
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Gallery button
-                      GestureDetector(
-                        onTap: _pickFromGallery,
-                        child: Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white24,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.photo_library_outlined,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 32),
-                      // Shutter button
-                      GestureDetector(
-                        onTap: _captureReceipt,
-                        child: Container(
-                          width: 72,
-                          height: 72,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 4),
-                          ),
-                          child: Center(
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 64), // Spacer for symmetry
-                    ],
+                  'Category suggestions are for organization only. Verify tax treatment before filing.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 12,
+                    height: 1.35,
                   ),
                 ),
               ],
             ),
-
-            // Processing overlay
-            if (_isProcessing)
-              Container(
-                color: Colors.black87,
-                child: const Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        width: 48,
-                        height: 48,
-                        child: CircularProgressIndicator(color: Colors.white),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Reading receipt…',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    ],
-                  ),
+          ),
+          if (_isProcessing)
+            Container(
+              color: Colors.black87,
+              child: const Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: CircularProgressIndicator(color: Colors.white),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'Reading receipt…',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ],
                 ),
               ),
-          ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlanBadge extends StatelessWidget {
+  final String label;
+
+  const _PlanBadge({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppTheme.blue.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: AppTheme.blue,
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final String detail;
+
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.detail,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(13),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.7),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            maxLines: 1,
+            style: const TextStyle(
+              color: AppTheme.textSecondary,
+              fontSize: 9,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.4,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+          ),
+          Text(
+            detail,
+            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReminderCard extends StatelessWidget {
+  final TaxDeadline? deadline;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  const _ReminderCard({
+    required this.deadline,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final dueDate = deadline?.date;
+    final reminderDate = deadline == null
+        ? null
+        : TaxReminderService.reminderDateFor(deadline!);
+
+    return Material(
+      color: AppTheme.orange.withValues(alpha: 0.09),
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: AppTheme.orange.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: const Icon(
+                  Icons.notifications_active_outlined,
+                  color: AppTheme.orange,
+                ),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Next tax reminder',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        const SizedBox(width: 7),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: enabled
+                                ? AppTheme.green.withValues(alpha: 0.14)
+                                : AppTheme.textTertiary.withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            enabled ? 'ON' : 'OFF',
+                            style: TextStyle(
+                              color: enabled
+                                  ? AppTheme.green
+                                  : AppTheme.textSecondary,
+                              fontSize: 9,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      dueDate == null
+                          ? 'Check IRS.gov for updated federal dates'
+                          : '${DateFormat.MMMd().format(dueDate)} due · ${DateFormat.MMMd().format(reminderDate!)} reminder',
+                      style: const TextStyle(
+                        color: AppTheme.textSecondary,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: AppTheme.textTertiary),
+            ],
+          ),
         ),
       ),
     );

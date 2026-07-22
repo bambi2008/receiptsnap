@@ -18,6 +18,8 @@ class TaxDeadline {
 class TaxReminderService {
   static const _channel = MethodChannel('com.receiptsnap.tax_reminders');
   static const reminderLeadTime = Duration(days: 7);
+  static const enabledSettingsKey = 'tax_reminders_enabled';
+  static const dateSettingsKeyPrefix = 'tax_reminder_date_';
 
   static final List<TaxDeadline> federal2026Deadlines = [
     TaxDeadline(
