@@ -37,6 +37,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(BottomNavigationBar), findsOneWidget);
     expect(find.text('Every receipt ready\nfor tax time.'), findsOneWidget);
+    expect(find.text('Tax-time guide'), findsOneWidget);
+    expect(
+      find.text('Possible expenses to review'.toUpperCase()),
+      findsOneWidget,
+    );
+    expect(find.text('Add the business purpose'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Scan a receipt'), 400);
     expect(find.text('Next tax reminder'), findsOneWidget);
     expect(find.text('Scan a receipt'), findsOneWidget);
   });

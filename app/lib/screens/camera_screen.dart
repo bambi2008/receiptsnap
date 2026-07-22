@@ -278,6 +278,15 @@ class _CameraScreenState extends State<CameraScreen> {
                   ],
                 ),
                 const SizedBox(height: 18),
+                _TaxGuideCard(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const TaxRemindersScreen(),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
                 _ReminderCard(
                   deadline: nextDeadline,
                   enabled: remindersEnabled,
@@ -353,6 +362,178 @@ class _CameraScreenState extends State<CameraScreen> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TaxGuideCard extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _TaxGuideCard({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.all(17),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: AppTheme.blue.withValues(alpha: 0.18)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    decoration: BoxDecoration(
+                      color: AppTheme.blue.withValues(alpha: 0.11),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.menu_book_outlined,
+                      color: AppTheme.blue,
+                      size: 21,
+                    ),
+                  ),
+                  const SizedBox(width: 11),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Tax-time guide',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          'Based on IRS Publication 583',
+                          style: TextStyle(
+                            color: AppTheme.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right, color: AppTheme.textTertiary),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'POSSIBLE EXPENSES TO REVIEW',
+                style: TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.55,
+                ),
+              ),
+              const SizedBox(height: 9),
+              const Wrap(
+                spacing: 7,
+                runSpacing: 7,
+                children: [
+                  _GuideChip(label: 'Advertising'),
+                  _GuideChip(label: 'Supplies'),
+                  _GuideChip(label: 'Software'),
+                  _GuideChip(label: 'Business travel'),
+                  _GuideChip(label: 'Insurance'),
+                  _GuideChip(label: 'Business-use phone'),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Divider(color: Theme.of(context).dividerColor),
+              const SizedBox(height: 7),
+              const Text(
+                'COMMONLY MISSED STEPS',
+                style: TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.55,
+                ),
+              ),
+              const SizedBox(height: 9),
+              const _GuideStep(text: 'Add the business purpose'),
+              const _GuideStep(text: 'Separate business and personal use'),
+              const _GuideStep(text: 'Review uncategorized receipts monthly'),
+              const _GuideStep(text: 'Keep receipts and proof of payment'),
+              const SizedBox(height: 10),
+              const Text(
+                'Review prompts only — eligibility depends on your facts and current law.',
+                style: TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 11,
+                  height: 1.35,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GuideChip extends StatelessWidget {
+  final String label;
+
+  const _GuideChip({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+      decoration: BoxDecoration(
+        color: AppTheme.blue.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(9),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: AppTheme.blue,
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+}
+
+class _GuideStep extends StatelessWidget {
+  final String text;
+
+  const _GuideStep({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 7),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 2),
+            child: Icon(
+              Icons.check_circle_outline,
+              size: 16,
+              color: AppTheme.green,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
         ],
       ),
     );
