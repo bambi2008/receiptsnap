@@ -13,12 +13,15 @@ import UIKit
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
 
-    // Custom native bridges for StoreKit 2 and on-device Apple Vision OCR.
+    // Custom native bridges for StoreKit 2, Apple Vision OCR, and local reminders.
     if let storeKitRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "StoreKitManager") {
       StoreKitManager.register(with: storeKitRegistrar)
     }
     if let visionRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "VisionOcrPlugin") {
       VisionOcrPlugin.register(with: visionRegistrar)
+    }
+    if let reminderRegistrar = engineBridge.pluginRegistry.registrar(forPlugin: "TaxReminderPlugin") {
+      TaxReminderPlugin.register(with: reminderRegistrar)
     }
   }
 }

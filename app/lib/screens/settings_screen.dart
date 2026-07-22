@@ -6,6 +6,7 @@ import '../providers/receipt_provider.dart';
 import '../config/theme.dart';
 import '../config/constants.dart';
 import '../widgets/paywall_sheet.dart';
+import 'tax_reminders_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -119,6 +120,16 @@ class SettingsScreen extends StatelessWidget {
 
           // Menu items
           ..._buildMenuSection([
+            _MenuItem(
+              Icons.notifications_active_outlined,
+              'Tax Reminders',
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const TaxRemindersScreen(),
+                ),
+              ),
+            ),
             _MenuItem(
               Icons.restore,
               'Restore Purchases',

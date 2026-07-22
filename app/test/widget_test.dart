@@ -79,5 +79,15 @@ void main() {
     await tester.tap(find.text('More'));
     await tester.pumpAndSettle();
     expect(find.text('FREE'), findsWidgets);
+    expect(find.text('Tax Reminders'), findsOneWidget);
+
+    await tester.tap(find.text('Tax Reminders'));
+    await tester.pumpAndSettle();
+    expect(find.text('Federal estimated-tax reminders'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('IRS BUSINESS-EXPENSE FRAMEWORK'),
+      300,
+    );
+    expect(find.text('IRS BUSINESS-EXPENSE FRAMEWORK'), findsOneWidget);
   });
 }
