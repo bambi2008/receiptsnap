@@ -14,6 +14,11 @@ class TaxGuideEntry {
     required this.sourceTitle,
     required this.sourceUrl,
   });
+
+  String get checklistId => title
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+      .replaceAll(RegExp(r'^_+|_+$'), '');
 }
 
 class TaxGuideData {

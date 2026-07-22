@@ -13,9 +13,11 @@ void main() {
     if (!Hive.isAdapterRegistered(0)) {
       Hive.registerAdapter(ReceiptAdapter());
     }
-    await Hive.openBox<Receipt>('receipts');
-    await Hive.openBox('settings');
-    Hive.box('settings').put('has_onboarded', true);
+    final receipts = await Hive.openBox<Receipt>('receipts');
+    final settings = await Hive.openBox('settings');
+    await receipts.clear();
+    await settings.clear();
+    await settings.put('has_onboarded', true);
   });
 
   tearDown(() async {
@@ -50,14 +52,24 @@ void main() {
     expect(find.text('Possible deductions'), findsOneWidget);
     expect(find.text('Common pitfalls'), findsOneWidget);
     expect(find.text('Source-backed federal guidance'), findsOneWidget);
-    expect(find.text('Advertising and marketing'), findsOneWidget);
+    expect(find.text('Tax-season review checklist'), findsOneWidget);
+    expect(find.textContaining('reviewed'), findsWidgets);
     expect(find.text('Federal estimated-tax reminders'), findsNothing);
 
-    await tester.tap(find.byTooltip('Back'));
+    await tester.drag(find.byType(ListView).last, const Offset(0, -450));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Scan a receipt'), 400);
-    expect(find.text('Next tax reminder'), findsOneWidget);
-    expect(find.text('Scan a receipt'), findsOneWidget);
+    expect(find.text('Advertising and marketing'), findsOneWidget);
+    final advertisingCard = find.ancestor(
+      of: find.text('Advertising and marketing'),
+      matching: find.byType(ExpansionTile),
+    );
+    final advertisingCheckbox = find.descendant(
+      of: advertisingCard,
+      matching: find.byType(Checkbox),
+    );
+    expect(advertisingCheckbox, findsOneWidget);
+    expect(tester.widget<Checkbox>(advertisingCheckbox).value, isFalse);
+    expect(tester.widget<Checkbox>(advertisingCheckbox).onChanged, isNotNull);
   });
 
   testWidgets('app has 3 navigation tabs', (tester) async {

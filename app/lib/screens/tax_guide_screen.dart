@@ -1,10 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../config/tax_guide_data.dart';
 import '../config/theme.dart';
 
-class TaxGuideScreen extends StatelessWidget {
+class TaxGuideScreen extends StatefulWidget {
   const TaxGuideScreen({super.key});
+
+  @override
+  State<TaxGuideScreen> createState() => _TaxGuideScreenState();
+}
+
+class _TaxGuideScreenState extends State<TaxGuideScreen> {
+  static const _selectedSeasonKey = 'tax_checklist_selected_season';
+  static const _reviewKeyPrefix = 'tax_checklist_reviewed_';
+
+  late int _season;
+
+  Box get _settings => Hive.box('settings');
+
+  @override
+  void initState() {
+    super.initState();
+    _season =
+        _settings.get(_selectedSeasonKey, defaultValue: DateTime.now().year)
+            as int;
+  }
+
+  List<int> get _seasonOptions {
+    final current = DateTime.now().year;
+    final seasons = <int>{
+      _season,
+      current - 2,
+      current - 1,
+      current,
+      current + 1,
+    };
+    return seasons.toList()..sort((a, b) => b.compareTo(a));
+  }
+
+  String _reviewKey(TaxGuideEntry entry) =>
+      '$_reviewKeyPrefix${_season}_${entry.checklistId}';
+
+  bool _isReviewed(TaxGuideEntry entry) =>
+      _settings.get(_reviewKey(entry), defaultValue: false) as bool;
+
+  int _reviewedCount(List<TaxGuideEntry> entries) =>
+      entries.where(_isReviewed).length;
+
+  Future<void> _setSeason(int? season) async {
+    if (season == null || season == _season) return;
+    await _settings.put(_selectedSeasonKey, season);
+    if (mounted) setState(() => _season = season);
+  }
+
+  Future<void> _setReviewed(TaxGuideEntry entry, bool? value) async {
+    await _settings.put(_reviewKey(entry), value ?? false);
+    if (mounted) setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +74,27 @@ class TaxGuideScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             _GuideList(
-              entries: TaxGuideData.expenseEntries,
+              entries: const [...TaxGuideData.expenseEntries],
               showIntroduction: true,
+              season: _season,
+              seasonOptions: _seasonOptions,
+              reviewedCount: _reviewedCount(TaxGuideData.expenseEntries),
+              isReviewed: _isReviewed,
+              onReviewedChanged: _setReviewed,
+              onSeasonChanged: _setSeason,
             ),
-            _GuideList(entries: TaxGuideData.pitfallEntries),
+            _GuideList(
+              entries: const [...TaxGuideData.pitfallEntries],
+              season: _season,
+              seasonOptions: _seasonOptions,
+              reviewedCount: _reviewedCount(TaxGuideData.pitfallEntries),
+              isReviewed: _isReviewed,
+              onReviewedChanged: _setReviewed,
+              onSeasonChanged: _setSeason,
+            ),
           ],
         ),
       ),
@@ -38,20 +105,134 @@ class TaxGuideScreen extends StatelessWidget {
 class _GuideList extends StatelessWidget {
   final List<TaxGuideEntry> entries;
   final bool showIntroduction;
+  final int season;
+  final List<int> seasonOptions;
+  final int reviewedCount;
+  final bool Function(TaxGuideEntry) isReviewed;
+  final Future<void> Function(TaxGuideEntry, bool?) onReviewedChanged;
+  final Future<void> Function(int?) onSeasonChanged;
 
-  const _GuideList({required this.entries, this.showIntroduction = false});
+  const _GuideList({
+    required this.entries,
+    required this.season,
+    required this.seasonOptions,
+    required this.reviewedCount,
+    required this.isReviewed,
+    required this.onReviewedChanged,
+    required this.onSeasonChanged,
+    this.showIntroduction = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-      itemCount: entries.length + (showIntroduction ? 2 : 1),
+      itemCount: entries.length + (showIntroduction ? 3 : 2),
       itemBuilder: (context, index) {
-        if (index == 0) return const _ScopeCard();
-        if (showIntroduction && index == 1) return const _CurrentLawCard();
-        final entryIndex = index - (showIntroduction ? 2 : 1);
-        return _GuideEntryCard(entry: entries[entryIndex]);
+        if (index == 0) {
+          return _ChecklistCard(
+            season: season,
+            seasonOptions: seasonOptions,
+            reviewedCount: reviewedCount,
+            totalCount: entries.length,
+            onSeasonChanged: onSeasonChanged,
+          );
+        }
+        if (index == 1) return const _ScopeCard();
+        if (showIntroduction && index == 2) return const _CurrentLawCard();
+        final entryIndex = index - (showIntroduction ? 3 : 2);
+        final entry = entries[entryIndex];
+        return _GuideEntryCard(
+          entry: entry,
+          reviewed: isReviewed(entry),
+          onReviewedChanged: (value) => onReviewedChanged(entry, value),
+        );
       },
+    );
+  }
+}
+
+class _ChecklistCard extends StatelessWidget {
+  final int season;
+  final List<int> seasonOptions;
+  final int reviewedCount;
+  final int totalCount;
+  final ValueChanged<int?> onSeasonChanged;
+
+  const _ChecklistCard({
+    required this.season,
+    required this.seasonOptions,
+    required this.reviewedCount,
+    required this.totalCount,
+    required this.onSeasonChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = totalCount == 0 ? 0.0 : reviewedCount / totalCount;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.7),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Expanded(
+                child: Text(
+                  'Tax-season review checklist',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+                ),
+              ),
+              DropdownButton<int>(
+                value: season,
+                underline: const SizedBox.shrink(),
+                items: seasonOptions
+                    .map(
+                      (value) => DropdownMenuItem(
+                        value: value,
+                        child: Text('$value season'),
+                      ),
+                    )
+                    .toList(),
+                onChanged: onSeasonChanged,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '$reviewedCount of $totalCount reviewed',
+            style: const TextStyle(
+              color: AppTheme.textSecondary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 7),
+          LinearProgressIndicator(
+            value: progress,
+            minHeight: 7,
+            borderRadius: BorderRadius.circular(8),
+            backgroundColor: AppTheme.blue.withValues(alpha: 0.10),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'A check means “reviewed,” not “deductible” or “claimed.” This checklist does not promise a deduction, refund, tax savings, completeness, filing accuracy or compliance. It only helps organize your review and does not replace a qualified tax professional.',
+            style: TextStyle(
+              color: AppTheme.textSecondary,
+              fontSize: 11,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -136,8 +317,14 @@ class _CurrentLawCard extends StatelessWidget {
 
 class _GuideEntryCard extends StatelessWidget {
   final TaxGuideEntry entry;
+  final bool reviewed;
+  final ValueChanged<bool?> onReviewedChanged;
 
-  const _GuideEntryCard({required this.entry});
+  const _GuideEntryCard({
+    required this.entry,
+    required this.reviewed,
+    required this.onReviewedChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +332,7 @@ class _GuideEntryCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       clipBehavior: Clip.antiAlias,
       child: ExpansionTile(
+        leading: Checkbox(value: reviewed, onChanged: onReviewedChanged),
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         title: Text(
