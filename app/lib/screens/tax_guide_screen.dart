@@ -66,11 +66,11 @@ class _TaxGuideScreenState extends State<TaxGuideScreen> {
       child: Scaffold(
         backgroundColor: AppTheme.bg,
         appBar: AppBar(
-          title: const Text('Tax Guide'),
+          title: const Text('Freelancer Tax Blind Spots'),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'Possible deductions'),
-              Tab(text: 'Common pitfalls'),
+              Tab(text: 'Expenses to check'),
+              Tab(text: 'Mistakes to avoid'),
             ],
           ),
         ),
@@ -85,6 +85,7 @@ class _TaxGuideScreenState extends State<TaxGuideScreen> {
               isReviewed: _isReviewed,
               onReviewedChanged: _setReviewed,
               onSeasonChanged: _setSeason,
+              accent: AppTheme.green,
             ),
             _GuideList(
               entries: const [...TaxGuideData.pitfallEntries],
@@ -94,6 +95,7 @@ class _TaxGuideScreenState extends State<TaxGuideScreen> {
               isReviewed: _isReviewed,
               onReviewedChanged: _setReviewed,
               onSeasonChanged: _setSeason,
+              accent: AppTheme.orange,
             ),
           ],
         ),
@@ -111,6 +113,7 @@ class _GuideList extends StatelessWidget {
   final bool Function(TaxGuideEntry) isReviewed;
   final Future<void> Function(TaxGuideEntry, bool?) onReviewedChanged;
   final Future<void> Function(int?) onSeasonChanged;
+  final Color accent;
 
   const _GuideList({
     required this.entries,
@@ -120,6 +123,7 @@ class _GuideList extends StatelessWidget {
     required this.isReviewed,
     required this.onReviewedChanged,
     required this.onSeasonChanged,
+    required this.accent,
     this.showIntroduction = false,
   });
 
@@ -136,6 +140,7 @@ class _GuideList extends StatelessWidget {
             reviewedCount: reviewedCount,
             totalCount: entries.length,
             onSeasonChanged: onSeasonChanged,
+            accent: accent,
           );
         }
         if (index == 1) return const _ScopeCard();
@@ -146,6 +151,7 @@ class _GuideList extends StatelessWidget {
           entry: entry,
           reviewed: isReviewed(entry),
           onReviewedChanged: (value) => onReviewedChanged(entry, value),
+          accent: accent,
         );
       },
     );
@@ -158,6 +164,7 @@ class _ChecklistCard extends StatelessWidget {
   final int reviewedCount;
   final int totalCount;
   final ValueChanged<int?> onSeasonChanged;
+  final Color accent;
 
   const _ChecklistCard({
     required this.season,
@@ -165,6 +172,7 @@ class _ChecklistCard extends StatelessWidget {
     required this.reviewedCount,
     required this.totalCount,
     required this.onSeasonChanged,
+    required this.accent,
   });
 
   @override
@@ -174,11 +182,11 @@ class _ChecklistCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Theme.of(context).dividerColor.withValues(alpha: 0.7),
+        color: accent.withValues(
+          alpha: Theme.of(context).brightness == Brightness.dark ? 0.16 : 0.09,
         ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: accent.withValues(alpha: 0.24)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +195,7 @@ class _ChecklistCard extends StatelessWidget {
             children: [
               const Expanded(
                 child: Text(
-                  'Tax-season review checklist',
+                  'Your tax-season blind-spot check',
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
                 ),
               ),
@@ -220,7 +228,8 @@ class _ChecklistCard extends StatelessWidget {
             value: progress,
             minHeight: 7,
             borderRadius: BorderRadius.circular(8),
-            backgroundColor: AppTheme.blue.withValues(alpha: 0.10),
+            color: accent,
+            backgroundColor: accent.withValues(alpha: 0.12),
           ),
           const SizedBox(height: 12),
           const Text(
@@ -259,7 +268,7 @@ class _ScopeCard extends StatelessWidget {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Source-backed federal guidance',
+                  'IRS-backed lessons, not generic tips',
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
               ),
@@ -319,11 +328,13 @@ class _GuideEntryCard extends StatelessWidget {
   final TaxGuideEntry entry;
   final bool reviewed;
   final ValueChanged<bool?> onReviewedChanged;
+  final Color accent;
 
   const _GuideEntryCard({
     required this.entry,
     required this.reviewed,
     required this.onReviewedChanged,
+    required this.accent,
   });
 
   @override
@@ -331,8 +342,16 @@ class _GuideEntryCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
       clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: accent.withValues(alpha: 0.18)),
+      ),
       child: ExpansionTile(
-        leading: Checkbox(value: reviewed, onChanged: onReviewedChanged),
+        leading: Checkbox(
+          value: reviewed,
+          activeColor: accent,
+          onChanged: onReviewedChanged,
+        ),
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         title: Text(

@@ -16,8 +16,32 @@ import 'tax_reminders_screen.dart';
 import '../widgets/result_sheet.dart';
 import '../widgets/paywall_sheet.dart';
 
+class ReceiptCaptureController {
+  Future<void> Function()? _captureReceipt;
+  Future<void> Function()? _chooseFromPhotos;
+
+  Future<void> captureReceipt() async => _captureReceipt?.call();
+
+  Future<void> chooseFromPhotos() async => _chooseFromPhotos?.call();
+
+  void attach({
+    required Future<void> Function() captureReceipt,
+    required Future<void> Function() chooseFromPhotos,
+  }) {
+    _captureReceipt = captureReceipt;
+    _chooseFromPhotos = chooseFromPhotos;
+  }
+
+  void detach() {
+    _captureReceipt = null;
+    _chooseFromPhotos = null;
+  }
+}
+
 class CameraScreen extends StatefulWidget {
-  const CameraScreen({super.key});
+  final ReceiptCaptureController controller;
+
+  const CameraScreen({super.key, required this.controller});
 
   @override
   State<CameraScreen> createState() => _CameraScreenState();
@@ -26,6 +50,33 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   final ImagePicker _picker = ImagePicker();
   bool _isProcessing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.attach(
+      captureReceipt: _captureReceipt,
+      chooseFromPhotos: _pickFromGallery,
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant CameraScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.detach();
+      widget.controller.attach(
+        captureReceipt: _captureReceipt,
+        chooseFromPhotos: _pickFromGallery,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller.detach();
+    super.dispose();
+  }
 
   Future<void> _captureReceipt() async {
     final sub = context.read<SubscriptionProvider>();
@@ -229,8 +280,21 @@ class _CameraScreenState extends State<CameraScreen> {
                   ],
                 ),
                 const SizedBox(height: 30),
-                const Text(
-                  'Every receipt ready\nfor tax time.',
+                const Text.rich(
+                  key: Key('home_headline'),
+                  TextSpan(
+                    children: [
+                      TextSpan(text: 'Every '),
+                      TextSpan(
+                        text: 'receipt',
+                        style: TextStyle(
+                          color: AppTheme.red,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      TextSpan(text: ' ready\nfor tax time.'),
+                    ],
+                  ),
                   style: TextStyle(
                     fontSize: 34,
                     height: 1.08,
@@ -239,13 +303,19 @@ class _CameraScreenState extends State<CameraScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Keep every eligible tax dollar working for you.',
-                  style: TextStyle(
-                    color: AppTheme.blue,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    height: 1.35,
+                const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Keep every eligible tax dollar working for you.',
+                    maxLines: 1,
+                    softWrap: false,
+                    style: TextStyle(
+                      color: AppTheme.blue,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                      height: 1.35,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -265,6 +335,7 @@ class _CameraScreenState extends State<CameraScreen> {
                         label: 'THIS MONTH',
                         value: '${receipts.monthlyCount}',
                         detail: 'receipts',
+                        accent: AppTheme.blue,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -276,6 +347,7 @@ class _CameraScreenState extends State<CameraScreen> {
                           decimalDigits: 0,
                         ).format(receipts.monthlyTotal),
                         detail: 'recorded',
+                        accent: AppTheme.green,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -284,6 +356,7 @@ class _CameraScreenState extends State<CameraScreen> {
                         label: 'ALL RECORDS',
                         value: '${receipts.count}',
                         detail: 'saved',
+                        accent: AppTheme.purple,
                       ),
                     ),
                   ],
@@ -309,44 +382,7 @@ class _CameraScreenState extends State<CameraScreen> {
                         if (mounted) setState(() {});
                       }),
                 ),
-                const SizedBox(height: 24),
-                FilledButton.icon(
-                  onPressed: _captureReceipt,
-                  icon: const Icon(Icons.document_scanner_outlined),
-                  label: const Text('Scan a receipt'),
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size.fromHeight(58),
-                    textStyle: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                OutlinedButton.icon(
-                  onPressed: _pickFromGallery,
-                  icon: const Icon(Icons.photo_library_outlined),
-                  label: const Text('Choose from Photos'),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Category suggestions are for organization only. Verify tax treatment before filing.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppTheme.textSecondary,
-                    fontSize: 12,
-                    height: 1.35,
-                  ),
-                ),
               ],
             ),
           ),
@@ -385,16 +421,27 @@ class _TaxGuideCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).cardColor,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
         child: Container(
-          padding: const EdgeInsets.all(17),
+          padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0xFF172554), Color(0xFF4338CA)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppTheme.blue.withValues(alpha: 0.18)),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.indigo.withValues(alpha: 0.24),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -409,8 +456,8 @@ class _TaxGuideCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
-                      Icons.menu_book_outlined,
-                      color: AppTheme.blue,
+                      Icons.lightbulb_outline,
+                      color: Color(0xFFFFC857),
                       size: 21,
                     ),
                   ),
@@ -420,30 +467,28 @@ class _TaxGuideCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Tax-time guide',
+                          'Freelancer Tax Blind Spots',
                           style: TextStyle(
+                            color: Colors.white,
                             fontSize: 17,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
                         Text(
-                          'IRS sources · reviewed July 2026',
-                          style: TextStyle(
-                            color: AppTheme.textSecondary,
-                            fontSize: 12,
-                          ),
+                          'Lessons independent workers often learn too late',
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(Icons.chevron_right, color: AppTheme.textTertiary),
+                  const Icon(Icons.chevron_right, color: Colors.white70),
                 ],
               ),
               const SizedBox(height: 16),
               const Text(
-                'POSSIBLE EXPENSES TO REVIEW',
+                'EXPENSES WORTH A SECOND LOOK',
                 style: TextStyle(
-                  color: AppTheme.textSecondary,
+                  color: Colors.white70,
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.55,
@@ -463,29 +508,46 @@ class _TaxGuideCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 14),
-              Divider(color: Theme.of(context).dividerColor),
-              const SizedBox(height: 7),
-              const Text(
-                'COMMONLY MISSED STEPS',
-                style: TextStyle(
-                  color: AppTheme.textSecondary,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.55,
+              Container(
+                padding: const EdgeInsets.all(13),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFC857).withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: const Color(0xFFFFC857).withValues(alpha: 0.30),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 9),
-              const _GuideStep(text: 'Add the business purpose'),
-              const _GuideStep(text: 'Separate business and personal use'),
-              const _GuideStep(text: 'Review uncategorized receipts monthly'),
-              const _GuideStep(text: 'Keep receipts and proof of payment'),
-              const SizedBox(height: 10),
-              const Text(
-                'Review prompts only — eligibility depends on your facts and current law.',
-                style: TextStyle(
-                  color: AppTheme.textSecondary,
-                  fontSize: 11,
-                  height: 1.35,
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'MISTAKES THAT COST FREELANCERS',
+                      style: TextStyle(
+                        color: Color(0xFFFFD978),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.55,
+                      ),
+                    ),
+                    SizedBox(height: 9),
+                    _GuideStep(
+                      text: 'A receipt does not prove business purpose',
+                    ),
+                    _GuideStep(text: 'Mixed personal use must be split'),
+                    _GuideStep(
+                      text:
+                          'Meals, commuting, and equipment have special rules',
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'Check each lesson for the season. No deduction or tax result is promised.',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -506,13 +568,13 @@ class _GuideChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(
-        color: AppTheme.blue.withValues(alpha: 0.08),
+        color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(9),
       ),
       child: Text(
         label,
         style: const TextStyle(
-          color: AppTheme.blue,
+          color: Colors.white,
           fontSize: 11,
           fontWeight: FontWeight.w600,
         ),
@@ -538,11 +600,16 @@ class _GuideStep extends StatelessWidget {
             child: Icon(
               Icons.check_circle_outline,
               size: 16,
-              color: AppTheme.green,
+              color: Color(0xFFFFC857),
             ),
           ),
           const SizedBox(width: 8),
-          Expanded(child: Text(text, style: const TextStyle(fontSize: 13))),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(color: Colors.white, fontSize: 13),
+            ),
+          ),
         ],
       ),
     );
@@ -578,11 +645,13 @@ class _StatCard extends StatelessWidget {
   final String label;
   final String value;
   final String detail;
+  final Color accent;
 
   const _StatCard({
     required this.label,
     required this.value,
     required this.detail,
+    required this.accent,
   });
 
   @override
@@ -590,11 +659,11 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Theme.of(context).dividerColor.withValues(alpha: 0.7),
+        color: accent.withValues(
+          alpha: Theme.of(context).brightness == Brightness.dark ? 0.16 : 0.09,
         ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: accent.withValues(alpha: 0.20)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -602,8 +671,8 @@ class _StatCard extends StatelessWidget {
           Text(
             label,
             maxLines: 1,
-            style: const TextStyle(
-              color: AppTheme.textSecondary,
+            style: TextStyle(
+              color: accent,
               fontSize: 9,
               fontWeight: FontWeight.w800,
               letterSpacing: 0.4,
@@ -614,7 +683,11 @@ class _StatCard extends StatelessWidget {
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+            style: TextStyle(
+              color: accent,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+            ),
           ),
           Text(
             detail,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../providers/receipt_provider.dart';
 import '../config/categories.dart';
+import '../config/receipt_tax_insights.dart';
 import '../config/theme.dart';
 import '../models/receipt.dart';
 import 'detail_screen.dart';
@@ -174,6 +175,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
   Widget _buildReceiptCard(Receipt receipt) {
     final cat = categoryMap[receipt.category] ?? categories.last;
+    final taxMatch = ReceiptTaxInsights.forReceipt(receipt);
     return Slidable(
       endActionPane: ActionPane(
         motion: const BehindMotion(),
@@ -239,6 +241,27 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                             color: AppTheme.textSecondary,
                             fontSize: 13,
                           ),
+                        ),
+                        const SizedBox(height: 7),
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 5,
+                          children: [
+                            _TaxMarker(
+                              icon: taxMatch.needsManualReview
+                                  ? Icons.help_outline
+                                  : Icons.savings_outlined,
+                              label: 'Review: ${taxMatch.expenseLabel}',
+                              color: taxMatch.needsManualReview
+                                  ? AppTheme.textSecondary
+                                  : AppTheme.green,
+                            ),
+                            _TaxMarker(
+                              icon: Icons.warning_amber_rounded,
+                              label: taxMatch.pitfallLabel,
+                              color: AppTheme.orange,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -312,5 +335,49 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
       map.putIfAbsent(r.monthYearKey, () => []).add(r);
     }
     return map;
+  }
+}
+
+class _TaxMarker extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  const _TaxMarker({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.18)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: color),
+          const SizedBox(width: 4),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 180),
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: color,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

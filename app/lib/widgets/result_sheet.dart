@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/receipt.dart';
 import '../config/categories.dart';
+import '../config/receipt_tax_insights.dart';
+import '../config/theme.dart';
 
 class ResultSheet extends StatefulWidget {
   final String imagePath;
@@ -50,8 +52,16 @@ class _ResultSheetState extends State<ResultSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final taxMatch = ReceiptTaxInsights.forReceipt(
+      Receipt(
+        vendorName: _vendor,
+        amount: _amount,
+        date: _date,
+        category: _category,
+      ),
+    );
     return DraggableScrollableSheet(
-      initialChildSize: 0.45,
+      initialChildSize: 0.58,
       minChildSize: 0.3,
       maxChildSize: 0.7,
       builder: (_, scrollController) {
@@ -102,6 +112,47 @@ class _ResultSheetState extends State<ResultSheet> {
               const Text(
                 'Category suggestions help organize records and are not tax advice. Verify tax treatment before filing.',
                 style: TextStyle(fontSize: 11, color: Colors.grey),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppTheme.indigo.withValues(alpha: 0.07),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppTheme.indigo.withValues(alpha: 0.16),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'TAX REVIEW PROMPTS',
+                      style: TextStyle(
+                        color: AppTheme.indigo,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.45,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _MatchRow(
+                      icon: taxMatch.needsManualReview
+                          ? Icons.help_outline
+                          : Icons.savings_outlined,
+                      text: taxMatch.expenseLabel,
+                      color: taxMatch.needsManualReview
+                          ? AppTheme.textSecondary
+                          : AppTheme.green,
+                    ),
+                    const SizedBox(height: 6),
+                    _MatchRow(
+                      icon: Icons.warning_amber_rounded,
+                      text: taxMatch.pitfallLabel,
+                      color: AppTheme.orange,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 24),
               Row(
@@ -286,5 +337,37 @@ class _ResultSheetState extends State<ResultSheet> {
       imagePath: widget.imagePath,
     );
     Navigator.pop(context, receipt);
+  }
+}
+
+class _MatchRow extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  const _MatchRow({
+    required this.icon,
+    required this.text,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: color, size: 17),
+        const SizedBox(width: 7),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
