@@ -11,13 +11,13 @@ private enum ReceiptSnapPurchaseError: Error {
 class StoreKitManager: NSObject, FlutterPlugin {
 
     // Product IDs matching App Store Connect configuration
-    private static let monthlyId = "com.snapdeduct.pro.monthly"
-    private static let annualId  = "com.snapdeduct.pro.annual"
+    private static let monthlyId = "com.receiptsnap.pro.monthly"
+    private static let annualId  = "com.receiptsnap.pro.annual"
     private static let allowedProductIds = Set([monthlyId, annualId])
 
     static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(
-            name: "com.snapdeduct.storekit/iap",
+            name: "com.receiptsnap.storekit/iap",
             binaryMessenger: registrar.messenger()
         )
         let instance = StoreKitManager()

@@ -25,7 +25,7 @@ void main() {
 
   test('missing StoreKit bridge fails closed', () async {
     final provider = SubscriptionProvider(settings);
-    final result = await provider.purchase('com.snapdeduct.pro.monthly');
+    final result = await provider.purchase('com.receiptsnap.pro.monthly');
 
     expect(result['status'], 'error');
     expect(provider.isPro, isFalse);

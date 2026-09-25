@@ -1,4 +1,4 @@
-# SnapDeduct — Demand Validation Playbook
+# ReceiptSnap — Demand Validation Playbook
 
 > Purpose: Prove (or kill) the idea BEFORE investing more in the product.
 > Principle we violated and are now fixing: "Validate before you build."
@@ -45,7 +45,7 @@ You need to measure **conversion rate**, not just signups. Add Plausible (privac
 
 ```html
 <!-- Add to <head> -->
-<script defer data-domain="snapdeduct.com" src="https://plausible.io/js/script.js"></script>
+<script defer data-domain="receiptsnap.com" src="https://plausible.io/js/script.js"></script>
 ```
 
 The page already fires `plausible('Waitlist Signup')` on submit — so you'll see:
@@ -62,7 +62,7 @@ Free hosting options:
 - **Netlify / Vercel** — drag-drop deploy, free, custom domain
 - **Cloudflare Pages** — free, fast
 
-Buy `snapdeduct.com` (~$12/yr on Namecheap/Cloudflare) — or use the free `*.netlify.app` subdomain for the test.
+Buy `receiptsnap.com` (~$12/yr on Namecheap/Cloudflare) — or use the free `*.netlify.app` subdomain for the test.
 
 ---
 

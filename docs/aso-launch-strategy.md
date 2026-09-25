@@ -1,7 +1,7 @@
-# SnapDeduct — ASO & Launch Strategy
+# ReceiptSnap — ASO & Launch Strategy
 
 > Phase 4 Deliverable | Ready to copy-paste into App Store Connect
-> Product: SnapDeduct — AI receipt scanner for US freelancers
+> Product: ReceiptSnap — AI receipt scanner for US freelancers
 > Goal: $1,000 MRR within 3 months
 
 ---
@@ -10,7 +10,7 @@
 
 ## App Name (30 char max)
 ```
-SnapDeduct: Tax Savings Tracker
+ReceiptSnap: Tax Savings Tracker
 ```
 *(29 chars — repositions from "scanner" to ongoing value)*
 
@@ -69,7 +69,7 @@ Tax season is coming. Stop digging through your camera roll. Snap every receipt,
 ```
 Stop losing money to lost receipts.
 
-If you're a freelancer, contractor, or self-employed, every receipt you can't find at tax time is money left on the table. SnapDeduct makes tracking business expenses effortless — so you keep more of what you earn.
+If you're a freelancer, contractor, or self-employed, every receipt you can't find at tax time is money left on the table. ReceiptSnap makes tracking business expenses effortless — so you keep more of what you earn.
 
 HOW IT WORKS
 1. Snap — Open the app, the camera's already on. Photograph any receipt.
@@ -79,14 +79,14 @@ HOW IT WORKS
 That's it. No accounting degree required.
 
 BUILT FOR FREELANCERS, NOT CORPORATIONS
-Most expense apps are bloated tools built for 500-person companies with approval workflows you'll never use. SnapDeduct does one thing brilliantly: capture your deductible expenses so you're ready for tax season.
+Most expense apps are bloated tools built for 500-person companies with approval workflows you'll never use. ReceiptSnap does one thing brilliantly: capture your deductible expenses so you're ready for tax season.
 
 • Designers, writers, photographers, consultants
 • Uber & Lyft drivers, DoorDash & Instacart couriers
 • Etsy sellers, coaches, and every 1099 worker
 
 SMART AI CATEGORIZATION
-SnapDeduct auto-sorts receipts into the categories the IRS actually uses — Advertising, Meals, Travel, Office Supplies, Software, and more. Correct it once, and it learns your habits.
+ReceiptSnap auto-sorts receipts into the categories the IRS actually uses — Advertising, Meals, Travel, Office Supplies, Software, and more. Correct it once, and it learns your habits.
 
 TAX-READY EXPORTS
 Generate professional PDF reports grouped by category with totals, or export a CSV your CPA can drop straight into their software. IRS-compliant digital recordkeeping (Rev. Proc. 97-22).
@@ -103,16 +103,16 @@ Start with 50 free receipts today. See how much you've been missing.
 
 —
 
-Questions? support@snapdeduct.com
-Privacy Policy: https://snapdeduct.com/privacy
-Terms of Use: https://snapdeduct.com/terms
+Questions? support@receiptsnap.com
+Privacy Policy: https://receiptsnap.com/privacy
+Terms of Use: https://receiptsnap.com/terms
 ```
 
 ---
 
 ## What's New (version notes for v1.0.0)
 ```
-Welcome to SnapDeduct! 🎉
+Welcome to ReceiptSnap! 🎉
 
 The simplest way for freelancers to track receipts and maximize tax deductions.
 
@@ -154,22 +154,22 @@ Open app → snap receipt → watch AI fill in details → see it in list → ta
 
 ## App Store Connect Setup
 - [ ] Apple Developer account active ($99/yr paid)
-- [ ] Bundle ID registered: com.snapdeduct.app
+- [ ] Bundle ID registered: com.receiptsnap.app
 - [ ] App created in App Store Connect
 - [ ] Banking info added (Hong Kong account)
 - [ ] Tax forms completed (W-8BEN for non-US)
 - [ ] Agreements signed (Paid Apps Agreement)
 
 ## In-App Purchases
-- [ ] Create subscription group "SnapDeduct Pro"
-- [ ] Monthly: com.snapdeduct.pro.monthly — $4.99
-- [ ] Annual: com.snapdeduct.pro.annual — $39.99
+- [ ] Create subscription group "ReceiptSnap Pro"
+- [ ] Monthly: com.receiptsnap.pro.monthly — $4.99
+- [ ] Annual: com.receiptsnap.pro.annual — $39.99
 - [ ] Add localized display names + descriptions
 - [ ] Submit IAPs WITH the first app version (or they won't review)
 
 ## Legal (required or rejection)
-- [ ] Privacy Policy live at snapdeduct.com/privacy
-- [ ] Terms of Use live at snapdeduct.com/terms
+- [ ] Privacy Policy live at receiptsnap.com/privacy
+- [ ] Terms of Use live at receiptsnap.com/terms
 - [ ] Privacy "nutrition label" filled in App Store Connect
   - Data collected: None linked to identity (receipts stay on-device)
 - [ ] Add privacy/terms links in app Settings (already in code)
@@ -183,7 +183,7 @@ Open app → snap receipt → watch AI fill in details → see it in list → ta
 
 ## App Review Notes (paste in "Notes for Reviewer")
 ```
-SnapDeduct is a receipt scanner for freelancers. No login required.
+ReceiptSnap is a receipt scanner for freelancers. No login required.
 
 To test:
 1. Open app, complete the 3-screen onboarding
@@ -203,8 +203,8 @@ Receipt data is stored locally on device. No accounts, no server.
 
 ## Week 0: Soft Launch
 - [ ] Submit to App Store (allow 1-3 days review)
-- [ ] Set up landing page (snapdeduct.com) — simple, one CTA
-- [ ] Set up @snapdeduct on X/Twitter + Instagram
+- [ ] Set up landing page (receiptsnap.com) — simple, one CTA
+- [ ] Set up @receiptsnap on X/Twitter + Instagram
 - [ ] Prepare Reddit/PH assets
 
 ## Week 1: Reddit Launch (organic, free)
@@ -220,7 +220,7 @@ Target subreddits (read rules first, provide value, don't spam):
 Title: I'm a freelancer who kept losing receipts at tax time, so I built an app to fix it
 
 Body: [Personal story] Every March I'd scroll through 2,000 camera roll photos
-hunting for receipts. Built SnapDeduct — snap a receipt, AI sorts it into IRS
+hunting for receipts. Built ReceiptSnap — snap a receipt, AI sorts it into IRS
 categories, export for your CPA. 50 free receipts to try. Would love feedback
 from other freelancers. [link]
 ```
@@ -255,7 +255,7 @@ from other freelancers. [link]
 
 | Campaign | Keywords | Budget | Goal |
 |----------|----------|--------|------|
-| Brand defense | snapdeduct | $2/day | Protect brand searches |
+| Brand defense | receiptsnap | $2/day | Protect brand searches |
 | Category | receipt scanner, expense tracker | $10/day | Acquire intent traffic |
 | Tax season | tax app, tax deduction, 1099 | $10/day | Seasonal spike (Jan-Apr only) |
 

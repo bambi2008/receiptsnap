@@ -1,7 +1,7 @@
-# SnapDeduct — 项目状态
+# ReceiptSnap — 项目状态
 
 > 当前进度 · 阻塞 · 下一步 · 文档索引
-> Last updated: 2026-06-21
+> Last updated: 2026-09-25
 
 ---
 
@@ -13,9 +13,11 @@
 ✅ 开发        Flutter 代码（21 文件, 0 errors, 生产线就绪）
 ✅ ASO + 发布  App Store 文案 + 截图方案 + 12 周发布计划
 ✅ 验证系统    落地页上线 + Formspree 邮箱捕获
-✅ 品牌        命名 SnapDeduct（Snap + Deduct）
+✅ 品牌        ReceiptSnap（已清除旧品牌名称与标识）
 ✅ GitHub      bambi2008/receiptsnap
 ✅ 仓库清理    13 核心文档 + 9 份归档
+✅ iOS 身份    com.receiptsnap.app（与 Pocklume 完全独立）
+✅ TestFlight  ReceiptSnap 1.0.0 (2) 已上传 App Store Connect
 ```
 
 ## 🟡 进行中
@@ -29,7 +31,7 @@
 
 ```
 🔜 问卷回复分析 → 确认产品方向（"收据扫描" vs "避免罚款"）
-🔜 Mac 端：flutter run + Vision OCR + StoreKit + TestFlight
+🔜 App Store Connect：等待构建处理完成，配置内部测试用户与订阅商品
 ```
 
 ## 核心文档

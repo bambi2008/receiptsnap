@@ -11,6 +11,6 @@ class AppConstants {
   static const String receiptCountKey = 'receipt_count';
 
   // StoreKit product IDs
-  static const String proMonthlyId = 'com.snapdeduct.pro.monthly';
-  static const String proAnnualId = 'com.snapdeduct.pro.annual';
+  static const String proMonthlyId = 'com.receiptsnap.pro.monthly';
+  static const String proAnnualId = 'com.receiptsnap.pro.annual';
 }

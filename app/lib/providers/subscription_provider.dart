@@ -32,7 +32,7 @@ class IapProduct {
 
 /// Manages subscription state via native StoreKit 2 plugin.
 class SubscriptionProvider extends ChangeNotifier {
-  static const _channel = MethodChannel('com.snapdeduct.storekit/iap');
+  static const _channel = MethodChannel('com.receiptsnap.storekit/iap');
 
   SubscriptionProvider([this._settingsBox]);
 

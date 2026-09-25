@@ -11,10 +11,9 @@ void main() {
       expect(AppConstants.freeReceiptLimit, 50);
     });
 
-    test('StoreKit product identifiers are defined', () {
-      expect(AppConstants.proMonthlyId, isNotEmpty);
-      expect(AppConstants.proAnnualId, isNotEmpty);
-      expect(AppConstants.proMonthlyId, isNot(AppConstants.proAnnualId));
+    test('StoreKit product identifiers use the ReceiptSnap namespace', () {
+      expect(AppConstants.proMonthlyId, 'com.receiptsnap.pro.monthly');
+      expect(AppConstants.proAnnualId, 'com.receiptsnap.pro.annual');
     });
 
     test('appVersion is 1.0.0', () {
