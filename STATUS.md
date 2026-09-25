@@ -17,7 +17,8 @@
 ✅ GitHub      bambi2008/receiptsnap
 ✅ 仓库清理    13 核心文档 + 9 份归档
 ✅ iOS 身份    com.bambi2008.receiptsnap（与 Pocklume 完全独立）
-✅ TestFlight  ReceiptSnap 1.0.0 (3) 已上传并加入 Internal Testers
+✅ TestFlight  ReceiptSnap 1.0.0 (3) 已处理并在 Internal Testers 中测试
+✅ 订阅商品    月费 $4.99 / 年费 $39.99（美国区，英文展示信息已配置）
 ```
 
 ## 🟡 进行中
@@ -31,7 +32,7 @@
 
 ```
 🔜 问卷回复分析 → 确认产品方向（"收据扫描" vs "避免罚款"）
-🔜 App Store Connect：等待构建处理完成，配置内部测试用户与订阅商品
+🔜 App Store 上架：补齐产品页元数据、订阅审核截图并提交首个正式版本审核
 ```
 
 ## 核心文档
