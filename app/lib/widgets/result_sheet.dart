@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/receipt.dart';
 import '../config/categories.dart';
+import '../config/receipt_tax_insights.dart';
+import '../config/theme.dart';
 
 class ResultSheet extends StatefulWidget {
   final String imagePath;
@@ -50,8 +52,16 @@ class _ResultSheetState extends State<ResultSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final taxMatch = ReceiptTaxInsights.forReceipt(
+      Receipt(
+        vendorName: _vendor,
+        amount: _amount,
+        date: _date,
+        category: _category,
+      ),
+    );
     return DraggableScrollableSheet(
-      initialChildSize: 0.45,
+      initialChildSize: 0.58,
       minChildSize: 0.3,
       maxChildSize: 0.7,
       builder: (_, scrollController) {
@@ -75,15 +85,22 @@ class _ResultSheetState extends State<ResultSheet> {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text('Receipt Details', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const Text(
+                'Receipt Details',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 20),
               _buildField('Vendor', _vendorCtrl, (v) => _vendor = v),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
-                    child: _buildField('Amount', _amountCtrl, (v) => _amount = double.tryParse(v) ?? _amount,
-                        keyboardType: TextInputType.number),
+                    child: _buildField(
+                      'Amount',
+                      _amountCtrl,
+                      (v) => _amount = double.tryParse(v) ?? _amount,
+                      keyboardType: TextInputType.number,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(child: _buildCategoryPicker()),
@@ -91,6 +108,52 @@ class _ResultSheetState extends State<ResultSheet> {
               ),
               const SizedBox(height: 16),
               _buildDatePicker(),
+              const SizedBox(height: 12),
+              const Text(
+                'Category suggestions help organize records and are not tax advice. Verify tax treatment before filing.',
+                style: TextStyle(fontSize: 11, color: Colors.grey),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppTheme.indigo.withValues(alpha: 0.07),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppTheme.indigo.withValues(alpha: 0.16),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'TAX REVIEW PROMPTS',
+                      style: TextStyle(
+                        color: AppTheme.indigo,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.45,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    _MatchRow(
+                      icon: taxMatch.needsManualReview
+                          ? Icons.help_outline
+                          : Icons.savings_outlined,
+                      text: taxMatch.expenseLabel,
+                      color: taxMatch.needsManualReview
+                          ? AppTheme.textSecondary
+                          : AppTheme.green,
+                    ),
+                    const SizedBox(height: 6),
+                    _MatchRow(
+                      icon: Icons.warning_amber_rounded,
+                      text: taxMatch.pitfallLabel,
+                      color: AppTheme.orange,
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -113,19 +176,33 @@ class _ResultSheetState extends State<ResultSheet> {
     );
   }
 
-  Widget _buildField(String label, TextEditingController ctrl, Function(String) onChanged,
-      {TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildField(
+    String label,
+    TextEditingController ctrl,
+    Function(String) onChanged, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 4),
         TextField(
           controller: ctrl,
           keyboardType: keyboardType,
           onChanged: onChanged,
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
             isDense: true,
           ),
@@ -139,19 +216,30 @@ class _ResultSheetState extends State<ResultSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Category', style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500)),
+        Text(
+          'Category',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 4),
         InkWell(
           onTap: () async {
             final selected = await showModalBottomSheet<String>(
               context: context,
               builder: (_) => ListView(
-                children: categories.map((c) => ListTile(
-                  leading: Icon(c.icon, color: c.color),
-                  title: Text(c.label),
-                  selected: c.key == _category,
-                  onTap: () => Navigator.pop(context, c.key),
-                )).toList(),
+                children: categories
+                    .map(
+                      (c) => ListTile(
+                        leading: Icon(c.icon, color: c.color),
+                        title: Text(c.label),
+                        selected: c.key == _category,
+                        onTap: () => Navigator.pop(context, c.key),
+                      ),
+                    )
+                    .toList(),
               ),
             );
             if (selected != null) setState(() => _category = selected);
@@ -166,7 +254,9 @@ class _ResultSheetState extends State<ResultSheet> {
               children: [
                 Icon(cat.icon, color: cat.color, size: 20),
                 const SizedBox(width: 8),
-                Expanded(child: Text(cat.label, style: const TextStyle(fontSize: 14))),
+                Expanded(
+                  child: Text(cat.label, style: const TextStyle(fontSize: 14)),
+                ),
                 const Icon(Icons.arrow_drop_down, color: Colors.grey),
               ],
             ),
@@ -180,7 +270,14 @@ class _ResultSheetState extends State<ResultSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Date', style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500)),
+        Text(
+          'Date',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         const SizedBox(height: 4),
         InkWell(
           onTap: () async {
@@ -216,13 +313,61 @@ class _ResultSheetState extends State<ResultSheet> {
   }
 
   void _save() {
+    final parsedAmount = double.tryParse(_amountCtrl.text.trim());
+    if (_vendorCtrl.text.trim().isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Vendor is required.')));
+      return;
+    }
+    if (parsedAmount == null ||
+        !parsedAmount.isFinite ||
+        parsedAmount < 0 ||
+        parsedAmount > 10000000) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter an amount from 0 to 10,000,000.')),
+      );
+      return;
+    }
     final receipt = Receipt(
-      vendorName: _vendor,
-      amount: _amount,
+      vendorName: _vendorCtrl.text.trim(),
+      amount: parsedAmount,
       date: _date,
       category: _category,
       imagePath: widget.imagePath,
     );
     Navigator.pop(context, receipt);
+  }
+}
+
+class _MatchRow extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  const _MatchRow({
+    required this.icon,
+    required this.text,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: color, size: 17),
+        const SizedBox(width: 7),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

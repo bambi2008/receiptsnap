@@ -1,4 +1,4 @@
-# SnapDeduct — 投放执行清单（照着做）
+# ReceiptSnap — 投放执行清单（照着做）
 
 > 网站已上线：https://lively-dango-84cbb0.netlify.app
 > 邮箱捕获：Formspree（已验证可用）
@@ -78,7 +78,7 @@ https://lively-dango-84cbb0.netlify.app/?utm_source=dm
 - 或者粗略估：Reddit 帖子的浏览量 + 广告后台的点击数
 
 ### 数字 2：邮箱数
-- 去 **Formspree 后台** → SNAPDEDUCT → Submissions
+- 去 **Formspree 后台** → RECEIPTSNAP → Submissions
 - 数有多少真实邮箱（排除你的测试那条）
 
 ### 转化率 = 邮箱数 ÷ 访客数

@@ -5,13 +5,15 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>SnapDeduct needs camera access to scan your receipts.</string>
+	<string>ReceiptSnap uses the camera only when you choose to photograph a receipt.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>SnapDeduct needs photo library access to import existing receipt images.</string>
+	<string>ReceiptSnap accesses photos you select so you can import an existing receipt image.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>SnapDeduct</string>
+	<string>ReceiptSnap</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
