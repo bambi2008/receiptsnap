@@ -154,7 +154,7 @@ Open app → snap receipt → watch AI fill in details → see it in list → ta
 
 ## App Store Connect Setup
 - [ ] Apple Developer account active ($99/yr paid)
-- [ ] Bundle ID registered: com.receiptsnap.app
+- [x] Bundle ID registered: com.bambi2008.receiptsnap
 - [ ] App created in App Store Connect
 - [ ] Banking info added (Hong Kong account)
 - [ ] Tax forms completed (W-8BEN for non-US)

@@ -11,7 +11,7 @@
 - [ ] **Subtitle:** Tax-Time Receipt Organizer
 - [ ] **Category:** Finance
 - [ ] **Secondary Category:** Business
-- [ ] **Bundle ID:** com.receiptsnap.app
+- [x] **Bundle ID:** com.bambi2008.receiptsnap
 - [ ] **SKU:** receiptsnap-001
 - [ ] **Primary Language:** English (U.S.)
 

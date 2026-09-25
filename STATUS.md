@@ -16,8 +16,8 @@
 ✅ 品牌        ReceiptSnap（已清除旧品牌名称与标识）
 ✅ GitHub      bambi2008/receiptsnap
 ✅ 仓库清理    13 核心文档 + 9 份归档
-✅ iOS 身份    com.receiptsnap.app（与 Pocklume 完全独立）
-✅ TestFlight  ReceiptSnap 1.0.0 (2) 已上传 App Store Connect
+✅ iOS 身份    com.bambi2008.receiptsnap（与 Pocklume 完全独立）
+✅ TestFlight  ReceiptSnap 1.0.0 (3) 已上传并加入 Internal Testers
 ```
 
 ## 🟡 进行中

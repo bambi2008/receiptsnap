@@ -110,7 +110,7 @@ Visit https://appstoreconnect.apple.com
 
 1. **Create App ID** in Certificates, Identifiers & Profiles
 2. **Create App** in App Store Connect
-   - Bundle ID: com.receiptsnap.app
+   - Bundle ID: com.bambi2008.receiptsnap
    - SKU: receiptsnap-001
 3. **Configure In-App Purchases:**
    - Monthly: com.receiptsnap.pro.monthly ($4.99)
