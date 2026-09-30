@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -193,5 +196,116 @@ void main() {
     expect(find.text('POSSIBLE EXPENSE RULE TO REVIEW'), findsOneWidget);
     expect(find.text('FREELANCER TRAP TO AVOID'), findsOneWidget);
     expect(find.textContaining('Do now:'), findsOneWidget);
+  });
+
+  testWidgets('receipt preview keeps the full image visible', (tester) async {
+    final imageFile = File(
+      '${Directory.systemTemp.path}/receiptsnap_preview_test.png',
+    );
+    await tester.runAsync(
+      () => imageFile.writeAsBytes(
+        base64Decode(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+        ),
+      ),
+    );
+    addTearDown(() async {
+      if (await imageFile.exists()) await imageFile.delete();
+    });
+
+    final receiptProvider = ReceiptProvider();
+    receiptProvider.loadReceipts();
+    await tester.runAsync(
+      () => receiptProvider.addReceipt(
+        Receipt(
+          vendorName: 'Full Receipt',
+          amount: 18.50,
+          date: DateTime(2026, 9, 29),
+          category: 'other',
+          imagePath: imageFile.path,
+        ),
+      ),
+    );
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: receiptProvider),
+          ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
+        ],
+        child: const ReceiptSnapApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Receipts'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Full Receipt'));
+    await tester.pumpAndSettle();
+
+    final image = tester.widget<Image>(
+      find.byKey(const Key('receipt_image_preview')),
+    );
+    expect(image.fit, BoxFit.contain);
+    expect(find.text('View full receipt'), findsOneWidget);
+  });
+
+  testWidgets('users can select and batch export multiple receipts', (
+    tester,
+  ) async {
+    final receiptProvider = ReceiptProvider();
+    receiptProvider.loadReceipts();
+    await tester.runAsync(() async {
+      await receiptProvider.addReceipt(
+        Receipt(
+          vendorName: 'First Receipt',
+          amount: 10,
+          date: DateTime(2026, 9, 28),
+          category: 'other',
+        ),
+      );
+      await receiptProvider.addReceipt(
+        Receipt(
+          vendorName: 'Second Receipt',
+          amount: 20,
+          date: DateTime(2026, 9, 29),
+          category: 'other',
+        ),
+      );
+    });
+
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: receiptProvider),
+          ChangeNotifierProvider(create: (_) => SubscriptionProvider()..init()),
+        ],
+        child: const ReceiptSnapApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Receipts'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Export'));
+    await tester.pump();
+
+    expect(find.text('0 selected'), findsOneWidget);
+    expect(
+      tester
+          .widget<FilledButton>(find.byKey(const Key('batch_pdf_export')))
+          .onPressed,
+      isNull,
+    );
+
+    await tester.tap(find.text('Select all'));
+    await tester.pump();
+    expect(find.text('2 selected'), findsOneWidget);
+    expect(find.text('PDF package (2)'), findsOneWidget);
+    expect(find.text('CSV summary'), findsOneWidget);
+    expect(
+      tester
+          .widget<FilledButton>(find.byKey(const Key('batch_pdf_export')))
+          .onPressed,
+      isNotNull,
+    );
   });
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:share_plus/share_plus.dart';
 import '../providers/receipt_provider.dart';
 import '../config/categories.dart';
 import '../config/receipt_tax_insights.dart';
 import '../config/theme.dart';
 import '../models/receipt.dart';
+import '../services/export_service.dart';
 import 'detail_screen.dart';
 
 class ReceiptsScreen extends StatefulWidget {
@@ -18,6 +20,9 @@ class ReceiptsScreen extends StatefulWidget {
 class _ReceiptsScreenState extends State<ReceiptsScreen> {
   final TextEditingController _searchCtrl = TextEditingController();
   String _query = '';
+  bool _selectionMode = false;
+  bool _isExporting = false;
+  final Set<String> _selectedIds = {};
 
   @override
   void dispose() {
@@ -33,7 +38,39 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
 
     return Scaffold(
       backgroundColor: AppTheme.bg,
-      appBar: AppBar(title: const Text('Receipts')),
+      appBar: _selectionMode
+          ? AppBar(
+              leading: IconButton(
+                tooltip: 'Cancel selection',
+                onPressed: _exitSelectionMode,
+                icon: const Icon(Icons.close),
+              ),
+              title: Text('${_selectedIds.length} selected'),
+              actions: [
+                TextButton(
+                  onPressed: receipts.isEmpty
+                      ? null
+                      : () => _toggleSelectAll(receipts),
+                  child: Text(
+                    receipts.every((r) => _selectedIds.contains(r.id))
+                        ? 'Clear'
+                        : 'Select all',
+                  ),
+                ),
+              ],
+            )
+          : AppBar(
+              title: const Text('Receipts'),
+              actions: [
+                TextButton.icon(
+                  onPressed: provider.receipts.isEmpty
+                      ? null
+                      : () => setState(() => _selectionMode = true),
+                  icon: const Icon(Icons.ios_share_outlined, size: 19),
+                  label: const Text('Export'),
+                ),
+              ],
+            ),
       body: provider.receipts.isEmpty
           ? _buildEmptyState()
           : ListView(
@@ -54,6 +91,9 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                 const SizedBox(height: 80),
               ],
             ),
+      bottomNavigationBar: _selectionMode
+          ? _buildBatchExportBar(provider.receipts)
+          : null,
     );
   }
 
@@ -177,6 +217,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     final cat = categoryMap[receipt.category] ?? categories.last;
     final taxMatch = ReceiptTaxInsights.forReceipt(receipt);
     return Slidable(
+      enabled: !_selectionMode,
       endActionPane: ActionPane(
         motion: const BehindMotion(),
         children: [
@@ -202,6 +243,10 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: () {
+              if (_selectionMode) {
+                _toggleReceipt(receipt.id);
+                return;
+              }
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -209,18 +254,35 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                 ),
               );
             },
+            onLongPress: () {
+              setState(() {
+                _selectionMode = true;
+                _selectedIds.add(receipt.id);
+              });
+            },
             child: Padding(
               padding: const EdgeInsets.all(14),
               child: Row(
                 children: [
-                  Container(
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 160),
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: cat.color.withValues(alpha: 0.15),
+                      color: _selectedIds.contains(receipt.id)
+                          ? AppTheme.blue
+                          : cat.color.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Icon(cat.icon, color: cat.color, size: 22),
+                    child: Icon(
+                      _selectedIds.contains(receipt.id)
+                          ? Icons.check_rounded
+                          : cat.icon,
+                      color: _selectedIds.contains(receipt.id)
+                          ? Colors.white
+                          : cat.color,
+                      size: 22,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -281,6 +343,113 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
         ),
       ),
     );
+  }
+
+  Widget _buildBatchExportBar(List<Receipt> allReceipts) {
+    final selected = allReceipts
+        .where((receipt) => _selectedIds.contains(receipt.id))
+        .toList();
+    return Material(
+      color: Theme.of(context).cardColor,
+      elevation: 14,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  key: const Key('batch_csv_export'),
+                  onPressed: _isExporting || selected.isEmpty
+                      ? null
+                      : () => _exportSelected(selected, pdf: false),
+                  icon: const Icon(Icons.table_chart_outlined, size: 18),
+                  label: const Text('CSV summary'),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FilledButton.icon(
+                  key: const Key('batch_pdf_export'),
+                  onPressed: _isExporting || selected.isEmpty
+                      ? null
+                      : () => _exportSelected(selected, pdf: true),
+                  icon: _isExporting
+                      ? const SizedBox(
+                          width: 17,
+                          height: 17,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Icon(Icons.picture_as_pdf_outlined, size: 18),
+                  label: Text(
+                    selected.isEmpty
+                        ? 'Select receipts'
+                        : 'PDF package (${selected.length})',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _toggleReceipt(String id) {
+    setState(() {
+      if (!_selectedIds.add(id)) _selectedIds.remove(id);
+    });
+  }
+
+  void _toggleSelectAll(List<Receipt> visibleReceipts) {
+    setState(() {
+      final allSelected = visibleReceipts.every(
+        (receipt) => _selectedIds.contains(receipt.id),
+      );
+      if (allSelected) {
+        _selectedIds.removeAll(visibleReceipts.map((receipt) => receipt.id));
+      } else {
+        _selectedIds.addAll(visibleReceipts.map((receipt) => receipt.id));
+      }
+    });
+  }
+
+  void _exitSelectionMode() {
+    setState(() {
+      _selectionMode = false;
+      _selectedIds.clear();
+    });
+  }
+
+  Future<void> _exportSelected(
+    List<Receipt> receipts, {
+    required bool pdf,
+  }) async {
+    setState(() => _isExporting = true);
+    try {
+      final path = pdf
+          ? await ExportService.exportPdf(receipts)
+          : await ExportService.exportCsv(receipts);
+      if (!mounted) return;
+      if (path == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not create the export file.')),
+        );
+        return;
+      }
+      await Share.shareXFiles(
+        [XFile(path)],
+        subject: pdf
+            ? 'ReceiptSnap receipt package'
+            : 'ReceiptSnap expense summary',
+      );
+    } finally {
+      if (mounted) setState(() => _isExporting = false);
+    }
   }
 
   void _editCategory(Receipt receipt) async {
@@ -363,8 +532,7 @@ class _TaxMarker extends StatelessWidget {
         children: [
           Icon(icon, size: 12, color: color),
           const SizedBox(width: 4),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 180),
+          Flexible(
             child: Text(
               label,
               maxLines: 1,

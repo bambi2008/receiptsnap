@@ -1,7 +1,7 @@
 # ReceiptSnap — 项目状态
 
 > 当前进度 · 阻塞 · 下一步 · 文档索引
-> Last updated: 2026-09-25
+> Last updated: 2026-09-30
 
 ---
 
@@ -19,6 +19,8 @@
 ✅ iOS 身份    com.bambi2008.receiptsnap（与 Pocklume 完全独立）
 ✅ TestFlight  ReceiptSnap 1.0.0 (3) 已处理并在 Internal Testers 中测试
 ✅ 订阅商品    月费 $4.99 / 年费 $39.99（美国区，英文展示信息已配置）
+✅ 收据预览    完整比例显示 + 全屏缩放，不再裁掉长收据
+✅ 批量导出    多选收据 → 单个带索引 PDF 包 / CSV 汇总
 ```
 
 ## 🟡 进行中

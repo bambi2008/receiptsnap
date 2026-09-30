@@ -79,41 +79,7 @@ class _DetailScreenState extends State<DetailScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Receipt image placeholder
-            Container(
-              height: 220,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: _receipt.imagePath != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.file(
-                        File(_receipt.imagePath!),
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, _, _) => const Center(
-                          child: Text('Receipt image unavailable'),
-                        ),
-                      ),
-                    )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.receipt_long,
-                          size: 60,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Receipt Image',
-                          style: TextStyle(color: Colors.grey[500]),
-                        ),
-                      ],
-                    ),
-            ),
+            _buildReceiptImage(),
             const SizedBox(height: 20),
 
             // Editable fields
@@ -194,6 +160,117 @@ class _DetailScreenState extends State<DetailScreen> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReceiptImage() {
+    final imagePath = _receipt.imagePath;
+    if (imagePath == null) {
+      return Container(
+        height: 260,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.receipt_long, size: 60, color: Colors.grey[400]),
+            const SizedBox(height: 8),
+            Text('Receipt Image', style: TextStyle(color: Colors.grey[500])),
+          ],
+        ),
+      );
+    }
+
+    return Semantics(
+      button: true,
+      label: 'View the full receipt image',
+      child: Material(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => _openFullImage(imagePath),
+          child: Stack(
+            children: [
+              SizedBox(
+                height: 320,
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Image.file(
+                    File(imagePath),
+                    key: const Key('receipt_image_preview'),
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, _, _) =>
+                        const Center(child: Text('Receipt image unavailable')),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 10,
+                bottom: 10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 7,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.68),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.zoom_in, color: Colors.white, size: 17),
+                      SizedBox(width: 4),
+                      Text(
+                        'View full receipt',
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openFullImage(String imagePath) {
+    return Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+            title: const Text('Receipt image'),
+          ),
+          body: SafeArea(
+            child: InteractiveViewer(
+              minScale: 0.8,
+              maxScale: 5,
+              child: Center(
+                child: Image.file(
+                  File(imagePath),
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, _, _) => const Text(
+                    'Receipt image unavailable',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
