@@ -36,7 +36,7 @@ class OcrService {
     final amount = _extractAmount(lines, fullText);
 
     // Extract date: look for date patterns
-    DateTime? date = _extractDate(fullText);
+    final date = extractReceiptDate(fullText);
 
     // Guess category from vendor name
     final category = guessCategory(vendor);
@@ -129,54 +129,100 @@ class OcrService {
     return largest;
   }
 
-  static DateTime? _extractDate(String text) {
-    // Match common date formats: MM/DD/YYYY, MM-DD-YYYY, Mon DD, YYYY
-    final patterns = [
-      RegExp(r'(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})'),
-      RegExp(
-        r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+(\d{1,2}),?\s*(\d{4})',
-      ),
+  static const _months = {
+    'jan': 1,
+    'feb': 2,
+    'mar': 3,
+    'apr': 4,
+    'may': 5,
+    'jun': 6,
+    'jul': 7,
+    'aug': 8,
+    'sep': 9,
+    'oct': 10,
+    'nov': 11,
+    'dec': 12,
+  };
+
+  /// Extracts the transaction date printed on a receipt. Date-labelled lines
+  /// are checked first so unrelated identifiers or loyalty dates do not win.
+  static DateTime? extractReceiptDate(String text) {
+    final lines = text
+        .split(RegExp(r'[\r\n]+'))
+        .map((line) => line.trim())
+        .where((line) => line.isNotEmpty)
+        .toList();
+    final dateLabel = RegExp(
+      r'\b(date|purchased|purchase|transaction|invoice)\b|日期|开票',
+      caseSensitive: false,
+    );
+    final prioritized = [
+      ...lines.where(dateLabel.hasMatch),
+      ...lines.where((line) => !dateLabel.hasMatch(line)),
     ];
 
-    for (final pattern in patterns) {
-      final match = pattern.firstMatch(text);
-      if (match != null) {
-        try {
-          if (match.groupCount >= 3 &&
-              match.group(1)!.contains(RegExp(r'[A-Za-z]'))) {
-            // Named month format
-            final months = {
-              'jan': 1,
-              'feb': 2,
-              'mar': 3,
-              'apr': 4,
-              'may': 5,
-              'jun': 6,
-              'jul': 7,
-              'aug': 8,
-              'sep': 9,
-              'oct': 10,
-              'nov': 11,
-              'dec': 12,
-            };
-            final m =
-                months[match.group(1)!.substring(0, 3).toLowerCase()] ?? 1;
-            final d = int.tryParse(match.group(2)!) ?? 1;
-            final y = int.tryParse(match.group(3)!) ?? DateTime.now().year;
-            return DateTime(y, m, d);
-          } else {
-            // Numeric format
-            final m = int.tryParse(match.group(1)!) ?? 1;
-            final d = int.tryParse(match.group(2)!) ?? 1;
-            var y = int.tryParse(match.group(3)!) ?? DateTime.now().year;
-            if (y < 100) y += 2000;
-            return DateTime(y, m, d);
-          }
-        } catch (_) {
-          // Parsing failed, continue
-        }
-      }
+    for (final line in prioritized) {
+      final parsed = _parseDateLine(line);
+      if (parsed != null) return parsed;
     }
     return null;
+  }
+
+  static DateTime? _parseDateLine(String line) {
+    Match? match;
+
+    // YYYY-MM-DD, YYYY/MM/DD, YYYY.MM.DD, and YYYY年MM月DD日.
+    match = RegExp(
+      r'\b(19\d{2}|20\d{2})\s*(?:[-/.]|年)\s*(\d{1,2})\s*(?:[-/.]|月)\s*(\d{1,2})(?:日)?\b',
+    ).firstMatch(line);
+    if (match != null) {
+      return _validDate(match.group(1), match.group(2), match.group(3));
+    }
+
+    // US numeric receipt dates: MM/DD/YYYY and MM-DD-YY.
+    match = RegExp(
+      r'\b(\d{1,2})[/-](\d{1,2})[/-](\d{2}|\d{4})\b',
+    ).firstMatch(line);
+    if (match != null) {
+      var year = int.tryParse(match.group(3)!);
+      if (year != null && year < 100) year += year >= 70 ? 1900 : 2000;
+      return _validDate(year?.toString(), match.group(1), match.group(2));
+    }
+
+    // Sep 29, 2026 / September 29 2026.
+    match = RegExp(
+      r'\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\b',
+      caseSensitive: false,
+    ).firstMatch(line);
+    if (match != null) {
+      final month = _months[match.group(1)!.substring(0, 3).toLowerCase()];
+      return _validDate(match.group(3), month?.toString(), match.group(2));
+    }
+
+    // 29 Sep 2026 / 29 September, 2026.
+    match = RegExp(
+      r'\b(\d{1,2})(?:st|nd|rd|th)?\s+(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?),?\s+(\d{4})\b',
+      caseSensitive: false,
+    ).firstMatch(line);
+    if (match != null) {
+      final month = _months[match.group(2)!.substring(0, 3).toLowerCase()];
+      return _validDate(match.group(3), month?.toString(), match.group(1));
+    }
+
+    return null;
+  }
+
+  static DateTime? _validDate(String? year, String? month, String? day) {
+    final y = int.tryParse(year ?? '');
+    final m = int.tryParse(month ?? '');
+    final d = int.tryParse(day ?? '');
+    if (y == null || m == null || d == null || y < 1990 || y > 2100) {
+      return null;
+    }
+    final candidate = DateTime(y, m, d);
+    if (candidate.year != y || candidate.month != m || candidate.day != d) {
+      return null;
+    }
+    return candidate;
   }
 }

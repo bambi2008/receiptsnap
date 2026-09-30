@@ -430,23 +430,58 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     required bool pdf,
   }) async {
     setState(() => _isExporting = true);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            pdf
+                ? 'Creating one PDF package for ${receipts.length} receipts…'
+                : 'Creating CSV summary for ${receipts.length} receipts…',
+          ),
+          duration: const Duration(seconds: 30),
+        ),
+      );
+    // Let the progress state paint before image decoding starts.
+    await Future<void>.delayed(Duration.zero);
     try {
       final path = pdf
           ? await ExportService.exportPdf(receipts)
           : await ExportService.exportCsv(receipts);
       if (!mounted) return;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       if (path == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not create the export file.')),
         );
         return;
       }
-      await Share.shareXFiles(
-        [XFile(path)],
-        subject: pdf
-            ? 'ReceiptSnap receipt package'
-            : 'ReceiptSnap expense summary',
-      );
+      // File creation is finished. Re-enable both choices before opening the
+      // system share sheet, whose Future remains pending until it is dismissed.
+      setState(() => _isExporting = false);
+      final box = context.findRenderObject() as RenderBox?;
+      final origin = box == null
+          ? null
+          : box.localToGlobal(Offset.zero) & box.size;
+      try {
+        await Share.shareXFiles(
+          [XFile(path, mimeType: pdf ? 'application/pdf' : 'text/csv')],
+          subject: pdf
+              ? 'ReceiptSnap receipt package'
+              : 'ReceiptSnap expense summary',
+          sharePositionOrigin: origin,
+        );
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'The share sheet could not open. Please try again.',
+              ),
+            ),
+          );
+        }
+      }
     } finally {
       if (mounted) setState(() => _isExporting = false);
     }

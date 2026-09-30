@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:csv/csv.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -149,10 +150,8 @@ class ExportService {
       final imagePath = receipt.imagePath;
       if (imagePath != null && imagePath.isNotEmpty) {
         try {
-          final file = File(imagePath);
-          if (await file.exists()) {
-            image = pw.MemoryImage(await file.readAsBytes());
-          }
+          final bytes = await _pdfReadyImageBytes(imagePath);
+          if (bytes != null) image = pw.MemoryImage(bytes);
         } catch (_) {
           image = null;
         }
@@ -225,5 +224,46 @@ class ExportService {
     }
 
     return document.save();
+  }
+
+  /// Decodes through Flutter's platform image codecs so iPhone HEIC photos are
+  /// supported, then downsizes them before embedding. Keeping full camera
+  /// resolution for every page makes a multi-receipt PDF appear to hang and can
+  /// exhaust memory on older phones.
+  static Future<Uint8List?> _pdfReadyImageBytes(String imagePath) async {
+    final file = File(imagePath);
+    if (!await file.exists()) return null;
+
+    final source = await file.readAsBytes();
+    ui.ImmutableBuffer? buffer;
+    ui.ImageDescriptor? descriptor;
+    ui.Codec? codec;
+    ui.Image? decoded;
+    try {
+      buffer = await ui.ImmutableBuffer.fromUint8List(source);
+      descriptor = await ui.ImageDescriptor.encoded(buffer);
+      final widthScale = 1400 / descriptor.width;
+      final heightScale = 2400 / descriptor.height;
+      final scale = [
+        1.0,
+        widthScale,
+        heightScale,
+      ].reduce((smallest, value) => value < smallest ? value : smallest);
+      codec = await descriptor.instantiateCodec(
+        targetWidth: (descriptor.width * scale).round(),
+        targetHeight: (descriptor.height * scale).round(),
+      );
+      final frame = await codec.getNextFrame();
+      decoded = frame.image;
+      final data = await decoded.toByteData(format: ui.ImageByteFormat.png);
+      return data?.buffer.asUint8List();
+    } catch (_) {
+      return null;
+    } finally {
+      decoded?.dispose();
+      codec?.dispose();
+      descriptor?.dispose();
+      buffer?.dispose();
+    }
   }
 }
