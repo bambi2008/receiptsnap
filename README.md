@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/app-icon-1024.png" width="120" alt="ReceiptSnap">
+  <img src="assets/app-icon-1024.png" width="120" alt="Freelance Tax Kit">
 </p>
 
-<h1 align="center">ReceiptSnap 🧾</h1>
+<h1 align="center">Freelance Tax Kit 🧾</h1>
 <p align="center"><strong>AI Receipt Scanner for US Freelancers</strong></p>
 
 <p align="center">
@@ -14,17 +14,17 @@
 </p>
 
 <p align="center">
-  <b>Snap → Categorize → Export.</b> Three taps from receipt to tax deduction.<br>
-  On-device AI. IRS Schedule C categories. CPA-ready.
+  <b>Snap → Review → Export.</b> A short path from receipt photo to organized expense record.<br>
+  On-device OCR. Expense-category suggestions. Accountant-friendly exports.
 </p>
 
 ---
 
-## ✨ What is ReceiptSnap?
+## ✨ What is Freelance Tax Kit?
 
-ReceiptSnap is an iOS app that turns every business receipt into a tax deduction — instantly. Built specifically for **US freelancers, 1099 contractors, and self-employed professionals.**
+Freelance Tax Kit is an iOS app that helps turn business receipt photos into organized expense records. It is built for **US freelancers, 1099 contractors, and self-employed professionals.**
 
-Open the app → snap a photo → AI reads vendor, amount, date → categorizes by IRS Schedule C rules → export to your CPA.
+Open the app → snap a photo → on-device OCR reads vendor, amount, and date → review the suggested category → export for your records or accountant.
 
 ```
 📸 Snap     →     🤖 AI Reads     →     📊 Dashboard     →     📤 CPA Export
@@ -40,7 +40,7 @@ Open the app → snap a photo → AI reads vendor, amount, date → categorizes 
 
 | Camera | Result | Dashboard | Export | Paywall |
 |:---:|:---:|:---:|:---:|:---:|
-| Snap in 1 tap | AI extracts data | Track deductions | PDF to CPA | $4.99/mo |
+| Snap in 1 tap | OCR extracts data | Organize expenses | PDF to CPA | Localized App Store pricing |
 
 > Screenshots at `assets/screenshots/` — optimized for iPhone 6.7" (1290×2796)
 
@@ -82,7 +82,7 @@ Open the app → snap a photo → AI reads vendor, amount, date → categorizes 
 ```
 
 **Key design decisions:**
-- 🧠 **On-device OCR** — Apple Vision framework. Zero cloud latency. Works offline.
+- 🧠 **On-device OCR** — Apple Vision text recognition. Receipt images are not uploaded by Freelance Tax Kit for OCR.
 - 💰 **StoreKit 2** — Native subscription management via Method Channel
 - 📦 **Provider** — Lightweight state management (no Bloc/Redux overhead)
 - 🔒 **Hive** — Fast local DB for receipts. All data stays on your phone.
@@ -183,7 +183,7 @@ code coverage      // TODO: add lcov
 
 | Test Suite | Count | Focus |
 |------------|:-----:|-------|
-| `config/categories_test.dart` | 15 | IRS category mapping + vendor guessing |
+| `config/categories_test.dart` | 15 | Expense categories + vendor guessing |
 | `config/constants_test.dart` | 8 | App constants + pricing |
 | `models/receipt_test.dart` | 13 | Receipt model + formatting |
 | `providers/receipt_provider_test.dart` | 14 | CRUD + search + grouping |
@@ -195,10 +195,10 @@ code coverage      // TODO: add lcov
 
 | | Free | Pro |
 |:---|:---:|:---:|
-| **Price** | $0 forever | $4.99/mo or $39.99/yr |
+| **Price** | 50 receipts free | Localized price shown in the app and App Store |
 | **Receipts** | 50 | Unlimited |
 | **OCR** | ✅ | ✅ |
-| **Categories** | 10 Schedule C | 10 Schedule C |
+| **Categories** | 10 expense categories | 10 expense categories |
 | **Export** | PDF + CSV | PDF + CSV |
 | **Support** | — | Priority |
 
@@ -209,7 +209,7 @@ code coverage      // TODO: add lcov
 ## 🎯 Target Audience
 
 - 🇺🇸 US-based freelancers & 1099 contractors
-- 🧾 Anyone filing IRS Schedule C
+- 🧾 Anyone organizing receipts for business records
 - 🏢 Self-employed professionals: designers, developers, writers, consultants
 - 🚗 Gig workers tracking business expenses
 

@@ -1,4 +1,4 @@
-# MVP Feature List — ReceiptSnap
+# MVP Feature List — Freelance Tax Kit
 
 > Date: June 2026 | Phase 0 Deliverable
 > Principle: Ship in 6 weeks. Say NO to everything that doesn't directly serve the "snap → categorize → export" loop.

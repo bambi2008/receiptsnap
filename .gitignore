@@ -39,6 +39,7 @@ coverage/
 # Hive local data
 *.hive
 *.lock
+!app/pubspec.lock
 
 # OS
 .DS_Store
@@ -46,6 +47,7 @@ Thumbs.db
 
 # Environment
 .env
+outputs/
 .env.*
 
 # Test artifacts

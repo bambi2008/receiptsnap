@@ -1,10 +1,10 @@
-# Privacy Policy for ReceiptSnap
+# Privacy Policy for Freelance Tax Kit
 
 **Last updated: June 2026**
 
 ## 1. Introduction
 
-ReceiptSnap ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application (the "App"). Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the App.
+Freelance Tax Kit ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our mobile application (the "App"). Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the App.
 
 ## 2. Information We Collect
 
@@ -32,7 +32,7 @@ ReceiptSnap ("we," "our," or "us") is committed to protecting your privacy. This
 All receipt data (images, extracted text, categories) is stored **locally on your device** using Hive, a secure local database. We do not upload your receipt data to our servers.
 
 ### 4.2 OCR Processing
-Receipt text extraction is performed **entirely on your device** using Apple's Vision framework and/or Google ML Kit. No receipt images are sent to external servers for processing.
+Receipt text extraction is performed **entirely on your device** using Apple's Vision framework. No receipt images are sent to external servers for processing.
 
 ### 4.3 iCloud (Future Feature)
 If you enable optional iCloud Sync in a future update, your receipt data may be synced across your Apple devices via your personal iCloud account. This data is encrypted in transit and at rest by Apple's iCloud infrastructure. We do not have access to your iCloud data.
@@ -61,7 +61,7 @@ Receipt data is retained on your device until you choose to delete it. We do not
 
 ## 8. Children's Privacy
 
-ReceiptSnap is not intended for children under 13. We do not knowingly collect information from children under 13.
+Freelance Tax Kit is not intended for children under 13. We do not knowingly collect information from children under 13.
 
 ## 9. Changes to This Privacy Policy
 

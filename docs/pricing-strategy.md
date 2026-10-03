@@ -1,4 +1,4 @@
-# Pricing Strategy — ReceiptSnap
+# Pricing Strategy — Freelance Tax Kit
 
 > Date: June 2026 | Phase 0 Deliverable
 
@@ -119,7 +119,7 @@ LTV:CAC ratio (paid): 11-19x ✅ (target >3x)
 | SimplyWise | 50 receipts | — | $3.33-7.50 | Export locked behind $90/yr |
 | Wave Receipts | — | $8.00 | — | Must use Wave accounting |
 | QuickBooks SE | — | $15.00 | $12.50 | Full accounting, overkill |
-| **ReceiptSnap** | **50 receipts** | **$4.99** | **$3.33** | **No data deletion, no dark patterns** |
+| **Freelance Tax Kit** | **50 receipts** | **$4.99** | **$3.33** | **No data deletion, no dark patterns** |
 
 ---
 
@@ -127,7 +127,7 @@ LTV:CAC ratio (paid): 11-19x ✅ (target >3x)
 
 1. **"50 receipts, not 30 days"** — Value-based limit feels fairer. Time-based trials feel like traps.
 2. **Annual discount = 33%** — Standard SaaS discount rate. Drives LTV and reduces churn.
-3. **No "Pro" branding** — Don't make free users feel like second-class. Just "ReceiptSnap" with a limit counter.
+3. **No "Pro" branding** — Don't make free users feel like second-class. Just "Freelance Tax Kit" with a limit counter.
 4. **Conversion screen design**: When user hits 50 receipts, show their stats — "You've captured $2,340 in deductible expenses. Unlock unlimited to keep saving." — value-first, not guilt.
 5. **Price anchoring**: Show $4.99/month next to $39.99/year ($3.33/mo) → annual looks like a deal.
 

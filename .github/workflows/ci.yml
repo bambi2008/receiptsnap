@@ -9,7 +9,7 @@ on:
 jobs:
   analyze-and-test:
     runs-on: macos-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     defaults:
       run:
@@ -32,3 +32,6 @@ jobs:
 
       - name: Run tests
         run: flutter test
+
+      - name: Build iOS simulator app
+        run: flutter build ios --simulator --debug

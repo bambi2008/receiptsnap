@@ -1,4 +1,4 @@
-# SnapDeduct — Reddit & Ad Copy Pack
+# ReceiptSnap — Reddit & Ad Copy Pack
 
 > For the demand-validation phase. Goal: drive targeted traffic to the landing page.
 > Golden rule on Reddit: tell a story, give value, never hard-sell. Link goes in a comment or as soft mention, not as a banner ad.
@@ -154,7 +154,7 @@ you?
 **Primary text:**
 ```
 Every receipt you can't find at tax time is money you overpay the IRS.
-SnapDeduct: snap a receipt → AI sorts it by tax category → export for your
+ReceiptSnap: snap a receipt → AI sorts it by tax category → export for your
 CPA in seconds. 50 receipts free.
 ```
 **CTA button:** `Sign Up`
@@ -167,7 +167,7 @@ CPA in seconds. 50 receipts free.
 **Headline:** `Tax season in 3 taps, not a lost weekend`
 **Primary text:**
 ```
-Snap. Sort. Export. SnapDeduct tracks every business expense for freelancers
+Snap. Sort. Export. ReceiptSnap tracks every business expense for freelancers
 so you're tax-ready all year — no spreadsheets, no shoebox of receipts.
 Try 50 receipts free.
 ```
@@ -181,7 +181,7 @@ Try 50 receipts free.
 **Headline:** `Built for freelancers, not corporations`
 **Primary text:**
 ```
-Expensify is overkill. QuickBooks is a second job. SnapDeduct does one thing:
+Expensify is overkill. QuickBooks is a second job. ReceiptSnap does one thing:
 captures your deductible receipts so you keep more at tax time. $39.99/year.
 50 free to start.
 ```
@@ -211,7 +211,7 @@ shoebox. You just need them organized. (building a tool for exactly this btw)
 
 **Tweet 3 (indie hacker angle, #buildinpublic):**
 ```
-Day 1 of validating SnapDeduct 🧾
+Day 1 of validating ReceiptSnap 🧾
 
 Receipt tracker for US freelancers. $40/yr.
 Landing page is live, running $50 in ads this week.
@@ -246,11 +246,11 @@ you already like?
 
 Use UTM tags on your links so you know what converts:
 ```
-Reddit r/freelance:  snapdeduct.com/?utm_source=reddit&utm_campaign=freelance
-Reddit ads:          snapdeduct.com/?utm_source=reddit_ads
-Facebook ads:        snapdeduct.com/?utm_source=fb_ads
-Twitter:             snapdeduct.com/?utm_source=twitter
-Cold DM:             snapdeduct.com/?utm_source=dm
+Reddit r/freelance:  receiptsnap.com/?utm_source=reddit&utm_campaign=freelance
+Reddit ads:          receiptsnap.com/?utm_source=reddit_ads
+Facebook ads:        receiptsnap.com/?utm_source=fb_ads
+Twitter:             receiptsnap.com/?utm_source=twitter
+Cold DM:             receiptsnap.com/?utm_source=dm
 ```
 
 Whichever source has the best conversion rate = where you pour effort post-validation.
