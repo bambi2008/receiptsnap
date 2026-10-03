@@ -84,7 +84,7 @@ class StoreKitManager: NSObject, FlutterPlugin {
     private func purchase(productId: String, result: @escaping FlutterResult) async {
         guard Self.allowedProductIds.contains(productId) else {
             result(FlutterError(code: "INVALID_PRODUCT",
-                                message: "This product is not offered by ReceiptSnap.",
+                                message: "This product is not offered by Freelance Tax Kit.",
                                 details: nil))
             return
         }

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/app-icon-1024.png" width="120" alt="ReceiptSnap">
+  <img src="assets/app-icon-1024.png" width="120" alt="Freelance Tax Kit">
 </p>
 
-<h1 align="center">ReceiptSnap 🧾</h1>
+<h1 align="center">Freelance Tax Kit 🧾</h1>
 <p align="center"><strong>AI Receipt Scanner for US Freelancers</strong></p>
 
 <p align="center">
@@ -20,9 +20,9 @@
 
 ---
 
-## ✨ What is ReceiptSnap?
+## ✨ What is Freelance Tax Kit?
 
-ReceiptSnap is an iOS app that helps turn business receipt photos into organized expense records. It is built for **US freelancers, 1099 contractors, and self-employed professionals.**
+Freelance Tax Kit is an iOS app that helps turn business receipt photos into organized expense records. It is built for **US freelancers, 1099 contractors, and self-employed professionals.**
 
 Open the app → snap a photo → on-device OCR reads vendor, amount, and date → review the suggested category → export for your records or accountant.
 
@@ -82,7 +82,7 @@ Open the app → snap a photo → on-device OCR reads vendor, amount, and date �
 ```
 
 **Key design decisions:**
-- 🧠 **On-device OCR** — Apple Vision text recognition. Receipt images are not uploaded by ReceiptSnap for OCR.
+- 🧠 **On-device OCR** — Apple Vision text recognition. Receipt images are not uploaded by Freelance Tax Kit for OCR.
 - 💰 **StoreKit 2** — Native subscription management via Method Channel
 - 📦 **Provider** — Lightweight state management (no Bloc/Redux overhead)
 - 🔒 **Hive** — Fast local DB for receipts. All data stays on your phone.

@@ -5,6 +5,9 @@ import 'package:csv/csv.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
+import '../config/categories.dart';
+import '../config/constants.dart';
 import '../models/receipt.dart';
 
 class ExportService {
@@ -19,15 +22,38 @@ class ExportService {
       Receipt.csvHeaders,
       ...receipts.map(
         (r) => [
-          r.formattedDate,
+          r.date.year.toString(),
+          r.id,
+          _isoDate(r.date),
           neutralizeSpreadsheetText(r.vendorName),
-          neutralizeSpreadsheetText(r.category),
           r.amount.toStringAsFixed(2),
+          'USD',
+          r.businessUsePercent.toStringAsFixed(1),
+          r.businessAmount.toStringAsFixed(2),
+          neutralizeSpreadsheetText(r.category),
+          neutralizeSpreadsheetText(scheduleCReference(r.category)),
           neutralizeSpreadsheetText(r.note ?? ''),
+          neutralizeSpreadsheetText(r.businessPurpose ?? ''),
+          neutralizeSpreadsheetText(r.location ?? ''),
+          neutralizeSpreadsheetText(r.paymentMethod ?? 'Not recorded'),
+          neutralizeSpreadsheetText(r.reviewStatusLabel),
+          neutralizeSpreadsheetText(_imageReference(r)),
+          r.capturedAt.toUtc().toIso8601String(),
         ],
       ),
     ];
     return const ListToCsvConverter().convert(rows);
+  }
+
+  static String _isoDate(DateTime value) =>
+      '${value.year.toString().padLeft(4, '0')}-'
+      '${value.month.toString().padLeft(2, '0')}-'
+      '${value.day.toString().padLeft(2, '0')}';
+
+  static String _imageReference(Receipt receipt) {
+    final path = receipt.imagePath;
+    if (path == null || path.isEmpty) return 'No image';
+    return '${receipt.id}_${p.basename(path)}';
   }
 
   static Future<String?> exportCsv(List<Receipt> receipts) async {
@@ -35,7 +61,7 @@ class ExportService {
       final csv = buildCsv(receipts);
       final dir = await getTemporaryDirectory();
       final file = File(
-        '${dir.path}/receiptsnap_${receipts.length}_receipts_${DateTime.now().microsecondsSinceEpoch}.csv',
+        '${dir.path}/freelance_tax_kit_${receipts.length}_receipts_${DateTime.now().microsecondsSinceEpoch}.csv',
       );
       await file.writeAsString(csv);
       return file.path;
@@ -49,7 +75,7 @@ class ExportService {
       final bytes = await buildPdfBytes(receipts);
       final dir = await getTemporaryDirectory();
       final file = File(
-        '${dir.path}/receiptsnap_${receipts.length}_receipt_package_${DateTime.now().microsecondsSinceEpoch}.pdf',
+        '${dir.path}/freelance_tax_kit_${receipts.length}_receipt_package_${DateTime.now().microsecondsSinceEpoch}.pdf',
       );
       await file.writeAsBytes(bytes, flush: true);
       return file.path;
@@ -66,11 +92,15 @@ class ExportService {
     }
 
     final document = pw.Document(
-      title: 'ReceiptSnap receipt package',
-      author: 'ReceiptSnap',
+      title: '${AppConstants.appName} receipt package',
+      author: AppConstants.appName,
       subject: 'Expense records and supporting receipt images',
     );
-    final total = sorted.fold<double>(0, (sum, item) => sum + item.amount);
+    final grossTotal = sorted.fold<double>(0, (sum, item) => sum + item.amount);
+    final businessTotal = sorted.fold<double>(
+      0,
+      (sum, item) => sum + item.businessAmount,
+    );
 
     document.addPage(
       pw.MultiPage(
@@ -78,7 +108,7 @@ class ExportService {
         margin: const pw.EdgeInsets.all(36),
         build: (_) => [
           pw.Text(
-            'ReceiptSnap Expense Package',
+            '${AppConstants.appName} Self-Employed Tax Records Package',
             style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold),
           ),
           pw.SizedBox(height: 5),
@@ -88,9 +118,13 @@ class ExportService {
           ),
           pw.SizedBox(height: 18),
           ...grouped.entries.expand((entry) {
-            final categoryTotal = entry.value.fold<double>(
+            final categoryGross = entry.value.fold<double>(
               0,
               (sum, receipt) => sum + receipt.amount,
+            );
+            final categoryBusiness = entry.value.fold<double>(
+              0,
+              (sum, receipt) => sum + receipt.businessAmount,
             );
             return [
               pw.Text(
@@ -102,13 +136,14 @@ class ExportService {
               ),
               pw.SizedBox(height: 5),
               pw.TableHelper.fromTextArray(
-                headers: const ['Date', 'Vendor', 'Amount'],
+                headers: const ['Date', 'Vendor', 'Gross', 'Business record'],
                 data: entry.value
                     .map(
                       (receipt) => [
                         receipt.formattedDate,
                         receipt.vendorName,
                         receipt.formattedAmount,
+                        '\$${receipt.businessAmount.toStringAsFixed(2)}',
                       ],
                     )
                     .toList(),
@@ -121,7 +156,7 @@ class ExportService {
               pw.Align(
                 alignment: pw.Alignment.centerRight,
                 child: pw.Text(
-                  'Subtotal: \$${categoryTotal.toStringAsFixed(2)}',
+                  'Gross: \$${categoryGross.toStringAsFixed(2)}  |  Business record amount: \$${categoryBusiness.toStringAsFixed(2)}',
                 ),
               ),
               pw.SizedBox(height: 14),
@@ -131,13 +166,27 @@ class ExportService {
           pw.Align(
             alignment: pw.Alignment.centerRight,
             child: pw.Text(
-              'Total: \$${total.toStringAsFixed(2)}',
+              'Gross total: \$${grossTotal.toStringAsFixed(2)}',
               style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
+            ),
+          ),
+          pw.Align(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Text(
+              'Business record amount: \$${businessTotal.toStringAsFixed(2)}',
+              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+            ),
+          ),
+          pw.Align(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Text(
+              'Not a deduction determination',
+              style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey700),
             ),
           ),
           pw.SizedBox(height: 18),
           pw.Text(
-            'Recordkeeping aid only. Verify tax treatment and retain any additional proof of payment or business purpose that may be required.',
+            'For an individual sole proprietor\'s recordkeeping and tax-preparer review. This package is not a tax return and does not determine deductibility. File Form 1040 and Schedule C as applicable, and retain any additional proof of payment, business purpose, travel, meal, gift, vehicle, or mixed-use details required for the expense.',
             style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey700),
           ),
         ],
@@ -184,6 +233,37 @@ class ExportService {
                           '${receipt.formattedDate}  |  ${receipt.category}  |  ${receipt.formattedAmount}',
                           style: const pw.TextStyle(fontSize: 10),
                         ),
+                        pw.SizedBox(height: 3),
+                        pw.Text(
+                          scheduleCReference(receipt.category),
+                          style: const pw.TextStyle(fontSize: 9),
+                        ),
+                        pw.Text(
+                          'Receipt ID: ${receipt.id}',
+                          style: const pw.TextStyle(
+                            fontSize: 8,
+                            color: PdfColors.grey700,
+                          ),
+                        ),
+                        pw.Text(
+                          'Review: ${receipt.reviewStatusLabel}  |  Business use: ${receipt.businessUsePercent.toStringAsFixed(1)}%  |  Business amount: \$${receipt.businessAmount.toStringAsFixed(2)}',
+                          style: const pw.TextStyle(fontSize: 8),
+                        ),
+                        if (receipt.businessPurpose?.trim().isNotEmpty == true)
+                          pw.Text(
+                            'Business purpose: ${receipt.businessPurpose!.trim()}',
+                            style: const pw.TextStyle(fontSize: 9),
+                          ),
+                        if (receipt.location?.trim().isNotEmpty == true)
+                          pw.Text(
+                            'Location / destination: ${receipt.location!.trim()}',
+                            style: const pw.TextStyle(fontSize: 9),
+                          ),
+                        if (receipt.paymentMethod?.trim().isNotEmpty == true)
+                          pw.Text(
+                            'Payment method: ${receipt.paymentMethod!.trim()}',
+                            style: const pw.TextStyle(fontSize: 9),
+                          ),
                         if (receipt.note?.trim().isNotEmpty == true) ...[
                           pw.SizedBox(height: 3),
                           pw.Text(

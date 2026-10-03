@@ -22,7 +22,7 @@ class TaxGuideEntry {
 }
 
 class TaxGuideData {
-  static const reviewedDate = 'July 23, 2026';
+  static const reviewedDate = 'September 30, 2026';
 
   static const scheduleCUrl = 'https://www.irs.gov/instructions/i1040sc';
   static const pub334Url = 'https://www.irs.gov/publications/p334';
@@ -36,6 +36,32 @@ class TaxGuideData {
   static const healthInsuranceUrl = 'https://www.irs.gov/instructions/i7206';
   static const retirementUrl = 'https://www.irs.gov/publications/p560';
   static const qbiUrl = 'https://www.irs.gov/irb/2025-45_IRB';
+  static const eitcUrl =
+      'https://www.irs.gov/credits-deductions/individuals/earned-income-tax-credit-eitc';
+  static const childTaxCreditUrl =
+      'https://www.irs.gov/credits-deductions/individuals/child-tax-credit';
+  static const dependentCareUrl =
+      'https://www.irs.gov/credits-deductions/individuals/child-and-dependent-care-credit-information';
+  static const premiumTaxCreditUrl =
+      'https://www.irs.gov/affordable-care-act/individuals-and-families/questions-and-answers-on-the-premium-tax-credit';
+  static const educationCreditsUrl =
+      'https://www.irs.gov/credits-deductions/individuals/education-credits-aotc-and-llc';
+  static const saversCreditUrl =
+      'https://www.irs.gov/forms-pubs/about-form-8880';
+  static const adoptionCreditUrl =
+      'https://www.irs.gov/credits-deductions/individuals/adoption-credit';
+  static const foreignTaxCreditUrl = 'https://www.irs.gov/publications/p514';
+  static const elderlyDisabledCreditUrl =
+      'https://www.irs.gov/publications/p524';
+  static const excessSocialSecurityUrl = 'https://www.irs.gov/taxtopics/tc608';
+  static const priorMinimumTaxUrl =
+      'https://www.irs.gov/forms-pubs/about-form-8801';
+  static const fuelTaxCreditUrl =
+      'https://www.irs.gov/forms-pubs/about-form-4136';
+  static const mortgageCreditUrl =
+      'https://www.irs.gov/forms-pubs/about-form-8396';
+  static const expiredEnergyCreditsUrl =
+      'https://www.irs.gov/newsroom/faqs-for-modification-of-sections-25c-25d-25e-30c-30d-45l-45w-and-179d-under-public-law-119-21-139-stat-72-july-4-2025-commonly-known-as-the-one-big-beautiful-bill-obbb';
 
   static const expenseEntries = <TaxGuideEntry>[
     TaxGuideEntry(
@@ -321,6 +347,163 @@ class TaxGuideData {
           'This is not a Schedule C receipt category, and it is not automatically 20% of gross revenue.',
       sourceTitle: 'IRS Revenue Procedure 2025-32 — 2026 QBI rules',
       sourceUrl: qbiUrl,
+    ),
+  ];
+
+  static const creditEntries = <TaxGuideEntry>[
+    TaxGuideEntry(
+      title: 'Earned Income Tax Credit (EITC)',
+      overview:
+          'Low- to moderate-income freelancers may qualify, with or without a qualifying child.',
+      details:
+          'Check earned income, adjusted gross income, investment income, filing status, U.S. residency, valid Social Security numbers and each child’s relationship, age and residency. Gather income records, Social Security numbers and school, medical or childcare records that support where a child lived. Claim on Form 1040; attach Schedule EIC when claiming a qualifying child.',
+      pitfall:
+          'Net self-employment earnings can create eligibility but an unsupported Schedule C loss or omitted cash income can also change the credit. Use the IRS EITC Assistant and the limits for the tax year being filed.',
+      sourceTitle: 'IRS — Earned Income Tax Credit',
+      sourceUrl: eitcUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Child Tax Credit and Credit for Other Dependents',
+      overview:
+          'A qualifying child may support the CTC or refundable ACTC; another dependent may support the ODC.',
+      details:
+          'For every dependent, confirm relationship, age, support, residency, citizenship or residency status, dependent status and taxpayer identification number issued on time. Keep birth or placement records, Social Security cards and documents supporting residence and support. Report dependents on Form 1040 and complete Schedule 8812 when required.',
+      pitfall:
+          'A child does not qualify merely because you paid expenses. CTC, ACTC and ODC have different identification, income and refundability rules, and two taxpayers cannot claim the same dependent.',
+      sourceTitle: 'IRS — Child Tax Credit',
+      sourceUrl: childTaxCreditUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Child and Dependent Care Credit',
+      overview:
+          'Care paid so you can work or look for work may qualify for a separate credit.',
+      details:
+          'Confirm the qualifying person, earned-income and filing-status tests and that the care enabled work or an active job search. Record the provider’s name, address and SSN or EIN, dates, amount paid and dependent-care benefits. Claim with Form 2441.',
+      pitfall:
+          'School tuition, overnight camp and payments to certain relatives do not qualify as care expenses. Missing provider identification can block the credit.',
+      sourceTitle: 'IRS — Child and Dependent Care Credit',
+      sourceUrl: dependentCareUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Premium Tax Credit for Marketplace coverage',
+      overview:
+          'Marketplace health-plan buyers may qualify for a refundable premium credit.',
+      details:
+          'Keep every Form 1095-A and report household members, coverage months, household income and any advance premium tax credit. Reconcile advance payments on Form 8962 even when the Marketplace already reduced monthly premiums.',
+      pitfall:
+          'For tax years beginning in 2026, excess advance credit generally no longer receives the earlier repayment caps. Income or household changes can therefore create a larger balance due. Coordinate this calculation with the self-employed health-insurance deduction.',
+      sourceTitle: 'IRS — Premium Tax Credit questions and answers',
+      sourceUrl: premiumTaxCreditUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Education credits: AOTC or Lifetime Learning Credit',
+      overview:
+          'Tuition and certain education costs may support one education credit per student.',
+      details:
+          'Identify the student, eligible school, enrollment status, program, qualified costs, scholarships and Form 1098-T. AOTC focuses on the first four years of eligible postsecondary education; LLC can cover later study and courses that acquire or improve job skills. Claim with Form 8863.',
+      pitfall:
+          'Do not use the same expense for both credits, a tax-free education benefit and a business deduction. Beginning with 2026 returns, the IRS states new work-valid SSN requirements apply.',
+      sourceTitle: 'IRS — Education credits: AOTC and LLC',
+      sourceUrl: educationCreditsUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Retirement Savings Contributions Credit',
+      overview:
+          'Eligible lower- and moderate-income savers may receive a credit in addition to a permitted retirement deduction.',
+      details:
+          'Review eligible IRA, 401(k), 403(b), governmental 457, SIMPLE, SEP employee contributions and eligible ABLE contributions. Gather Forms W-2 and 5498 plus contribution and distribution records, then calculate the 2026 credit on Form 8880.',
+      pitfall:
+          'Age, full-time student, dependent, income and recent retirement-distribution rules can reduce or eliminate the credit. The Saver’s Match replaces much of this credit beginning with 2027 contributions, not 2026 contributions.',
+      sourceTitle: 'IRS — Form 8880, Saver’s Credit',
+      sourceUrl: saversCreditUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Adoption Credit',
+      overview:
+          'Qualified adoption expenses may support a partly refundable federal credit.',
+      details:
+          'Track the child’s identifying number, adoption type and finalization date, agency and court fees, attorney fees, required travel, employer reimbursements and any state special-needs determination. Claim with Form 8839; timing differs for domestic and foreign adoptions.',
+      pitfall:
+          'Expenses reimbursed by an employer cannot also be credited, adopting a spouse’s child does not qualify, and income phaseouts apply. Preserve final decrees and supporting documents even though they are not normally filed with the return.',
+      sourceTitle: 'IRS — Adoption Credit',
+      sourceUrl: adoptionCreditUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Foreign Tax Credit',
+      overview:
+          'U.S. freelancers who paid qualifying foreign income tax may avoid double taxation.',
+      details:
+          'Record the foreign country, type of tax, foreign income, payment or accrual date, foreign-currency amount and U.S.-dollar conversion method. Forms 1099, K-1 or brokerage statements may report foreign tax. Form 1116 is commonly required, although a limited exception can apply.',
+      pitfall:
+          'VAT, sales tax and taxes on excluded foreign earned income are not automatically creditable income taxes. Choosing a deduction instead of a credit and foreign-source-income limitations can change the result.',
+      sourceTitle: 'IRS Publication 514 — Foreign Tax Credit',
+      sourceUrl: foreignTaxCreditUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Credit for the Elderly or the Disabled',
+      overview:
+          'Some older taxpayers and permanently and totally disabled retirees may qualify.',
+      details:
+          'Check age, filing status, taxable disability income, adjusted gross income and nontaxable Social Security, pension or disability benefits. A disabled claimant generally needs qualifying taxable disability income and may need a physician’s statement. Calculate on Schedule R.',
+      pitfall:
+          'Being over 65 or having a disability does not by itself qualify; relatively low income limits and nontaxable benefits can eliminate the credit.',
+      sourceTitle: 'IRS Publication 524 — Elderly or Disabled Credit',
+      sourceUrl: elderlyDisabledCreditUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Excess Social Security or RRTA tax withheld',
+      overview:
+          'People with multiple employers may have more employee Social Security or tier 1 RRTA tax withheld than the annual limit.',
+      details:
+          'Collect every Form W-2 and total the employee withholding across different employers. An excess caused by multiple employers can generally be claimed as a credit on Form 1040 or Schedule 3, as directed by current instructions.',
+      pitfall:
+          'This does not apply merely because self-employment tax plus wage withholding feels high. If one employer alone withheld too much, request a correction or refund from that employer first.',
+      sourceTitle: 'IRS Topic 608 — Excess Social Security and RRTA tax',
+      sourceUrl: excessSocialSecurityUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Prior-year minimum tax credit',
+      overview:
+          'A taxpayer who paid alternative minimum tax in an earlier year may have a carryforward credit.',
+      details:
+          'Locate prior returns and every prior Form 8801. The credit generally concerns prior AMT attributable to deferral items and is recalculated on the current Form 8801 before flowing to Schedule 3.',
+      pitfall:
+          'Not all prior AMT creates a credit, and missing an old carryforward is easy when changing tax software or preparers. Do not recreate the amount from memory.',
+      sourceTitle: 'IRS — Form 8801, Prior Year Minimum Tax Credit',
+      sourceUrl: priorMinimumTaxUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Federal tax paid on qualifying fuel use',
+      overview:
+          'Fuel used for certain off-highway business purposes may support a credit or refund.',
+      details:
+          'Track fuel type, gallons, purchase date, federal tax paid, equipment or vehicle and exact use. Eligible uses can include certain off-highway business or farming uses. Calculate with Form 4136.',
+      pitfall:
+          'Ordinary highway driving and commuting do not qualify. Keep contemporaneous gallon and use records; a fuel receipt alone does not establish eligible use.',
+      sourceTitle: 'IRS — Form 4136, Credit for Federal Tax Paid on Fuels',
+      sourceUrl: fuelTaxCreditUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Mortgage Interest Credit Certificate',
+      overview:
+          'A homeowner with a qualifying state or local Mortgage Credit Certificate may claim a credit.',
+      details:
+          'Locate the original Mortgage Credit Certificate, loan and property details, certificate credit rate and mortgage-interest statement. Calculate the current credit and any carryforward on Form 8396.',
+      pitfall:
+          'A regular Form 1098 or mortgage payment does not create this credit. The certificate must come from a qualified government program, and credited interest cannot also be deducted in full.',
+      sourceTitle: 'IRS — Form 8396, Mortgage Interest Credit',
+      sourceUrl: mortgageCreditUrl,
+    ),
+    TaxGuideEntry(
+      title: 'Expired energy credits and old carryforwards',
+      overview:
+          'Do not assume a 2026 vehicle or home-energy purchase earns the former federal credits.',
+      details:
+          'The new and previously owned clean-vehicle credits ended for vehicles acquired after September 30, 2025. The residential clean-energy and energy-efficient-home-improvement credits ended for 2026 expenditures or property placed in service after December 31, 2025. Review prior returns for a valid unused carryforward before dismissing an older credit.',
+      pitfall:
+          'Marketing materials and older articles often still describe the former credits. Purchase date, binding contract, expenditure date and placed-in-service date can matter; never label a 2026 receipt eligible without checking the transition rule.',
+      sourceTitle: 'IRS — Energy-credit termination dates',
+      sourceUrl: expiredEnergyCreditsUrl,
     ),
   ];
 

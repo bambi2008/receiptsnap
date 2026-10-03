@@ -1,13 +1,13 @@
 # App Store Connect — Submission Checklist
 
-> Use this checklist when submitting ReceiptSnap to the App Store.
+> Use this checklist when submitting Freelance Tax Kit to the App Store.
 
 ---
 
 ## Pre-Submission: App Store Connect Setup
 
 ### App Information
-- [ ] **App Name:** ReceiptSnap: AI Receipt Scanner
+- [ ] **App Name:** Freelance Tax Kit: AI Receipt Scanner
 - [ ] **Subtitle:** Tax-Time Receipt Organizer
 - [ ] **Category:** Finance
 - [ ] **Secondary Category:** Business
@@ -57,12 +57,12 @@
 - [ ] **Contact:** support@receiptsnap.com
 - [ ] **Phone:** (your number)
 - [ ] **Demo Account:** Create test account if needed (not needed for free tier)
-- [ ] **Notes for Reviewer:** "ReceiptSnap is a receipt scanner for freelancers. Free tier: 50 receipts. Pro: $4.99/mo or $39.99/yr. All data stored on-device. No server backend. OCR uses Apple Vision framework (on-device)."
+- [ ] **Notes for Reviewer:** "Freelance Tax Kit is a receipt scanner for freelancers. Free tier: 50 receipts. Pro: $4.99/mo or $39.99/yr. All data stored on-device. No server backend. OCR uses Apple Vision framework (on-device)."
 
 ### Version Information
 - [ ] **Version:** 1.0.0
 - [ ] **Build:** 1
-- [ ] **Copyright:** © 2026 ReceiptSnap
+- [ ] **Copyright:** © 2026 Freelance Tax Kit
 
 ### App Description (from docs/aso-strategy.md)
 - [ ] Full description pasted

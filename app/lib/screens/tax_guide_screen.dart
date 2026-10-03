@@ -11,6 +11,8 @@ class TaxGuideScreen extends StatefulWidget {
   State<TaxGuideScreen> createState() => _TaxGuideScreenState();
 }
 
+enum _GuideSection { business, credits, pitfalls }
+
 class _TaxGuideScreenState extends State<TaxGuideScreen> {
   static const _selectedSeasonKey = 'tax_checklist_selected_season';
   static const _reviewKeyPrefix = 'tax_checklist_reviewed_';
@@ -62,15 +64,16 @@ class _TaxGuideScreenState extends State<TaxGuideScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: AppTheme.bg,
         appBar: AppBar(
           title: const Text('Freelancer Tax Blind Spots'),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'Expenses to check'),
-              Tab(text: 'Mistakes to avoid'),
+              Tab(text: 'Business costs'),
+              Tab(text: 'Tax credits'),
+              Tab(text: 'Pitfalls'),
             ],
           ),
         ),
@@ -78,7 +81,7 @@ class _TaxGuideScreenState extends State<TaxGuideScreen> {
           children: [
             _GuideList(
               entries: const [...TaxGuideData.expenseEntries],
-              showIntroduction: true,
+              section: _GuideSection.business,
               season: _season,
               seasonOptions: _seasonOptions,
               reviewedCount: _reviewedCount(TaxGuideData.expenseEntries),
@@ -88,7 +91,19 @@ class _TaxGuideScreenState extends State<TaxGuideScreen> {
               accent: AppTheme.green,
             ),
             _GuideList(
+              entries: const [...TaxGuideData.creditEntries],
+              section: _GuideSection.credits,
+              season: _season,
+              seasonOptions: _seasonOptions,
+              reviewedCount: _reviewedCount(TaxGuideData.creditEntries),
+              isReviewed: _isReviewed,
+              onReviewedChanged: _setReviewed,
+              onSeasonChanged: _setSeason,
+              accent: AppTheme.purple,
+            ),
+            _GuideList(
               entries: const [...TaxGuideData.pitfallEntries],
+              section: _GuideSection.pitfalls,
               season: _season,
               seasonOptions: _seasonOptions,
               reviewedCount: _reviewedCount(TaxGuideData.pitfallEntries),
@@ -106,7 +121,7 @@ class _TaxGuideScreenState extends State<TaxGuideScreen> {
 
 class _GuideList extends StatelessWidget {
   final List<TaxGuideEntry> entries;
-  final bool showIntroduction;
+  final _GuideSection section;
   final int season;
   final List<int> seasonOptions;
   final int reviewedCount;
@@ -117,6 +132,7 @@ class _GuideList extends StatelessWidget {
 
   const _GuideList({
     required this.entries,
+    required this.section,
     required this.season,
     required this.seasonOptions,
     required this.reviewedCount,
@@ -124,17 +140,20 @@ class _GuideList extends StatelessWidget {
     required this.onReviewedChanged,
     required this.onSeasonChanged,
     required this.accent,
-    this.showIntroduction = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final hasSectionNote = section != _GuideSection.pitfalls;
     return ListView.builder(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
-      itemCount: entries.length + (showIntroduction ? 3 : 2),
+      itemCount: entries.length + (hasSectionNote ? 3 : 2),
       itemBuilder: (context, index) {
         if (index == 0) {
           return _ChecklistCard(
+            title: section == _GuideSection.credits
+                ? 'Your personal credit review'
+                : 'Your tax-season blind-spot check',
             season: season,
             seasonOptions: seasonOptions,
             reviewedCount: reviewedCount,
@@ -143,12 +162,19 @@ class _GuideList extends StatelessWidget {
             accent: accent,
           );
         }
-        if (index == 1) return const _ScopeCard();
-        if (showIntroduction && index == 2) return const _CurrentLawCard();
-        final entryIndex = index - (showIntroduction ? 3 : 2);
+        if (index == 1) return _ScopeCard(section: section);
+        if (hasSectionNote && index == 2) {
+          return section == _GuideSection.credits
+              ? const _CreditScopeCard()
+              : const _CurrentLawCard();
+        }
+        final entryIndex = index - (hasSectionNote ? 3 : 2);
         final entry = entries[entryIndex];
         return _GuideEntryCard(
           entry: entry,
+          detailLabel: section == _GuideSection.credits
+              ? 'What to verify and collect'
+              : 'What the IRS guidance says',
           reviewed: isReviewed(entry),
           onReviewedChanged: (value) => onReviewedChanged(entry, value),
           accent: accent,
@@ -159,6 +185,7 @@ class _GuideList extends StatelessWidget {
 }
 
 class _ChecklistCard extends StatelessWidget {
+  final String title;
   final int season;
   final List<int> seasonOptions;
   final int reviewedCount;
@@ -167,6 +194,7 @@ class _ChecklistCard extends StatelessWidget {
   final Color accent;
 
   const _ChecklistCard({
+    required this.title,
     required this.season,
     required this.seasonOptions,
     required this.reviewedCount,
@@ -193,10 +221,13 @@ class _ChecklistCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Your tax-season blind-spot check',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+                  title,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
               DropdownButton<int>(
@@ -247,7 +278,9 @@ class _ChecklistCard extends StatelessWidget {
 }
 
 class _ScopeCard extends StatelessWidget {
-  const _ScopeCard();
+  final _GuideSection section;
+
+  const _ScopeCard({required this.section});
 
   @override
   Widget build(BuildContext context) {
@@ -259,10 +292,10 @@ class _ScopeCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppTheme.blue.withValues(alpha: 0.18)),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
               Icon(Icons.verified_outlined, color: AppTheme.blue, size: 20),
               SizedBox(width: 8),
@@ -274,19 +307,54 @@ class _ScopeCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
-            'For U.S. freelancers and sole proprietors who generally file Schedule C. Based on current IRS instructions and publications; reviewed ${TaxGuideData.reviewedDate}.',
-            style: TextStyle(fontSize: 13, height: 1.4),
+            section == _GuideSection.credits
+                ? 'Federal personal credits that can apply to U.S. freelancers as individual taxpayers. Based on current IRS guidance; reviewed ${TaxGuideData.reviewedDate}.'
+                : 'For U.S. freelancers and sole proprietors who generally file Schedule C. Based on current IRS instructions and publications; reviewed ${TaxGuideData.reviewedDate}.',
+            style: const TextStyle(fontSize: 13, height: 1.4),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
-            'No item is automatically deductible. Eligibility depends on your facts, business purpose, records and current law. Specialized industries, entities, states and localities may follow other rules.',
-            style: TextStyle(
+            section == _GuideSection.credits
+                ? 'A listed credit is not automatically available. Eligibility depends on household facts, filing status, income, identification numbers, timing and current law. State and local credits are outside this federal checklist.'
+                : 'No item is automatically deductible. Eligibility depends on your facts, business purpose, records and current law. Specialized industries, entities, states and localities may follow other rules.',
+            style: const TextStyle(
               color: AppTheme.textSecondary,
               fontSize: 12,
               height: 1.4,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CreditScopeCard extends StatelessWidget {
+  const _CreditScopeCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: AppTheme.purple.withValues(alpha: 0.09),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.purple.withValues(alpha: 0.16)),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Credits are different from business deductions',
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'A Schedule C deduction reduces business profit. A credit reduces federal income tax and some credits can increase a refund. These items usually depend on personal and household facts that cannot be inferred from a receipt, so you must review and confirm them.',
+            style: TextStyle(fontSize: 12, height: 1.4),
           ),
         ],
       ),
@@ -326,12 +394,14 @@ class _CurrentLawCard extends StatelessWidget {
 
 class _GuideEntryCard extends StatelessWidget {
   final TaxGuideEntry entry;
+  final String detailLabel;
   final bool reviewed;
   final ValueChanged<bool?> onReviewedChanged;
   final Color accent;
 
   const _GuideEntryCard({
     required this.entry,
+    required this.detailLabel,
     required this.reviewed,
     required this.onReviewedChanged,
     required this.accent,
@@ -366,7 +436,7 @@ class _GuideEntryCard extends StatelessWidget {
           const Divider(),
           _DetailBlock(
             icon: Icons.check_circle_outline,
-            label: 'What the IRS guidance says',
+            label: detailLabel,
             text: entry.details,
             color: AppTheme.green,
           ),

@@ -1,4 +1,4 @@
-# ReceiptSnap — Launch Marketing Kit
+# Freelance Tax Kit — Launch Marketing Kit
 
 > One file. All launch copy. Copy, paste, post.
 
@@ -14,7 +14,7 @@ Hey Product Hunt! 👋
 
 I'm a freelancer who's been tracking receipts in a shoebox for years. Every March, I'd spend hours digging through crumpled paper trying to figure out what I could deduct. So I built the tool I wished I had.
 
-**ReceiptSnap is an iOS app that turns any receipt into a tax deduction in 3 seconds:**
+**Freelance Tax Kit is an iOS app that turns any receipt into a tax deduction in 3 seconds:**
 
 📸 **Snap** — Open the app, tap the shutter. Or pick from your photo library. No menus, no friction.
 
@@ -33,7 +33,7 @@ I'm a freelancer who's been tracking receipts in a shoebox for years. Every Marc
 Built for freelancers, by a freelancer. I'd love your feedback! 🧾
 
 ### First Comment
-Thanks for checking out ReceiptSnap! A few things:
+Thanks for checking out Freelance Tax Kit! A few things:
 
 1. **Why I built this:** I track ~200 receipts/year as a freelancer. Every existing app was either too complex (Expensify for enterprises), too expensive, or sent my data to the cloud. I wanted something: dead simple, on-device, freelancer-priced.
 
@@ -62,7 +62,7 @@ Three things:
 **Title:** I built a dead-simple receipt scanner for freelancers — 50 receipts free, on-device AI
 
 **Body:**
-After losing ~$2,000 in missed deductions last tax season (couldn't find half my receipts), I built ReceiptSnap — an iOS app that scans receipts and auto-categorizes them by IRS Schedule C rules.
+After losing ~$2,000 in missed deductions last tax season (couldn't find half my receipts), I built Freelance Tax Kit — an iOS app that scans receipts and auto-categorizes them by IRS Schedule C rules.
 
 How it works:
 - Open app → snap photo → AI reads vendor/amount/date → auto-categorizes (Meals 50%, Home Office, Travel, Software, etc) → export PDF to CPA
@@ -91,7 +91,7 @@ Common missed deductions:
 - Phone & internet (portion used for business)
 - Shipping costs, ad spend, travel
 
-I built ReceiptSnap to make tracking dead simple. Snap a photo of any receipt → AI reads it → auto-categorizes by IRS Schedule C → export to CPA.
+I built Freelance Tax Kit to make tracking dead simple. Snap a photo of any receipt → AI reads it → auto-categorizes by IRS Schedule C → export to CPA.
 
 50 receipts free. $4.99/mo unlimited. All on-device, no cloud.
 
@@ -108,7 +108,7 @@ Curious what everyone else uses to track business expenses?
 **Body:**
 I've been freelancing for years and my "receipt system" was a shoebox. Every tax season was a panic.
 
-I finally built ReceiptSnap — an iOS app that scans receipts with on-device AI and categorizes everything by IRS Schedule C. Free for 50 receipts, $4.99/mo unlimited.
+I finally built Freelance Tax Kit — an iOS app that scans receipts with on-device AI and categorizes everything by IRS Schedule C. Free for 50 receipts, $4.99/mo unlimited.
 
 Not here to spam — genuinely want to know:
 
@@ -122,10 +122,10 @@ Honest feedback welcome (including "this idea sucks").
 
 ### r/iosapps (~100k members)
 
-**Title:** ReceiptSnap — iOS receipt scanner with on-device AI (50 free, $4.99/mo)
+**Title:** Freelance Tax Kit — iOS receipt scanner with on-device AI (50 free, $4.99/mo)
 
 **Body:**
-Just launched ReceiptSnap on the App Store. Key features:
+Just launched Freelance Tax Kit on the App Store. Key features:
 
 - 📸 One-tap capture (camera or photo library)
 - 🤖 Apple Vision OCR — on-device, no internet needed
@@ -165,7 +165,7 @@ So I built an app that does one thing well: snap → categorize → export.
 ### Founder story tweet
 Freelancer tax prep used to take me 4 hours.
 
-Now: open ReceiptSnap → export PDF → email CPA → done in 2 minutes.
+Now: open Freelance Tax Kit → export PDF → email CPA → done in 2 minutes.
 
 Built it for myself. Shipping it for everyone else.
 
@@ -173,12 +173,12 @@ Built it for myself. Shipping it for everyone else.
 
 ## LinkedIn
 
-**Title:** From shoebox to App Store: How I built ReceiptSnap
+**Title:** From shoebox to App Store: How I built Freelance Tax Kit
 
 **Body:**
 Problem: I'm a freelancer. I had a shoebox full of receipts. Every March was tax panic.
 
-Solution: ReceiptSnap — an iOS app that scans receipts with on-device AI and auto-categorizes by IRS Schedule C.
+Solution: Freelance Tax Kit — an iOS app that scans receipts with on-device AI and auto-categorizes by IRS Schedule C.
 
 Learning #1: On-device AI is the future. Apple Vision does amazing OCR with zero latency and zero privacy concerns. No server costs, no GDPR headaches.
 
@@ -196,12 +196,12 @@ What expense tracking tool do you use? 👇
 
 ## Hacker News (Show HN)
 
-**Title:** Show HN: ReceiptSnap – On-device AI receipt scanner for freelancers
+**Title:** Show HN: Freelance Tax Kit – On-device AI receipt scanner for freelancers
 
 **Body:**
 Hi HN,
 
-I built ReceiptSnap after losing thousands in missed tax deductions due to poor receipt tracking. It's an iOS app that:
+I built Freelance Tax Kit after losing thousands in missed tax deductions due to poor receipt tracking. It's an iOS app that:
 
 1. Scans receipts with on-device Apple Vision OCR
 2. Auto-categorizes by IRS Schedule C rules
@@ -223,10 +223,10 @@ Questions I'm thinking about:
 
 ## Indie Hackers
 
-**Title:** Built ReceiptSnap: AI receipt scanner → $4.99/mo for freelancers
+**Title:** Built Freelance Tax Kit: AI receipt scanner → $4.99/mo for freelancers
 
 **Body:**
-Hey IH! Just launched ReceiptSnap on the App Store.
+Hey IH! Just launched Freelance Tax Kit on the App Store.
 
 Numbers so far: launching this week. Will update with real metrics.
 
@@ -249,12 +249,12 @@ Will update with launch numbers! 🧾
 
 ## Email — Waitlist "You're In"
 
-**Subject:** ReceiptSnap is live on the App Store 🧾
+**Subject:** Freelance Tax Kit is live on the App Store 🧾
 
 **Body:**
 Hey there,
 
-ReceiptSnap is now available on the App Store!
+Freelance Tax Kit is now available on the App Store!
 
 Stop losing tax deductions. Snap any receipt → AI reads vendor, amount, date → auto-categorized → export to your CPA.
 
@@ -265,7 +265,7 @@ Download now: [App Store link]
 Your first 50 receipts are free forever.
 
 Happy scanning!
-— The ReceiptSnap Team
+— The Freelance Tax Kit Team
 
 ---
 
@@ -278,7 +278,7 @@ Quick question: how much did you miss in tax deductions last year?
 
 Most freelancers lose $1,500-3,000/year because they can't find receipts at tax time.
 
-ReceiptSnap fixes that in 3 taps:
+Freelance Tax Kit fixes that in 3 taps:
 📸 Snap → 🤖 AI reads → 📤 Export
 
 50 receipts free. No credit card needed.
@@ -290,7 +290,7 @@ ReceiptSnap fixes that in 3 taps:
 ## App Store Review Response Templates
 
 ### Positive (5 stars)
-Thanks for the kind words! We built ReceiptSnap for freelancers like you — so glad it's making tax time easier 🧾💰 If you ever have feature requests, hit us at support@receiptsnap.com.
+Thanks for the kind words! We built Freelance Tax Kit for freelancers like you — so glad it's making tax time easier 🧾💰 If you ever have feature requests, hit us at support@receiptsnap.com.
 
 ### Neutral (3-4 stars)
 Thanks for the feedback! We're a small team of freelancers constantly improving. Could you email support@receiptsnap.com with what we can do better? We ship updates fast.

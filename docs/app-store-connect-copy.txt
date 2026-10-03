@@ -1,10 +1,10 @@
 === APP STORE CONNECT — COPY-PASTE READY ===
 
 --- App Name (30 chars max) ---
-ReceiptSnap: AI Receipt Scanner
+Freelance Tax Kit
 
 --- Subtitle (30 chars max) ---
-Tax-Time Receipt Organizer
+1099 Receipts & Deductions
 
 --- Keywords (100 chars) ---
 receipt,scan,tax,expense,freelance,self-employed,business,tracker,ocr,1099,records,invoice
@@ -17,7 +17,7 @@ Snap a photo. On-device OCR extracts the vendor, amount, and date, then suggests
 
 Your Receipts. Your Records. Organized.
 
-ReceiptSnap is an on-device receipt scanner built for freelancers and self-employed professionals. Keep receipt details together throughout the year, review every extracted field, and prepare clean records for tax time.
+Freelance Tax Kit is an on-device tax-record organizer built for U.S. freelancers and self-employed professionals. Keep receipt details together throughout the year, review possible expense categories and tax blind spots, and prepare a PDF evidence package plus CSV ledger for tax time.
 
 HOW IT WORKS
 1. Snap a photo of any business receipt
@@ -26,9 +26,9 @@ HOW IT WORKS
 4. Export a clean PDF or CSV for your records or tax professional
 
 BUILT FOR FREELANCERS
-ReceiptSnap uses practical expense labels such as Meals, Travel and Software/Tools. Suggestions are for organization only; you stay in control and can change every field before saving.
+Freelance Tax Kit uses practical expense labels such as Meals, Travel and Software/Tools. Suggestions and checklists are for organization only; you stay in control and must verify every field and tax treatment before filing.
 
-WHY RECEIPTSNAP
+WHY FREELANCE TAX KIT
 - INSTANT CAPTURE: App opens directly to camera. One tap to snap.
 - AI-POWERED OCR: Reads vendor name, amount, date from any receipt
 - CATEGORY SUGGESTIONS: Practical labels for you to review
@@ -52,15 +52,17 @@ PERFECT FOR:
 ✓ Anyone organizing business expense records for tax time
 
 --- Promotional Text (170 chars) ---
-New! ReceiptSnap extracts receipt details on device and suggests expense categories for your review. Snap, organize and export up to 50 receipts free.
+New! Freelance Tax Kit combines on-device receipt capture, a freelancer tax-savings checklist, and a PDF plus CSV tax records package. Organize up to 50 receipts free.
 
 --- What's New (v1.0.0) ---
-Welcome to ReceiptSnap! Your AI receipt companion for freelancers.
+ReceiptSnap is now Freelance Tax Kit — a clearer name for a broader freelancer tax-record toolkit.
 
 - Instant camera capture
 - AI-powered OCR with auto-categorization
 - Reviewable expense category suggestions
-- PDF & CSV export for your records or accountant
+- Batch PDF evidence package and CSV expense ledger
+- IRS-sourced business-cost, credit and tax-pitfall checklists
+- Receipt date detection and full-image receipt preview
 - 50 free receipts, no credit card required
 
 --- Support URL ---
@@ -89,13 +91,13 @@ Primary: Finance
 Secondary: Business
 
 --- Copyright ---
-© 2026 ReceiptSnap
+© 2026 Freelance Tax Kit
 
 --- In-App Purchases ---
 1. Pro Monthly — com.receiptsnap.pro.monthly — $4.99 USD
 2. Pro Annual — com.receiptsnap.pro.annual — $39.99 USD
 
 --- Review Notes ---
-ReceiptSnap is a receipt scanner for freelancers. Free tier: 50 receipts.
+Freelance Tax Kit is a tax-record organization tool for U.S. freelancers. Free tier: 50 receipts.
 Pro: $4.99/mo or $39.99/yr. All data stored on-device. No server backend.
 OCR uses Apple Vision framework (on-device).

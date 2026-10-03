@@ -1,7 +1,8 @@
 class AppConstants {
-  static const String appName = 'ReceiptSnap';
+  static const String appName = 'Freelance Tax Kit';
   static const int freeReceiptLimit = 50;
   static const String appVersion = '1.0.0';
+  static const int appBuildNumber = 6;
   static const String privacyUrl = 'https://receiptsnap.com/privacy';
   static const String termsUrl = 'https://receiptsnap.com/terms';
   static const String supportEmail = 'support@receiptsnap.com';

@@ -125,9 +125,7 @@ class SettingsScreen extends StatelessWidget {
               'Tax Reminders',
               () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const TaxRemindersScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const TaxRemindersScreen()),
               ),
             ),
             _MenuItem(
@@ -162,7 +160,7 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'ReceiptSnap v1.0.0',
+                  '${AppConstants.appName} v${AppConstants.appVersion} · Build ${AppConstants.appBuildNumber}',
                   style: TextStyle(color: AppTheme.textTertiary, fontSize: 13),
                 ),
                 SizedBox(height: 4),
@@ -205,7 +203,7 @@ class SettingsScreen extends StatelessWidget {
     final uri = Uri(
       scheme: 'mailto',
       path: AppConstants.supportEmail,
-      queryParameters: {'subject': 'ReceiptSnap Support'},
+      queryParameters: {'subject': 'Freelance Tax Kit Support'},
     );
     if (!await launchUrl(uri) && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

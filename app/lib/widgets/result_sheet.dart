@@ -31,6 +31,12 @@ class _ResultSheetState extends State<ResultSheet> {
   late DateTime _date;
   late TextEditingController _vendorCtrl;
   late TextEditingController _amountCtrl;
+  late TextEditingController _descriptionCtrl;
+  late TextEditingController _purposeCtrl;
+  late TextEditingController _locationCtrl;
+  late TextEditingController _businessUseCtrl;
+  String _paymentMethod = 'Not recorded';
+  String _reviewStatus = receiptReviewNeedsReview;
 
   @override
   void initState() {
@@ -41,12 +47,20 @@ class _ResultSheetState extends State<ResultSheet> {
     _date = widget.date;
     _vendorCtrl = TextEditingController(text: _vendor);
     _amountCtrl = TextEditingController(text: _amount.toStringAsFixed(2));
+    _descriptionCtrl = TextEditingController();
+    _purposeCtrl = TextEditingController();
+    _locationCtrl = TextEditingController();
+    _businessUseCtrl = TextEditingController(text: '100');
   }
 
   @override
   void dispose() {
     _vendorCtrl.dispose();
     _amountCtrl.dispose();
+    _descriptionCtrl.dispose();
+    _purposeCtrl.dispose();
+    _locationCtrl.dispose();
+    _businessUseCtrl.dispose();
     super.dispose();
   }
 
@@ -61,9 +75,9 @@ class _ResultSheetState extends State<ResultSheet> {
       ),
     );
     return DraggableScrollableSheet(
-      initialChildSize: 0.58,
+      initialChildSize: 0.76,
       minChildSize: 0.3,
-      maxChildSize: 0.7,
+      maxChildSize: 0.94,
       builder: (_, scrollController) {
         return Container(
           decoration: const BoxDecoration(
@@ -108,6 +122,57 @@ class _ResultSheetState extends State<ResultSheet> {
               ),
               const SizedBox(height: 16),
               _buildDatePicker(),
+              const SizedBox(height: 20),
+              const Text(
+                'Tax record details',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                'For your Schedule C preparer and supporting records. Add these near the time of the expense.',
+                style: TextStyle(fontSize: 11, color: Colors.grey),
+              ),
+              const SizedBox(height: 12),
+              _buildField(
+                'Business purpose',
+                _purposeCtrl,
+                (_) {},
+                hintText: 'Example: supplies for client project',
+              ),
+              const SizedBox(height: 12),
+              _buildField(
+                'Description / items',
+                _descriptionCtrl,
+                (_) {},
+                hintText: 'What was purchased?',
+              ),
+              const SizedBox(height: 12),
+              _buildField(
+                'Location / destination',
+                _locationCtrl,
+                (_) {},
+                hintText: 'Recommended for travel and meals',
+              ),
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: _buildPaymentMethod()),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildField(
+                      'Business use %',
+                      _businessUseCtrl,
+                      (_) {},
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildReviewStatus(),
               const SizedBox(height: 12),
               const Text(
                 'Category suggestions help organize records and are not tax advice. Verify tax treatment before filing.',
@@ -181,6 +246,7 @@ class _ResultSheetState extends State<ResultSheet> {
     TextEditingController ctrl,
     Function(String) onChanged, {
     TextInputType keyboardType = TextInputType.text,
+    String? hintText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,6 +265,7 @@ class _ResultSheetState extends State<ResultSheet> {
           keyboardType: keyboardType,
           onChanged: onChanged,
           decoration: InputDecoration(
+            hintText: hintText,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,
               vertical: 10,
@@ -208,6 +275,76 @@ class _ResultSheetState extends State<ResultSheet> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPaymentMethod() {
+    const methods = [
+      'Not recorded',
+      'Cash',
+      'Personal card',
+      'Business card',
+      'Bank transfer',
+      'Digital wallet',
+      'Other',
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Payment method',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 4),
+        DropdownButtonFormField<String>(
+          initialValue: _paymentMethod,
+          isExpanded: true,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 10,
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            isDense: true,
+          ),
+          items: methods
+              .map(
+                (value) => DropdownMenuItem(value: value, child: Text(value)),
+              )
+              .toList(),
+          onChanged: (value) =>
+              setState(() => _paymentMethod = value ?? 'Not recorded'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReviewStatus() {
+    return SegmentedButton<String>(
+      segments: const [
+        ButtonSegment(
+          value: receiptReviewNeedsReview,
+          label: Text('Review'),
+          icon: Icon(Icons.help_outline),
+        ),
+        ButtonSegment(
+          value: receiptReviewConfirmedBusiness,
+          label: Text('Business'),
+          icon: Icon(Icons.check_circle_outline),
+        ),
+        ButtonSegment(
+          value: receiptReviewPersonal,
+          label: Text('Personal'),
+          icon: Icon(Icons.block),
+        ),
+      ],
+      selected: {_reviewStatus},
+      onSelectionChanged: (value) =>
+          setState(() => _reviewStatus = value.first),
     );
   }
 
@@ -329,12 +466,31 @@ class _ResultSheetState extends State<ResultSheet> {
       );
       return;
     }
+    final businessUse = double.tryParse(_businessUseCtrl.text.trim());
+    if (businessUse == null || businessUse < 0 || businessUse > 100) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Business use must be from 0 to 100%.')),
+      );
+      return;
+    }
     final receipt = Receipt(
       vendorName: _vendorCtrl.text.trim(),
       amount: parsedAmount,
       date: _date,
       category: _category,
       imagePath: widget.imagePath,
+      note: _descriptionCtrl.text.trim().isEmpty
+          ? null
+          : _descriptionCtrl.text.trim(),
+      businessPurpose: _purposeCtrl.text.trim().isEmpty
+          ? null
+          : _purposeCtrl.text.trim(),
+      location: _locationCtrl.text.trim().isEmpty
+          ? null
+          : _locationCtrl.text.trim(),
+      paymentMethod: _paymentMethod == 'Not recorded' ? null : _paymentMethod,
+      businessUsePercent: businessUse,
+      reviewStatus: _reviewStatus,
     );
     Navigator.pop(context, receipt);
   }

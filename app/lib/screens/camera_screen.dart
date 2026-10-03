@@ -266,14 +266,18 @@ class _CameraScreenState extends State<CameraScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Text(
-                      'ReceiptSnap',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+                    const Expanded(
+                      child: Text(
+                        'Freelance Tax Kit',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 8),
                     _PlanBadge(
                       label: sub.isPro ? 'PRO' : '${sub.remainingFree} FREE',
                     ),
@@ -507,7 +511,43 @@ class _TaxGuideCard extends StatelessWidget {
                   _GuideChip(label: 'Business-use phone'),
                 ],
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(13),
+                decoration: BoxDecoration(
+                  color: AppTheme.purple.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: const Color(0xFFD8B4FE).withValues(alpha: 0.32),
+                  ),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'PERSONAL TAX CREDITS TO REVIEW',
+                      style: TextStyle(
+                        color: Color(0xFFE9D5FF),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.55,
+                      ),
+                    ),
+                    SizedBox(height: 7),
+                    Text(
+                      'EITC · Child & dependent care · Marketplace health · Education · Retirement savings',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        height: 1.4,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(13),
                 decoration: BoxDecoration(

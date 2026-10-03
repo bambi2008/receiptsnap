@@ -1,4 +1,4 @@
-# Mac Handoff Checklist — ReceiptSnap
+# Mac Handoff Checklist — Freelance Tax Kit
 
 > When you're ready to continue development on your Mac, follow this checklist.
 

@@ -365,7 +365,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                       ? null
                       : () => _exportSelected(selected, pdf: false),
                   icon: const Icon(Icons.table_chart_outlined, size: 18),
-                  label: const Text('CSV summary'),
+                  label: const Text('CSV ledger'),
                 ),
               ),
               const SizedBox(width: 10),
@@ -388,7 +388,7 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
                   label: Text(
                     selected.isEmpty
                         ? 'Select receipts'
-                        : 'PDF package (${selected.length})',
+                        : 'Tax package (${selected.length})',
                   ),
                 ),
               ),
@@ -436,8 +436,8 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
         SnackBar(
           content: Text(
             pdf
-                ? 'Creating one PDF package for ${receipts.length} receipts…'
-                : 'Creating CSV summary for ${receipts.length} receipts…',
+                ? 'Creating PDF evidence and CSV ledger for ${receipts.length} receipts…'
+                : 'Creating CSV ledger for ${receipts.length} receipts…',
           ),
           duration: const Duration(seconds: 30),
         ),
@@ -445,12 +445,11 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
     // Let the progress state paint before image decoding starts.
     await Future<void>.delayed(Duration.zero);
     try {
-      final path = pdf
-          ? await ExportService.exportPdf(receipts)
-          : await ExportService.exportCsv(receipts);
+      final pdfPath = pdf ? await ExportService.exportPdf(receipts) : null;
+      final csvPath = await ExportService.exportCsv(receipts);
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      if (path == null) {
+      if (csvPath == null || (pdf && pdfPath == null)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Could not create the export file.')),
         );
@@ -465,10 +464,13 @@ class _ReceiptsScreenState extends State<ReceiptsScreen> {
           : box.localToGlobal(Offset.zero) & box.size;
       try {
         await Share.shareXFiles(
-          [XFile(path, mimeType: pdf ? 'application/pdf' : 'text/csv')],
+          [
+            if (pdfPath != null) XFile(pdfPath, mimeType: 'application/pdf'),
+            XFile(csvPath, mimeType: 'text/csv'),
+          ],
           subject: pdf
-              ? 'ReceiptSnap receipt package'
-              : 'ReceiptSnap expense summary',
+              ? 'Freelance Tax Kit self-employed tax records package'
+              : 'Freelance Tax Kit self-employed expense ledger',
           sharePositionOrigin: origin,
         );
       } catch (_) {

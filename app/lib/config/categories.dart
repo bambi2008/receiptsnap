@@ -91,6 +91,26 @@ Map<String, ReceiptCategory> get categoryMap => {
   'other': categories[9],
 };
 
+/// Schedule C references are organizational hints for a sole proprietor's
+/// tax preparer. They are deliberately phrased as suggestions because the
+/// correct line depends on facts that a receipt alone cannot establish.
+const Map<String, String> scheduleCReferenceByCategory = {
+  'advertising': 'Schedule C, line 8 — Advertising',
+  'meals': 'Schedule C, line 24b — Deductible meals (eligibility review)',
+  'travel': 'Schedule C, line 24a — Travel',
+  'office_supplies': 'Schedule C, line 18 or 22 — Office expense / Supplies',
+  'software': 'Schedule C, Part V / line 27a — Other expenses',
+  'utilities': 'Schedule C, line 25 — Utilities (business share only)',
+  'rent': 'Schedule C, line 20b or Form 8829 — Rent / business use of home',
+  'shipping': 'Schedule C, line 18 or Part V — Postage / shipping',
+  'insurance': 'Schedule C, line 15 — Insurance other than health',
+  'other': 'Schedule C, Part V / line 27a — Classification required',
+};
+
+String scheduleCReference(String category) =>
+    scheduleCReferenceByCategory[category] ??
+    'Schedule C classification required';
+
 String guessCategory(String vendorName) {
   final lower = vendorName.toLowerCase();
   if (lower.contains('starbucks') ||

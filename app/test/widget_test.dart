@@ -42,6 +42,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.byType(BottomNavigationBar), findsOneWidget);
+    expect(find.text('Freelance Tax Kit'), findsOneWidget);
     expect(find.byKey(const Key('home_headline')), findsOneWidget);
     final headline = tester.widget<Text>(
       find.byKey(const Key('home_headline')),
@@ -65,12 +66,14 @@ void main() {
       find.text('A receipt does not prove business purpose'),
       findsOneWidget,
     );
+    expect(find.text('PERSONAL TAX CREDITS TO REVIEW'), findsOneWidget);
 
     await tester.tap(find.text('Freelancer Tax Blind Spots'));
     await tester.pumpAndSettle();
     expect(find.text('Freelancer Tax Blind Spots'), findsOneWidget);
-    expect(find.text('Expenses to check'), findsOneWidget);
-    expect(find.text('Mistakes to avoid'), findsOneWidget);
+    expect(find.text('Business costs'), findsOneWidget);
+    expect(find.text('Tax credits'), findsOneWidget);
+    expect(find.text('Pitfalls'), findsOneWidget);
     expect(find.text('IRS-backed lessons, not generic tips'), findsOneWidget);
     expect(find.text('Your tax-season blind-spot check'), findsOneWidget);
     expect(find.textContaining('reviewed'), findsWidgets);
@@ -90,6 +93,17 @@ void main() {
     expect(advertisingCheckbox, findsOneWidget);
     expect(tester.widget<Checkbox>(advertisingCheckbox).value, isFalse);
     expect(tester.widget<Checkbox>(advertisingCheckbox).onChanged, isNotNull);
+
+    await tester.tap(find.text('Tax credits'));
+    await tester.pumpAndSettle();
+    expect(find.text('Your personal credit review'), findsOneWidget);
+    expect(
+      find.text('Credits are different from business deductions'),
+      findsOneWidget,
+    );
+    await tester.drag(find.byType(ListView).last, const Offset(0, -520));
+    await tester.pumpAndSettle();
+    expect(find.text('Earned Income Tax Credit (EITC)'), findsOneWidget);
   });
 
   testWidgets('app keeps receipt capture visible in bottom navigation', (
@@ -299,8 +313,8 @@ void main() {
     await tester.tap(find.text('Select all'));
     await tester.pump();
     expect(find.text('2 selected'), findsOneWidget);
-    expect(find.text('PDF package (2)'), findsOneWidget);
-    expect(find.text('CSV summary'), findsOneWidget);
+    expect(find.text('Tax package (2)'), findsOneWidget);
+    expect(find.text('CSV ledger'), findsOneWidget);
     expect(
       tester
           .widget<FilledButton>(find.byKey(const Key('batch_pdf_export')))

@@ -97,5 +97,25 @@ class ReceiptProvider extends ChangeNotifier {
         'Amount must be from 0 to 10,000,000.',
       );
     }
+    if (!receipt.businessUsePercent.isFinite ||
+        receipt.businessUsePercent < 0 ||
+        receipt.businessUsePercent > 100) {
+      throw ArgumentError.value(
+        receipt.businessUsePercent,
+        'businessUsePercent',
+        'Business use percent must be from 0 to 100.',
+      );
+    }
+    if (!{
+      receiptReviewNeedsReview,
+      receiptReviewConfirmedBusiness,
+      receiptReviewPersonal,
+    }.contains(receipt.reviewStatus)) {
+      throw ArgumentError.value(
+        receipt.reviewStatus,
+        'reviewStatus',
+        'Unknown receipt review status.',
+      );
+    }
   }
 }

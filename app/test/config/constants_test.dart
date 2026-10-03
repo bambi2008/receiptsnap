@@ -3,8 +3,8 @@ import 'package:receiptsnap/config/constants.dart';
 
 void main() {
   group('AppConstants', () {
-    test('appName is ReceiptSnap', () {
-      expect(AppConstants.appName, 'ReceiptSnap');
+    test('appName uses the tax-focused brand', () {
+      expect(AppConstants.appName, 'Freelance Tax Kit');
     });
 
     test('freeReceiptLimit is 50', () {
@@ -18,6 +18,7 @@ void main() {
 
     test('appVersion is 1.0.0', () {
       expect(AppConstants.appVersion, '1.0.0');
+      expect(AppConstants.appBuildNumber, 6);
     });
 
     test('storage keys are defined', () {

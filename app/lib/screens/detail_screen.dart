@@ -129,6 +129,9 @@ class _DetailScreenState extends State<DetailScreen> {
             _buildTaxReviewCard(taxMatch),
             const SizedBox(height: 20),
 
+            _buildTaxRecordDetails(),
+            const SizedBox(height: 20),
+
             // Export buttons
             Row(
               children: [
@@ -162,6 +165,149 @@ class _DetailScreenState extends State<DetailScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTaxRecordDetails() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Tax record details',
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Used in the self-employed tax records export. Complete these near the time of the expense.',
+              style: TextStyle(
+                color: AppTheme.textSecondary,
+                fontSize: 11,
+                height: 1.35,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildField(
+              'Purpose',
+              _receipt.businessPurpose ?? '',
+              (value) => _update('businessPurpose', value.trim()),
+            ),
+            const Divider(),
+            _buildField(
+              'Description',
+              _receipt.note ?? '',
+              (value) => _update('note', value.trim()),
+            ),
+            const Divider(),
+            _buildField(
+              'Location',
+              _receipt.location ?? '',
+              (value) => _update('location', value.trim()),
+            ),
+            const Divider(),
+            _buildField(
+              'Business %',
+              _receipt.businessUsePercent.toStringAsFixed(1),
+              (value) {
+                final percent = double.tryParse(value);
+                if (percent != null && percent >= 0 && percent <= 100) {
+                  _update('businessUsePercent', percent);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Business use must be from 0 to 100%.'),
+                    ),
+                  );
+                }
+              },
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+            ),
+            const Divider(),
+            _buildPaymentMethodField(),
+            const Divider(),
+            _buildReviewStatusField(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethodField() {
+    const methods = [
+      'Not recorded',
+      'Cash',
+      'Personal card',
+      'Business card',
+      'Bank transfer',
+      'Digital wallet',
+      'Other',
+    ];
+    final current = _receipt.paymentMethod ?? 'Not recorded';
+    return Row(
+      children: [
+        const SizedBox(
+          width: 80,
+          child: Text(
+            'Payment',
+            style: TextStyle(color: Colors.grey, fontSize: 14),
+          ),
+        ),
+        Expanded(
+          child: DropdownButton<String>(
+            value: methods.contains(current) ? current : 'Other',
+            isExpanded: true,
+            underline: const SizedBox.shrink(),
+            items: methods
+                .map(
+                  (value) => DropdownMenuItem(value: value, child: Text(value)),
+                )
+                .toList(),
+            onChanged: (value) {
+              if (value != null) {
+                _update('paymentMethod', value == 'Not recorded' ? '' : value);
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReviewStatusField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Include in tax records?',
+          style: TextStyle(color: Colors.grey, fontSize: 12),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: SegmentedButton<String>(
+            segments: const [
+              ButtonSegment(
+                value: receiptReviewNeedsReview,
+                label: Text('Review'),
+              ),
+              ButtonSegment(
+                value: receiptReviewConfirmedBusiness,
+                label: Text('Business'),
+              ),
+              ButtonSegment(
+                value: receiptReviewPersonal,
+                label: Text('Personal'),
+              ),
+            ],
+            selected: {_receipt.reviewStatus},
+            onSelectionChanged: (value) => _update('reviewStatus', value.first),
+          ),
+        ),
+      ],
     );
   }
 
@@ -497,6 +643,18 @@ class _DetailScreenState extends State<DetailScreen> {
           _receipt.category = value as String;
         case 'date':
           _receipt.date = value as DateTime;
+        case 'note':
+          _receipt.note = (value as String).isEmpty ? null : value;
+        case 'businessPurpose':
+          _receipt.businessPurpose = (value as String).isEmpty ? null : value;
+        case 'location':
+          _receipt.location = (value as String).isEmpty ? null : value;
+        case 'paymentMethod':
+          _receipt.paymentMethod = (value as String).isEmpty ? null : value;
+        case 'businessUsePercent':
+          _receipt.businessUsePercent = value as double;
+        case 'reviewStatus':
+          _receipt.reviewStatus = value as String;
       }
     });
     context.read<ReceiptProvider>().updateReceipt(_receipt);

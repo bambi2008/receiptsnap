@@ -1,7 +1,7 @@
-# ReceiptSnap — Flutter Implementation Plan
+# Freelance Tax Kit — Flutter Implementation Plan
 
 > **For Hermes:** Use subagent-driven-development skill to implement this plan task-by-task.
-> **Goal:** Build ReceiptSnap iOS app with Flutter — AI receipt scanner for US freelancers
+> **Goal:** Build Freelance Tax Kit iOS app with Flutter — AI receipt scanner for US freelancers
 > **Architecture:** Flutter + Provider state management + Vision OCR via native bridge
 > **Tech Stack:** Flutter 3.38, Dart, camera plugin, purchase_flutter (StoreKit 2)
 > **Target:** iOS 16+, iPhone
@@ -11,7 +11,7 @@
 ## Project Setup
 
 ```
-ReceiptSnap/
+Freelance Tax Kit/
 ├── lib/
 │   ├── main.dart                  # App entry point
 │   ├── app.dart                   # MaterialApp + theme
@@ -313,7 +313,7 @@ const categories = {
 **Step 4:** Help & Support → opens email  
 **Step 5:** Privacy Policy → opens URL  
 **Step 6:** Terms of Service → opens URL  
-**Step 7:** App version footer: "ReceiptSnap v1.0.0 · Made with ❤️ for freelancers"  
+**Step 7:** App version footer: "Freelance Tax Kit v1.0.0 · Made with ❤️ for freelancers"
 **Step 8:** Verify: all menu items tappable, subscription card updates after upgrade
 
 ---

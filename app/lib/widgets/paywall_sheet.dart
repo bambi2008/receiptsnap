@@ -47,7 +47,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
           const Icon(Icons.auto_awesome, size: 40, color: AppTheme.blue),
           const SizedBox(height: 12),
           const Text(
-            'ReceiptSnap Pro',
+            'Freelance Tax Kit Pro',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
@@ -279,7 +279,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Welcome to ReceiptSnap Pro!'),
+          content: Text('Welcome to Freelance Tax Kit Pro!'),
           backgroundColor: AppTheme.green,
           behavior: SnackBarBehavior.floating,
         ),

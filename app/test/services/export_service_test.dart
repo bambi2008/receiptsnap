@@ -49,7 +49,38 @@ void main() {
       final csv = ExportService.buildCsv(receipts);
       expect(csv, contains('Studio Supply'));
       expect(csv, contains('Client Travel'));
+      expect(csv, contains('Suggested Schedule C Reference'));
+      expect(csv, contains('Business Purpose'));
+      expect(csv, contains('Receipt Image Reference'));
+      expect(csv, contains('USD'));
       expect(csv.trim().split('\n'), hasLength(3));
+    });
+
+    test('CSV carries sole-proprietor review and substantiation fields', () {
+      final csv = ExportService.buildCsv([
+        Receipt(
+          id: 'receipt-123',
+          vendorName: 'Client Cafe',
+          amount: 50,
+          date: DateTime(2026, 4, 15),
+          category: 'meals',
+          note: 'Lunch for two',
+          businessPurpose: 'Discuss client project',
+          location: 'Austin, TX',
+          paymentMethod: 'Personal card',
+          businessUsePercent: 50,
+          reviewStatus: receiptReviewConfirmedBusiness,
+          capturedAt: DateTime.utc(2026, 4, 15, 18),
+        ),
+      ]);
+
+      expect(csv, contains('2026-04-15'));
+      expect(csv, contains('receipt-123'));
+      expect(csv, contains('Discuss client project'));
+      expect(csv, contains('Austin, TX'));
+      expect(csv, contains('25.00'));
+      expect(csv, contains('Schedule C, line 24b'));
+      expect(csv, contains('Confirmed business record'));
     });
 
     test('PDF combines summary and selected receipt pages', () async {

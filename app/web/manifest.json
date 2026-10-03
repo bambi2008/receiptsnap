@@ -1,6 +1,6 @@
 {
-    "name": "receiptsnap",
-    "short_name": "receiptsnap",
+    "name": "Freelance Tax Kit",
+    "short_name": "Tax Kit",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

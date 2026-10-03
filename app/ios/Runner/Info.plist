@@ -5,13 +5,13 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>ReceiptSnap uses the camera only when you choose to photograph a receipt.</string>
+	<string>Freelance Tax Kit uses the camera only when you choose to photograph a receipt.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>ReceiptSnap accesses photos you select so you can import an existing receipt image.</string>
+	<string>Freelance Tax Kit accesses photos you select so you can import an existing receipt image.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>ReceiptSnap</string>
+	<string>Freelance Tax Kit</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleExecutable</key>
@@ -21,7 +21,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>receiptsnap</string>
+	<string>Freelance Tax Kit</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
